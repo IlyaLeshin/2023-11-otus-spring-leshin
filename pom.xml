@@ -20,8 +20,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.version>6.1.1</spring.version>
         <opencsv.version>5.8</opencsv.version>
-        <junit.version>5.10.0</junit.version>
-        <mockito.version>5.4.0</mockito.version>
+        <junit.version>5.10.1</junit.version>
+        <mockito.version>5.8.0</mockito.version>
+        <mockito-junit-jupiter.version>5.8.0</mockito-junit-jupiter.version>
         <assertj.version>3.24.2</assertj.version>
         <lombok.version>1.18.30</lombok.version>
         <minimal.maven.version>3.3.9</minimal.maven.version>
@@ -66,6 +67,13 @@
                 <artifactId>mockito-core</artifactId>
                 <scope>test</scope>
                 <version>${mockito.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-junit-jupiter</artifactId>
+                <version>${mockito-junit-jupiter.version}</version>
+                <scope>test</scope>
             </dependency>
 
             <dependency>

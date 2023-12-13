@@ -25,13 +25,13 @@ public class TestServiceImpl implements TestService {
         for (int i = 0; i < questionList.size(); i++) {
             Question currentQuestion = questionList.get(i);
             List<Answer> answersForTheCurrentQuestion = currentQuestion.answers();
-            ioService.printFormattedLine("Question # %s", i + 1);
-            ioService.printLine(currentQuestion.text());
+            ioService.printLine("");
+            ioService.printFormattedLine("Question #%s: %s", i + 1, currentQuestion.text());
 
             if (answersForTheCurrentQuestion != null) {
                 for (int j = 0; j < answersForTheCurrentQuestion.size(); j++) {
-                    ioService.printFormattedLine("Answer %s for Question # %s", j + 1, i + 1);
-                    ioService.printLine(answersForTheCurrentQuestion.get(j).text());
+                    ioService.printFormattedLine("Answer #%s: %s",
+                            j + 1, answersForTheCurrentQuestion.get(j).text());
                 }
             } else {
                 ioService.printLine("No answers for the current question");
