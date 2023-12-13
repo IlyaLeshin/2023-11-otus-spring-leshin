@@ -38,20 +38,20 @@ public class TestServiceImplTest {
     void executeTestTest() {
 
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-
-        String expectedString = new String(System.lineSeparator() +
-                "Please answer the questions below" + System.lineSeparator() +
-                System.lineSeparator() +
-                System.lineSeparator() +
-                "Question #1: Question #1" + System.lineSeparator() +
-                "Answer #1: Answer #1 for question #1" + System.lineSeparator() +
-                "Answer #2: Answer #2 for question #1" + System.lineSeparator() +
-                "Answer #3: Answer #3 for question #1" + System.lineSeparator() +
-                System.lineSeparator() +
-                "Question #2: Question #2" + System.lineSeparator() +
-                "Answer #1: Answer #1 for question #2" + System.lineSeparator() +
+        String separator = System.lineSeparator();
+        String expectedString = new String(separator +
+                "Please answer the questions below" + separator +
+                separator +
+                separator +
+                "Question #1: Question #1" + separator +
+                "Answer #1: Answer #1 for question #1" + separator +
+                "Answer #2: Answer #2 for question #1" + separator +
+                "Answer #3: Answer #3 for question #1" + separator +
+                separator +
+                "Question #2: Question #2" + separator +
+                "Answer #1: Answer #1 for question #2" + separator +
                 "Answer #2: Answer #2 for question #2" +
-                System.lineSeparator());
+                separator);
 
         List<Answer> answersForQuestionOne = new ArrayList<>();
         answersForQuestionOne.add(new Answer("Answer #1 for question #1", true));
