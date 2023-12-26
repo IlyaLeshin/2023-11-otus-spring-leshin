@@ -1,15 +1,7 @@
-package ru.otus.hw.dao;
+package ru.otus.hw.dao.parser;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.junit.jupiter.MockitoExtension;
-import ru.otus.hw.config.TestFileNameProvider;
-import ru.otus.hw.dao.loader.Loader;
-import ru.otus.hw.dao.loader.ResourceLoader;
-import ru.otus.hw.dao.parser.Parser;
-import ru.otus.hw.dao.parser.ParserCsv;
 import ru.otus.hw.domain.Answer;
 import ru.otus.hw.domain.Question;
 
@@ -19,19 +11,19 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 @DisplayName("The test CscQuestionDao should ")
-@ExtendWith(MockitoExtension.class)
-public class CsvQuestionDaoTest {
-
-    @InjectMocks
-    private TestFileNameProvider testFileNameProvider = () -> "test-questions.csv";
+public class ParserCsvTest {
 
     @Test
     @DisplayName("find all questions and answers from resource. current method: findAll()")
-    void findAllTest() {
-
+    void parserCsvTest() {
         Parser parserCsv = new ParserCsv();
-        Loader resourceLoader = new ResourceLoader();
-        CsvQuestionDao csvQuestionDao = new CsvQuestionDao(resourceLoader, parserCsv, testFileNameProvider);
+        String separator = System.lineSeparator();
+        String rowData = "# SkipLines;" + separator +
+                "Question #1;Answer #1 for question #1%true|Answer #2 for question #1%false|Answer #3 for question #1%false" + separator +
+                "Question #2;Answer #1 for question #2%false|Answer #2 for question #2%true";
+
+        List<Question> actualQuestionList = parserCsv.parse(rowData);
+
 
         List<Answer> answersForQuestionOne = new ArrayList<>();
         List<Answer> answersForQuestionTwo = new ArrayList<>();
@@ -48,8 +40,6 @@ public class CsvQuestionDaoTest {
 
         Question[] expectedQuestionArr = new Question[]{questionOne, questionTwo};
 
-        List<Question> actualQuestionList = csvQuestionDao.findAll();
-
-        assertArrayEquals(expectedQuestionArr, actualQuestionList.toArray());
+          assertArrayEquals(expectedQuestionArr, actualQuestionList.toArray());
     }
 }

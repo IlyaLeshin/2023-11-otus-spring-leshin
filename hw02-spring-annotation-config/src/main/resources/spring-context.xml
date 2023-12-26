@@ -12,8 +12,16 @@
         </constructor-arg>
     </bean>
 
+    <bean id="resourceLoader" class="ru.otus.hw.dao.loader.ResourceLoader">
+    </bean>
+
+    <bean id="parserCsv" class="ru.otus.hw.dao.parser.ParserCsv">
+    </bean>
+
     <bean id="csvQuestionDao" class="ru.otus.hw.dao.CsvQuestionDao">
-        <constructor-arg ref="appProperties"/>
+        <constructor-arg index="0" ref="resourceLoader"/>
+        <constructor-arg index="1" ref="parserCsv"/>
+        <constructor-arg index="2" ref="appProperties"/>
     </bean>
 
     <bean id="testService" class="ru.otus.hw.service.TestServiceImpl">
