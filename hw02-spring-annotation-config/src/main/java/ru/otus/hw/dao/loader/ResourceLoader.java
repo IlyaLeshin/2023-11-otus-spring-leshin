@@ -1,5 +1,6 @@
 package ru.otus.hw.dao.loader;
 
+import org.springframework.stereotype.Component;
 import ru.otus.hw.exceptions.QuestionReadException;
 
 import java.io.BufferedReader;
@@ -11,6 +12,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.stream.Collectors;
 
+@Component
 public class ResourceLoader implements Loader {
 
     @Override

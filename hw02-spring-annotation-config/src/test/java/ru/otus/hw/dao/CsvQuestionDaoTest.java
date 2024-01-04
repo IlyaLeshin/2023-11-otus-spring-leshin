@@ -3,7 +3,8 @@ package ru.otus.hw.dao;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.otus.hw.config.TestFileNameProvider;
 import ru.otus.hw.dao.loader.Loader;
@@ -22,17 +23,12 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 @ExtendWith(MockitoExtension.class)
 public class CsvQuestionDaoTest {
 
-    @InjectMocks
-    private TestFileNameProvider testFileNameProvider = () -> "test-questions.csv";
+    @Mock
+    private TestFileNameProvider testFileNameProvider;
 
     @Test
     @DisplayName("find all questions and answers from resource. current method: findAll()")
     void findAllTest() {
-
-        Parser parserCsv = new ParserCsv();
-        Loader resourceLoader = new ResourceLoader();
-        CsvQuestionDao csvQuestionDao = new CsvQuestionDao(resourceLoader, parserCsv, testFileNameProvider);
-
         List<Answer> answersForQuestionOne = new ArrayList<>();
         List<Answer> answersForQuestionTwo = new ArrayList<>();
 
@@ -48,6 +44,10 @@ public class CsvQuestionDaoTest {
 
         Question[] expectedQuestionArr = new Question[]{questionOne, questionTwo};
 
+        Parser parserCsv = new ParserCsv();
+        Loader resourceLoader = new ResourceLoader();
+        CsvQuestionDao csvQuestionDao = new CsvQuestionDao(resourceLoader, parserCsv, testFileNameProvider);
+        Mockito.when(testFileNameProvider.getTestFileName()).thenReturn("test-questions.csv");
         List<Question> actualQuestionList = csvQuestionDao.findAll();
 
         assertArrayEquals(expectedQuestionArr, actualQuestionList.toArray());

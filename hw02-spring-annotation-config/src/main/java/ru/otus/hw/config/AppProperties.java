@@ -1,13 +1,26 @@
 package ru.otus.hw.config;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
 
-@AllArgsConstructor
-@Data
-public class AppProperties implements TestFileNameProvider {
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-    private String testFileName;
+@Component
+public class AppProperties implements TestConfig, TestFileNameProvider {
+
+    private final int rightAnswersCountToPass;
+
+    private final String testFileName;
+
+    public AppProperties(@Value("${test.rightAnswersCountToPass}") int rightAnswersCountToPass,
+                         @Value("${test.fileName}") String testFileName) {
+        this.rightAnswersCountToPass = rightAnswersCountToPass;
+        this.testFileName = testFileName;
+    }
+
+    @Override
+    public int getRightAnswersCountToPass() {
+        return rightAnswersCountToPass;
+    }
 
     @Override
     public String getTestFileName() {
