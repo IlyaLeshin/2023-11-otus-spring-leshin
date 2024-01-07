@@ -1,5 +1,6 @@
 package ru.otus.hw.dao.extractor;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,12 +28,16 @@ public class QuestionExtractorCsvFromResourceIntegrationTest {
     @Mock
     private TestFileNameProvider testFileNameProvider;
 
+    @BeforeEach
+    void setUp() {
+        testFileNameProvider = mock(TestFileNameProvider.class);
+    }
+
     @Test
     @DisplayName("load and parse questions and answers from resource. current method: loadData()")
     void loadData() {
         Question[] expectedQuestionArr = getQuestionsArr();
 
-        testFileNameProvider = mock(TestFileNameProvider.class);
         Mockito.when(testFileNameProvider.getTestFileName()).thenReturn("test-questions.csv");
 
         Loader loader = new ResourceLoader();

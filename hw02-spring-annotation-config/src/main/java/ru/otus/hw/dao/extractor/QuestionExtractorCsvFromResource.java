@@ -17,7 +17,6 @@ public class QuestionExtractorCsvFromResource implements QuestionExtractor {
 
     private final Parser parser;
 
-
     public QuestionExtractorCsvFromResource(TestFileNameProvider fileNameProvider, Loader loader, Parser parser) {
         this.fileNameProvider = fileNameProvider;
         this.loader = loader;
