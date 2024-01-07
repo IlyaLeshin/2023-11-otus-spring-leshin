@@ -11,16 +11,17 @@ import java.util.List;
 @Component
 public class QuestionExtractorCsvFromResource implements QuestionExtractor {
 
+    private final TestFileNameProvider fileNameProvider;
+
     private final Loader loader;
 
     private final Parser parser;
 
-    private final TestFileNameProvider fileNameProvider;
 
-    public QuestionExtractorCsvFromResource(Loader loader, Parser parser, TestFileNameProvider fileNameProvider) {
+    public QuestionExtractorCsvFromResource(TestFileNameProvider fileNameProvider, Loader loader, Parser parser) {
+        this.fileNameProvider = fileNameProvider;
         this.loader = loader;
         this.parser = parser;
-        this.fileNameProvider = fileNameProvider;
     }
 
     @Override

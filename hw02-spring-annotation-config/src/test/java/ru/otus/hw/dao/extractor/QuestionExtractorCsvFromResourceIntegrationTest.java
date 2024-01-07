@@ -1,40 +1,45 @@
-package ru.otus.hw.dao;
+package ru.otus.hw.dao.extractor;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.otus.hw.dao.extractor.QuestionExtractorCsvFromResource;
-
+import ru.otus.hw.config.TestFileNameProvider;
+import ru.otus.hw.dao.loader.Loader;
+import ru.otus.hw.dao.loader.ResourceLoader;
+import ru.otus.hw.dao.parser.Parser;
+import ru.otus.hw.dao.parser.ParserCsv;
 import ru.otus.hw.domain.Answer;
 import ru.otus.hw.domain.Question;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.mockito.Mockito.mock;
 
-@DisplayName("The test CsvQuestionDao should ")
+@DisplayName("The integration test QuestionExtractorCsvFromResource should ")
 @ExtendWith(MockitoExtension.class)
-public class CsvQuestionDaoTest {
-
-    @InjectMocks
-    private CsvQuestionDao csvQuestionDao;
+public class QuestionExtractorCsvFromResourceIntegrationTest {
 
     @Mock
-    private QuestionExtractorCsvFromResource questionExtractorCsvFromResource;
+    private TestFileNameProvider testFileNameProvider;
 
     @Test
-    @DisplayName("find all questions and answers from resource. current method: findAll()")
-    void findAllTest() {
+    @DisplayName("load and parse questions and answers from resource. current method: loadData()")
+    void loadData() {
         Question[] expectedQuestionArr = getQuestionsArr();
 
-        Mockito.when(questionExtractorCsvFromResource.loadData()).thenReturn(Arrays.stream(expectedQuestionArr).toList());
-        List<Question> actualQuestionList = csvQuestionDao.findAll();
+        testFileNameProvider = mock(TestFileNameProvider.class);
+        Mockito.when(testFileNameProvider.getTestFileName()).thenReturn("test-questions.csv");
+
+        Loader loader = new ResourceLoader();
+        Parser parser = new ParserCsv();
+        QuestionExtractor questionExtractor = new QuestionExtractorCsvFromResource(testFileNameProvider, loader, parser);
+
+        List<Question> actualQuestionList = questionExtractor.loadData();
 
         assertArrayEquals(expectedQuestionArr, actualQuestionList.toArray());
     }
