@@ -12,6 +12,7 @@
 
     <modules>
         <module>hw01-spring-xml-config</module>
+        <module>hw02-spring-annotation-config</module>
     </modules>
 
     <properties>
