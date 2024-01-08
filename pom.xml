@@ -3,12 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.1</version>
-        <relativePath/> <!-- lookup parent from repository -->
-    </parent>
+
     <groupId>ru.otus</groupId>
     <artifactId>2023-11-otus-spring-leshin</artifactId>
     <version>1.0</version>
@@ -19,15 +14,22 @@
         <module>hw01-spring-xml-config</module>
         <module>hw02-spring-annotation-config</module>
         <module>hw03-spring-boot</module>
+        <module>hw05-spring-jdbc</module>
     </modules>
 
     <properties>
         <java.version>17</java.version>
+        <java.version>17</java.version>
+        <spring-boot-starter-data-jdbc.version>3.2.1</spring-boot-starter-data-jdbc.version>
+        <spring-boot-starter-test.version>3.2.1</spring-boot-starter-test.version>
+        <spring-boot-maven-plugin.version>3.2.1</spring-boot-maven-plugin.version>
+        <h2.version>2.2.220</h2.version>
+        <spring.shell.version>3.2.0</spring.shell.version>
+        <snakeyaml.version>2.0</snakeyaml.version>
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.source>17</maven.compiler.source>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.version>6.1.1</spring.version>
-
         <opencsv.version>5.8</opencsv.version>
         <junit.version>5.10.1</junit.version>
         <mockito.version>5.8.0</mockito.version>
@@ -46,6 +48,39 @@
 
     <dependencyManagement>
         <dependencies>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-jdbc</artifactId>
+                <version>${spring-boot-starter-data-jdbc.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.shell</groupId>
+                <artifactId>spring-shell-starter</artifactId>
+                <version>${spring.shell.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <scope>runtime</scope>
+                <version>${h2.version}</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>org.yaml</groupId>
+                <artifactId>snakeyaml</artifactId>
+                <version>${snakeyaml.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <scope>test</scope>
+                <version>${spring-boot-starter-test.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.springframework</groupId>
@@ -106,7 +141,6 @@
     <build>
         <pluginManagement>
             <plugins>
-
                 <plugin>
                     <artifactId>maven-enforcer-plugin</artifactId>
                     <version>${maven-enforcer-plugin.version}</version>
@@ -126,6 +160,12 @@
                             </configuration>
                         </execution>
                     </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring-boot-maven-plugin.version}</version>
                 </plugin>
 
                 <plugin>
