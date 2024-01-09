@@ -13,6 +13,7 @@
     <modules>
         <module>hw01-spring-xml-config</module>
         <module>hw02-spring-annotation-config</module>
+        <module>hw03-spring-boot</module>
     </modules>
 
     <properties>
@@ -20,6 +21,9 @@
         <maven.compiler.source>17</maven.compiler.source>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.version>6.1.1</spring.version>
+        <spring-boot-starter-parent.version>3.2.1</spring-boot-starter-parent.version>
+        <spring-boot-starter.version>3.2.1</spring-boot-starter.version>
+        <spring-boot-starter-test.version>3.2.1</spring-boot-starter-test.version>
         <opencsv.version>5.8</opencsv.version>
         <junit.version>5.10.1</junit.version>
         <mockito.version>5.8.0</mockito.version>
@@ -38,6 +42,25 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-parent</artifactId>
+                <version>${spring-boot-starter-parent.version}</version>
+                <type>pom</type>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter</artifactId>
+                <version>${spring-boot-starter.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <version>${spring-boot-starter-test.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-context</artifactId>
