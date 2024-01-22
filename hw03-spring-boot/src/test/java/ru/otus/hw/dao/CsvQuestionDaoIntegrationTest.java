@@ -1,4 +1,4 @@
-package ru.otus.hw.dao.extractor;
+package ru.otus.hw.dao;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -21,9 +21,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.mockito.Mockito.mock;
 
-@DisplayName("The integration test QuestionExtractorCsvFromResource should ")
+@DisplayName("The integration test CsvQuestionDao should ")
 @ExtendWith(MockitoExtension.class)
-public class QuestionExtractorCsvFromResourceIntegrationTest {
+public class CsvQuestionDaoIntegrationTest {
 
     @Mock
     private TestFileNameProvider testFileNameProvider;
@@ -42,9 +42,9 @@ public class QuestionExtractorCsvFromResourceIntegrationTest {
 
         Loader loader = new ResourceLoader();
         Parser parser = new ParserCsv();
-        QuestionExtractor questionExtractor = new QuestionExtractorCsvFromResource(testFileNameProvider, loader, parser);
+        CsvQuestionDao csvQuestionDao = new CsvQuestionDao(testFileNameProvider, loader, parser);
 
-        List<Question> actualQuestionList = questionExtractor.loadData();
+        List<Question> actualQuestionList = csvQuestionDao.findAll();
 
         assertArrayEquals(expectedQuestionArr, actualQuestionList.toArray());
     }

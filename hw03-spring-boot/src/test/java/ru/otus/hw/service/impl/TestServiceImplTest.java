@@ -1,4 +1,4 @@
-package ru.otus.hw.service;
+package ru.otus.hw.service.impl;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,6 +12,8 @@ import ru.otus.hw.domain.Answer;
 import ru.otus.hw.domain.Question;
 import ru.otus.hw.domain.Student;
 import ru.otus.hw.domain.TestResult;
+import ru.otus.hw.service.LocalizedIOService;
+import ru.otus.hw.service.impl.StreamsIOService;
 import ru.otus.hw.service.impl.TestServiceImpl;
 
 import java.util.ArrayList;
@@ -30,7 +32,7 @@ public class TestServiceImplTest {
     private QuestionDao questionDao;
 
     @Mock
-    IOService ioService;
+    LocalizedIOService localizedIOService;
 
     @Test
     @DisplayName("get correct TestResult. current method: executeTestFor(Student student)")
@@ -40,11 +42,11 @@ public class TestServiceImplTest {
         List<Question> questionList = getQuestionsList();
 
         Mockito.when(questionDao.findAll()).thenReturn(questionList);
-        Mockito.when(ioService.readIntForRangeWithPrompt(1, 3, "Enter your answer number:",
-                        "Your answer number is outside the range of available answers, try again:"))
+        Mockito.when(localizedIOService.readIntForRangeWithPromptLocalized(1, 3, "TestService.student.answer.number.enter",
+                        "TestService.student.answer.number.error"))
                 .thenReturn(2);
-        Mockito.when(ioService.readIntForRangeWithPrompt(1, 2, "Enter your answer number:",
-                        "Your answer number is outside the range of available answers, try again:"))
+        Mockito.when(localizedIOService.readIntForRangeWithPromptLocalized(1, 2, "TestService.student.answer.number.enter",
+                        "TestService.student.answer.number.error"))
                 .thenReturn(2);
 
         Student student = new Student("testFirstName", "TestLastName");

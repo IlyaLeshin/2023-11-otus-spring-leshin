@@ -1,0 +1,12 @@
+${AnsiBackground.RED}
+(\
+\'\     ${spring.application.name}
+ \'\   ()===========)
+ / '|    \ ~~~~~~~~ \
+ \ '/     \ ~~~~~~~~ \
+   \       \ ~~~~~~   \
+  (==)      \          \
+  (__)      ()===========)
+${AnsiBackground.DEFAULT}
+
+Powered by Spring Boot ${spring-boot.version}

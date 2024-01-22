@@ -7,8 +7,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.otus.hw.dao.extractor.QuestionExtractorCsvFromResource;
+import ru.otus.hw.config.TestFileNameProvider;
 
+import ru.otus.hw.dao.loader.Loader;
+import ru.otus.hw.dao.parser.Parser;
 import ru.otus.hw.domain.Answer;
 import ru.otus.hw.domain.Question;
 
@@ -26,14 +28,22 @@ public class CsvQuestionDaoTest {
     private CsvQuestionDao csvQuestionDao;
 
     @Mock
-    private QuestionExtractorCsvFromResource questionExtractorCsvFromResource;
+    private TestFileNameProvider testFileNameProvider;
+
+    @Mock
+    private Loader loader;
+
+    @Mock
+    private Parser parser;
+
 
     @Test
     @DisplayName("find all questions and answers from resource. current method: findAll()")
     void findAllTest() {
         Question[] expectedQuestionArr = getQuestionsArr();
 
-        Mockito.when(questionExtractorCsvFromResource.loadData()).thenReturn(Arrays.stream(expectedQuestionArr).toList());
+        Mockito.when(parser.parse(loader.loadData(testFileNameProvider.getTestFileName()))).thenReturn(Arrays.stream(expectedQuestionArr).toList());
+
         List<Question> actualQuestionList = csvQuestionDao.findAll();
 
         assertArrayEquals(expectedQuestionArr, actualQuestionList.toArray());

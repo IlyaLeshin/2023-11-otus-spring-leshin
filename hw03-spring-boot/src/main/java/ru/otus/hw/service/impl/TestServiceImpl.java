@@ -7,21 +7,22 @@ import ru.otus.hw.domain.Question;
 import ru.otus.hw.domain.Student;
 import ru.otus.hw.domain.TestResult;
 import ru.otus.hw.exceptions.QuestionNotFondException;
-import ru.otus.hw.service.IOService;
+import ru.otus.hw.service.LocalizedIOService;
 import ru.otus.hw.service.TestService;
 
 @Service
 @RequiredArgsConstructor
 public class TestServiceImpl implements TestService {
 
-    private final IOService ioService;
+    private final LocalizedIOService localizedIOService;
 
     private final QuestionDao questionDao;
 
     @Override
     public TestResult executeTestFor(Student student) {
-        ioService.printLine("");
-        ioService.printFormattedLine("Please answer the questions below%n");
+        localizedIOService.printLine("");
+        localizedIOService.printLineLocalized("TestService.answer.the.questions");
+        localizedIOService.printLine("");
         var questions = questionDao.findAll();
         var testResult = new TestResult(student);
 
@@ -37,7 +38,7 @@ public class TestServiceImpl implements TestService {
 
     private void printCurrentQuestion(Question question) {
         try {
-            ioService.printLine("\n" + question.text());
+            localizedIOService.printLine("\n" + question.text());
         } catch (NullPointerException e) {
             throw new QuestionNotFondException("question not found", e);
         }
@@ -49,11 +50,11 @@ public class TestServiceImpl implements TestService {
 
             if (answersToTheCurrentQuestion != null) {
                 for (int i = 0; i < answersToTheCurrentQuestion.size(); i++) {
-                    ioService.printFormattedLine("Answer #%s: %s",
+                    localizedIOService.printFormattedLineLocalized("TestService.answer.number.and.text",
                             i + 1, answersToTheCurrentQuestion.get(i).text());
                 }
             } else {
-                ioService.printLine("No answers for the current question");
+                localizedIOService.printLineLocalized("TestService.answer.not.found");
             }
         } catch (NullPointerException e) {
             throw new QuestionNotFondException("question not found", e);
@@ -64,10 +65,10 @@ public class TestServiceImpl implements TestService {
         try {
             var minNumberOfAvailableAnswers = 1;
             var maxNumberOfAvailableAnswers = question.answers().size();
-            int studentAnswerNumber = ioService.readIntForRangeWithPrompt(minNumberOfAvailableAnswers,
+            int studentAnswerNumber = localizedIOService.readIntForRangeWithPromptLocalized(minNumberOfAvailableAnswers,
                     maxNumberOfAvailableAnswers,
-                    "Enter your answer number:",
-                    "Your answer number is outside the range of available answers, try again:");
+                    "TestService.student.answer.number.enter",
+                    "TestService.student.answer.number.error");
 
             return question.answers().get(studentAnswerNumber - 1).isCorrect();
         } catch (NullPointerException e) {

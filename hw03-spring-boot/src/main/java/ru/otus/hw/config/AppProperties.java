@@ -1,28 +1,32 @@
 package ru.otus.hw.config;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@Component
-public class AppProperties implements TestConfig, TestFileNameProvider {
+import java.util.Locale;
+import java.util.Map;
 
-    private final int rightAnswersCountToPass;
+@Setter
+@ConfigurationProperties(prefix = "application")
+// Сейчас класс соответствует файлу настроек. Чтобы они сюда отобразились нужно только правильно разместить аннотации
+public class AppProperties implements TestConfig, TestFileNameProvider, LocaleConfig {
 
-    private final String testFileName;
+    @Getter
+    private int rightAnswersCountToPass;
 
-    public AppProperties(@Value("${test.rightAnswersCountToPass}") int rightAnswersCountToPass,
-                         @Value("${test.fileName}") String testFileName) {
-        this.rightAnswersCountToPass = rightAnswersCountToPass;
-        this.testFileName = testFileName;
-    }
+    @Getter
+    private Locale locale;
 
-    @Override
-    public int getRightAnswersCountToPass() {
-        return rightAnswersCountToPass;
+    private Map<String, String> fileNameByLocaleTag;
+
+
+    public void setLocale(String locale) {
+        this.locale = Locale.forLanguageTag(locale);
     }
 
     @Override
     public String getTestFileName() {
-        return testFileName;
+        return fileNameByLocaleTag.get(locale.toLanguageTag());
     }
 }
