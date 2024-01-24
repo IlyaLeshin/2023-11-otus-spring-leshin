@@ -1,4 +1,4 @@
-${AnsiBackground.RED}
+${AnsiBackground.YELLOW}
 (\
 \'\     ${spring.application.name}
  \'\   ()===========)
