@@ -1,0 +1,6 @@
+# Добавить сюда своих вопросов. Эту строку надо пропустить при настройке CsvToBean (withSkipLines);
+Is there life on Mars?;Science doesn't know this yet%true|Certainly. The red UFO is from Mars. And green is from Venus%false|Absolutely not%false
+How should resources be loaded form jar in Java?;ClassLoader#getResourceAsStream or ClassPathResource#getInputStream%true|ClassLoader#getResource#getFile + FileReader%false|Wingardium Leviosa%false
+Which option is a good way to handle the exception?;@SneakyThrow%false|e.printStackTrace()%false|Rethrow with wrapping in business exception (for example, QuestionReadException)%true|Ignoring exception%false
+What is the real name(not a pseudonym) of the person after whom the Fibonacci numbers are named?;Leonardus Pisanus%true|Leonardo Bonacci%false|Leonardo Fibonacci%false|
+Why was Pluto downgraded to a dwarf planet in 2006?;The International Astronomical Union (IAU) developed an official definition of the term planet%true|Pluto was destroyed by an asteroid%false|Due to excessive drilling by Plutonian corporations, Pluto shrunk and led Earth's astronomers to reclassify it as a dwarf planet rather than a planet%false
