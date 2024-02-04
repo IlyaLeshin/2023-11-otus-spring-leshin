@@ -1,12 +1,10 @@
 package ru.otus.hw.dao;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.otus.hw.config.TestFileNameProvider;
 import ru.otus.hw.dao.loader.Loader;
 import ru.otus.hw.dao.loader.ResourceLoader;
@@ -19,32 +17,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @DisplayName("The integration test CsvQuestionDao should ")
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest(classes = {CsvQuestionDao.class, ResourceLoader.class, ParserCsv.class})
 public class CsvQuestionDaoIntegrationTest {
+    @Autowired
+    private QuestionDao questionDao;
 
-    @Mock
+    @MockBean
     private TestFileNameProvider testFileNameProvider;
 
-    @BeforeEach
-    void setUp() {
-        testFileNameProvider = mock(TestFileNameProvider.class);
-    }
+    @Autowired
+    private Loader loader;
+
+    @Autowired
+    private Parser parser;
 
     @Test
     @DisplayName("load and parse questions and answers from resource. current method: loadData()")
-    void loadData() {
+    void loadDataTest() {
         Question[] expectedQuestionArr = getQuestionsArr();
-
-        Mockito.when(testFileNameProvider.getTestFileName()).thenReturn("test-questions.csv");
-
-        Loader loader = new ResourceLoader();
-        Parser parser = new ParserCsv();
-        CsvQuestionDao csvQuestionDao = new CsvQuestionDao(testFileNameProvider, loader, parser);
-
-        List<Question> actualQuestionList = csvQuestionDao.findAll();
+        when(testFileNameProvider.getTestFileName()).thenReturn("test-questions_en_US.csv");
+        List<Question> actualQuestionList = questionDao.findAll();
 
         assertArrayEquals(expectedQuestionArr, actualQuestionList.toArray());
     }

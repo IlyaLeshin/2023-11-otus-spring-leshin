@@ -2,13 +2,10 @@ package ru.otus.hw.dao;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.otus.hw.config.TestFileNameProvider;
-
 import ru.otus.hw.dao.loader.Loader;
 import ru.otus.hw.dao.parser.Parser;
 import ru.otus.hw.domain.Answer;
@@ -19,32 +16,31 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.mockito.Mockito.when;
 
 @DisplayName("The test CsvQuestionDao should ")
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest(classes = CsvQuestionDao.class)
 public class CsvQuestionDaoTest {
 
-    @InjectMocks
-    private CsvQuestionDao csvQuestionDao;
+    @Autowired
+    private QuestionDao questionDao;
 
-    @Mock
+    @MockBean
     private TestFileNameProvider testFileNameProvider;
 
-    @Mock
+    @MockBean
     private Loader loader;
 
-    @Mock
+    @MockBean
     private Parser parser;
-
 
     @Test
     @DisplayName("find all questions and answers from resource. current method: findAll()")
     void findAllTest() {
         Question[] expectedQuestionArr = getQuestionsArr();
-
-        Mockito.when(parser.parse(loader.loadData(testFileNameProvider.getTestFileName()))).thenReturn(Arrays.stream(expectedQuestionArr).toList());
-
-        List<Question> actualQuestionList = csvQuestionDao.findAll();
+        when(parser.parse(loader.loadData(testFileNameProvider.getTestFileName())))
+                .thenReturn(Arrays.stream(expectedQuestionArr).toList());
+        List<Question> actualQuestionList = questionDao.findAll();
 
         assertArrayEquals(expectedQuestionArr, actualQuestionList.toArray());
     }

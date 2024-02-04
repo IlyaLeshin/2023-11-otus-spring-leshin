@@ -2,37 +2,34 @@ package ru.otus.hw.service.impl;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.context.MessageSource;
-import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
+import org.springframework.boot.autoconfigure.context.MessageSourceAutoConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.otus.hw.config.LocaleConfig;
 
 import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
 @DisplayName("The test LocalizedMessagesServiceImpl should ")
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest(classes = {LocalizedMessagesServiceImpl.class})
+@ImportAutoConfiguration(MessageSourceAutoConfiguration.class)
 class LocalizedMessagesServiceImplTest {
 
-    private final MessageSource messageSource = messageSource();
-
-    @InjectMocks
+    @Autowired
     private LocalizedMessagesServiceImpl localizedMessagesService;
 
-    @Mock
+    @MockBean
     private LocaleConfig localeConfig;
 
     @Test
     @DisplayName("Correct getting a message with the en-EN locale. current method: getMessage(String code, Object ...args)")
     void getMessage_en_US() {
-        Mockito.when(localeConfig.getLocale()).thenReturn(Locale.forLanguageTag("en-US"));
-        localizedMessagesService = new LocalizedMessagesServiceImpl(localeConfig, messageSource);
-        String actualLocalizedMessage = localizedMessagesService.getMessage("TestService.answer.the.questions", messageSource, localeConfig.getLocale());
+        when(localeConfig.getLocale()).thenReturn(Locale.forLanguageTag("en-US"));
+        String actualLocalizedMessage = localizedMessagesService.getMessage("TestService.answer.the.questions");
 
         assertEquals("Please answer the questions below", actualLocalizedMessage);
     }
@@ -40,16 +37,9 @@ class LocalizedMessagesServiceImplTest {
     @Test
     @DisplayName("Correct getting a message with the ru-RU locale. current method: getMessage(String code, Object ...args)")
     void getMessage_ru_RU() {
-        Mockito.when(localeConfig.getLocale()).thenReturn(Locale.forLanguageTag("ru-RU"));
-        localizedMessagesService = new LocalizedMessagesServiceImpl(localeConfig, messageSource);
+        when(localeConfig.getLocale()).thenReturn(Locale.forLanguageTag("ru-RU"));
         String localizedMessage = localizedMessagesService.getMessage("TestService.answer.the.questions");
 
         assertEquals("Пожалуйста, ответьте на вопросы ниже", localizedMessage);
-    }
-
-    private MessageSource messageSource() {
-        ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-        messageSource.setBasename("classpath:messages");
-        return messageSource;
     }
 }

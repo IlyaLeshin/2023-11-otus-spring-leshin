@@ -2,24 +2,22 @@ package ru.otus.hw.service.impl;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.otus.hw.domain.Student;
 import ru.otus.hw.service.LocalizedIOService;
-import ru.otus.hw.service.impl.StudentServiceImpl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
 @DisplayName("The test StudentServiceImpl should ")
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest(classes = StudentServiceImpl.class)
 public class StudentServiceImplTest {
 
-    @InjectMocks
+    @Autowired
     private StudentServiceImpl studentService;
-    @Mock
+    @MockBean
     private LocalizedIOService localizedIOService;
 
     @Test
@@ -27,8 +25,10 @@ public class StudentServiceImplTest {
     void determineCurrentStudentTest() {
         Student expectedStudent = new Student("testFirstName", "testLastName");
 
-        Mockito.when(localizedIOService.readStringWithPromptLocalized("StudentService.input.first.name")).thenReturn("testFirstName");
-        Mockito.when(localizedIOService.readStringWithPromptLocalized("StudentService.input.last.name")).thenReturn("testLastName");
+        when(localizedIOService.readStringWithPromptLocalized("StudentService.input.first.name"))
+                .thenReturn("testFirstName");
+        when(localizedIOService.readStringWithPromptLocalized("StudentService.input.last.name"))
+                .thenReturn("testLastName");
 
         Student actual = studentService.determineCurrentStudent();
 

@@ -1,4 +1,7 @@
 spring:
+  shell:
+    interactive:
+      enabled: false
   messages:
     baseName: messages
     encoding: UTF-8
@@ -12,4 +15,4 @@ application:
   locale: ru-RU
   fileNameByLocaleTag:
     ru-RU: test-questions_ru_RU.csv
-    en-US: test-questions.csv
+    en-US: test-questions_en_US.csv

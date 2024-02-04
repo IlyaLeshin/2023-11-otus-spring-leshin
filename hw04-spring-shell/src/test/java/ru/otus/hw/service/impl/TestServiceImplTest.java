@@ -2,36 +2,34 @@ package ru.otus.hw.service.impl;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.otus.hw.dao.QuestionDao;
 import ru.otus.hw.domain.Answer;
 import ru.otus.hw.domain.Question;
 import ru.otus.hw.domain.Student;
 import ru.otus.hw.domain.TestResult;
 import ru.otus.hw.service.LocalizedIOService;
-import ru.otus.hw.service.impl.StreamsIOService;
-import ru.otus.hw.service.impl.TestServiceImpl;
+import ru.otus.hw.service.TestService;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
 @DisplayName("The test TestServiceImpl should ")
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest(classes = {TestServiceImpl.class})
 public class TestServiceImplTest {
 
-    @InjectMocks
-    private TestServiceImpl testService;
+    @Autowired
+    private TestService testService;
 
-    @Mock
+    @MockBean
     private QuestionDao questionDao;
 
-    @Mock
+    @MockBean
     LocalizedIOService localizedIOService;
 
     @Test
@@ -41,12 +39,12 @@ public class TestServiceImplTest {
 
         List<Question> questionList = getQuestionsList();
 
-        Mockito.when(questionDao.findAll()).thenReturn(questionList);
-        Mockito.when(localizedIOService.readIntForRangeWithPromptLocalized(1, 3, "TestService.student.answer.number.enter",
-                        "TestService.student.answer.number.error"))
+        when(questionDao.findAll()).thenReturn(questionList);
+        when(localizedIOService.readIntForRangeWithPromptLocalized(1, 3, "TestService.student.answer.number.enter",
+                "TestService.student.answer.number.error"))
                 .thenReturn(2);
-        Mockito.when(localizedIOService.readIntForRangeWithPromptLocalized(1, 2, "TestService.student.answer.number.enter",
-                        "TestService.student.answer.number.error"))
+        when(localizedIOService.readIntForRangeWithPromptLocalized(1, 2, "TestService.student.answer.number.enter",
+                "TestService.student.answer.number.error"))
                 .thenReturn(2);
 
         Student student = new Student("testFirstName", "TestLastName");
