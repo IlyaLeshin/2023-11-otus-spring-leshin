@@ -22,9 +22,9 @@ public class ApplicationCommands {
 
     private Login userName;
 
-    @ShellMethod(value = "Log in", key = {"l", "log"})
-    @ShellMethodAvailability(value = "isLogAvailable")
-    public String logIn() {
+    @ShellMethod(value = "Sign in", key = {"si", "li", "login"})
+    @ShellMethodAvailability(value = "isLoginAvailable")
+    public String signIn() {
         userName = identificationService.identify();
         return localizedIOService.getMessage("Shell.identification.pass");
     }
@@ -36,9 +36,9 @@ public class ApplicationCommands {
         return localizedIOService.getMessage("Shell.test.application.finish");
     }
 
-    @ShellMethod(value = "Log out", key = {"lo", "logout"})
+    @ShellMethod(value = "Sign out", key = {"so", "lo", "logout"})
     @ShellMethodAvailability(value = "isTestRunAvailable")
-    public String logOut() {
+    public String signOut() {
         userName = null;
         return localizedIOService.getMessage("Shell.identification.reset");
     }
@@ -49,7 +49,7 @@ public class ApplicationCommands {
                 : Availability.available();
     }
 
-    private Availability isLogAvailable() {
+    private Availability isLoginAvailable() {
         return userName != null
                 ? Availability.unavailable(localizedIOService.getMessage("Shell.identification.start.fail"))
                 : Availability.available();
