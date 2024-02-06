@@ -19,6 +19,7 @@
         <module>hw01-spring-xml-config</module>
         <module>hw02-spring-annotation-config</module>
         <module>hw03-spring-boot</module>
+        <module>hw04-spring-shell</module>
     </modules>
 
     <properties>
@@ -27,7 +28,7 @@
         <maven.compiler.source>17</maven.compiler.source>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.version>6.1.1</spring.version>
-
+        <spring.shell.version>3.2.0</spring.shell.version>
         <opencsv.version>5.8</opencsv.version>
         <junit.version>5.10.1</junit.version>
         <mockito.version>5.8.0</mockito.version>
@@ -36,7 +37,6 @@
         <lombok.version>1.18.30</lombok.version>
         <minimal.maven.version>3.3.9</minimal.maven.version>
         <maven-enforcer-plugin.version>3.4.1</maven-enforcer-plugin.version>
-        <maven-shade-plugin.version>3.2.2</maven-shade-plugin.version>
         <checkstyle-plugin.version>3.2.2</checkstyle-plugin.version>
         <checkstyle.version>10.11.0</checkstyle.version>
         <checkstyle.config.url>
@@ -46,6 +46,12 @@
 
     <dependencyManagement>
         <dependencies>
+
+            <dependency>
+                <groupId>org.springframework.shell</groupId>
+                <artifactId>spring-shell-starter</artifactId>
+                <version>${spring.shell.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.springframework</groupId>
@@ -128,11 +134,6 @@
                     </executions>
                 </plugin>
 
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-shade-plugin</artifactId>
-                    <version>${maven-shade-plugin.version}</version>
-                </plugin>
             </plugins>
         </pluginManagement>
     </build>
