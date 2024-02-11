@@ -18,6 +18,6 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public List<AuthorDto> findAll() {
-        return authorRepository.findAll().stream().map(authorConverter::authorToAuthorDto).toList();
+        return authorRepository.findAll().stream().map(authorConverter::modelToDto).toList();
     }
 }

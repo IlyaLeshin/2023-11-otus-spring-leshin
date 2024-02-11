@@ -1,17 +1,19 @@
 package ru.otus.hw.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 public class BookDto {
     private Long id;
 
@@ -19,5 +21,5 @@ public class BookDto {
 
     private AuthorDto authorDto;
 
-    private Set<GenreDto> genreDtoList = new HashSet<>();
+    private List<GenreDto> genreDtoList = new ArrayList<>();
 }

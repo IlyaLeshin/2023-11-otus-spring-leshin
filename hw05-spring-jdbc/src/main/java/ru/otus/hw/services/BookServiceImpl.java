@@ -31,12 +31,12 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Optional<BookDto> findById(long id) {
-        return bookRepository.findById(id).map(bookConverter::bookToBookDto);
+        return bookRepository.findById(id).map(bookConverter::modelToDto);
     }
 
     @Override
     public List<BookDto> findAll() {
-        return bookRepository.findAll().stream().map(bookConverter::bookToBookDto).toList();
+        return bookRepository.findAll().stream().map(bookConverter::modelToDto).toList();
     }
 
     @Override
@@ -67,6 +67,6 @@ public class BookServiceImpl implements BookService {
         }
 
         var book = new Book(id, title, author, genres);
-        return bookConverter.bookToBookDto(bookRepository.save(book));
+        return bookConverter.modelToDto(bookRepository.save(book));
     }
 }

@@ -21,14 +21,14 @@ public class BookCommands {
     @ShellMethod(value = "Find all books", key = "ab")
     public String findAllBooks() {
         return bookService.findAll().stream()
-                .map(bookConverter::bookToString)
+                .map(bookConverter::dtoToString)
                 .collect(Collectors.joining("," + System.lineSeparator()));
     }
 
     @ShellMethod(value = "Find book by id", key = "bbid")
     public String findBookById(long id) {
         return bookService.findById(id)
-                .map(bookConverter::bookToString)
+                .map(bookConverter::dtoToString)
                 .orElse("Book with id %d not found".formatted(id));
     }
 
@@ -36,14 +36,14 @@ public class BookCommands {
     @ShellMethod(value = "Insert book", key = "bins")
     public String insertBook(String title, long authorId, Set<Long> genresIds) {
         var savedBook = bookService.insert(title, authorId, genresIds);
-        return bookConverter.bookToString(savedBook);
+        return bookConverter.dtoToString(savedBook);
     }
 
     // bupd 4 editedBook 3 2,5
     @ShellMethod(value = "Update book", key = "bupd")
     public String updateBook(long id, String title, long authorId, Set<Long> genresIds) {
         var savedBook = bookService.update(id, title, authorId, genresIds);
-        return bookConverter.bookToString(savedBook);
+        return bookConverter.dtoToString(savedBook);
     }
 
     // bdel 4

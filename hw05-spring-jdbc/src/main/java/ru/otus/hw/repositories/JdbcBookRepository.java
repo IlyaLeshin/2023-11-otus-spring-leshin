@@ -40,13 +40,10 @@ public class JdbcBookRepository implements BookRepository {
                         where books.id = :id
                         """, Map.of("id", id), new BookResultSetExtractor());
         if (books != null) {
-            if (books.size() == 1) {
-                return books.stream().findFirst();
-            } else if (books.isEmpty()) {
-                return Optional.empty();
-            } else {
-                throw new DuplicateBookIdException("Books has duplicated id %s".formatted(id));
+            if (books.size() <= 1) {
+                return books.isEmpty() ? Optional.empty() : books.stream().findFirst();
             }
+            throw new DuplicateBookIdException("Books has duplicated id %s".formatted(id));
         }
         return Optional.empty();
 

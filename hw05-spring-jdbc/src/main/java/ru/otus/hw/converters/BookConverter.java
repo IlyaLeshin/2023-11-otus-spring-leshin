@@ -14,33 +14,33 @@ public class BookConverter {
 
     private final GenreConverter genreConverter;
 
-    public String bookToString(BookDto book) {
+    public String dtoToString(BookDto book) {
         var genresString = book.getGenreDtoList().stream()
-                .map(genreConverter::genreToString)
+                .map(genreConverter::dtoToString)
                 .map("{%s}"::formatted)
                 .collect(Collectors.joining(", "));
         return "Id: %d, title: %s, author: {%s}, genres: [%s]".formatted(
                 book.getId(),
                 book.getTitle(),
-                authorConverter.authorToString(book.getAuthorDto()),
+                authorConverter.dtoToString(book.getAuthorDto()),
                 genresString);
     }
 
-    public Book bookDtoToBook(BookDto bookDto) {
+    public Book dtoToModel(BookDto bookDto) {
         return new Book(bookDto.getId(),
                 bookDto.getTitle(),
-                authorConverter.authorDtoToAuthor(bookDto.getAuthorDto()),
-                bookDto.getGenreDtoList().stream().map(genreConverter::genreDtotoGenre).toList());
+                authorConverter.dtoToModel(bookDto.getAuthorDto()),
+                bookDto.getGenreDtoList().stream().map(genreConverter::dtoToModel).toList());
     }
 
-    public BookDto bookToBookDto(Book book) {
+    public BookDto modelToDto(Book book) {
 
         BookDto bookDto = new BookDto();
         bookDto.setId(book.getId());
         bookDto.setTitle(book.getTitle());
-        bookDto.setAuthorDto(authorConverter.authorToAuthorDto(book.getAuthor()));
+        bookDto.setAuthorDto(authorConverter.modelToDto(book.getAuthor()));
         bookDto.setGenreDtoList(book.getGenres().stream()
-                .map(genreConverter::genreToGenreDto).collect(Collectors.toSet()));
+                .map(genreConverter::modelToDto).toList());
         return bookDto;
     }
 }
