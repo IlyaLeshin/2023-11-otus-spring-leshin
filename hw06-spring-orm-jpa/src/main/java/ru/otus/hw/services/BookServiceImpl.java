@@ -2,15 +2,20 @@ package ru.otus.hw.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.converters.BookConverter;
 import ru.otus.hw.dto.BookDto;
+import ru.otus.hw.dto.CommentDto;
 import ru.otus.hw.exceptions.AuthorNotFoundException;
+import ru.otus.hw.exceptions.BookNotFoundException;
 import ru.otus.hw.exceptions.GenreNotFoundException;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.repositories.AuthorRepository;
 import ru.otus.hw.repositories.BookRepository;
+import ru.otus.hw.repositories.CommentRepository;
 import ru.otus.hw.repositories.GenreRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -35,21 +40,28 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<BookDto> findAll() {
         return bookRepository.findAll().stream().map(bookConverter::modelToDto).toList();
     }
 
     @Override
+    @Transactional
     public BookDto insert(String title, long authorId, Set<Long> genresIds) {
         return save(0, title, authorId, genresIds);
     }
 
     @Override
+    @Transactional
     public BookDto update(long id, String title, long authorId, Set<Long> genresIds) {
-        return save(id, title, authorId, genresIds);
+        if (findById(id).isPresent()) {
+            return save(id, title, authorId, genresIds);
+        }
+        throw new BookNotFoundException("Book with id %d not found".formatted(id));
     }
 
     @Override
+    @Transactional
     public void deleteById(long id) {
         bookRepository.deleteById(id);
     }

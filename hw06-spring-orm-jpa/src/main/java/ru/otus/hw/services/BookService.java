@@ -9,6 +9,8 @@ import java.util.Set;
 public interface BookService {
     Optional<BookDto> findById(long id);
 
+/*    Optional<BookWithCommentsDto> findWithCommentsById(long id);*/
+
     List<BookDto> findAll();
 
     BookDto insert(String title, long authorId, Set<Long> genresIds);

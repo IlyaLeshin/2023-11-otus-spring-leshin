@@ -10,10 +10,6 @@ public class GenreConverter {
         return "Id: %d, Name: %s".formatted(genre.getId(), genre.getName());
     }
 
-    public Genre dtoToModel(GenreDto genreDto) {
-        return new Genre(genreDto.getId(), genreDto.getName());
-    }
-
     public GenreDto modelToDto(Genre genre) {
         GenreDto genreDto = new GenreDto();
         genreDto.setId(genre.getId());

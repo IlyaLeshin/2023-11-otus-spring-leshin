@@ -26,13 +26,6 @@ public class BookConverter {
                 genresString);
     }
 
-    public Book dtoToModel(BookDto bookDto) {
-        return new Book(bookDto.getId(),
-                bookDto.getTitle(),
-                authorConverter.dtoToModel(bookDto.getAuthorDto()),
-                bookDto.getGenreDtoList().stream().map(genreConverter::dtoToModel).toList());
-    }
-
     public BookDto modelToDto(Book book) {
 
         BookDto bookDto = new BookDto();
