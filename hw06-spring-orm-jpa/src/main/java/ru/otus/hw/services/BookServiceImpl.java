@@ -4,18 +4,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.converters.BookConverter;
+import ru.otus.hw.converters.BookWithCommentsConverter;
 import ru.otus.hw.dto.BookDto;
-import ru.otus.hw.dto.CommentDto;
+import ru.otus.hw.dto.BookWithCommentsDto;
 import ru.otus.hw.exceptions.AuthorNotFoundException;
 import ru.otus.hw.exceptions.BookNotFoundException;
 import ru.otus.hw.exceptions.GenreNotFoundException;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.repositories.AuthorRepository;
 import ru.otus.hw.repositories.BookRepository;
-import ru.otus.hw.repositories.CommentRepository;
 import ru.otus.hw.repositories.GenreRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -34,9 +33,17 @@ public class BookServiceImpl implements BookService {
 
     private final BookConverter bookConverter;
 
+    private final BookWithCommentsConverter bookWithCommentsConverter;
+
+
     @Override
     public Optional<BookDto> findById(long id) {
         return bookRepository.findById(id).map(bookConverter::modelToDto);
+    }
+
+    @Override
+    public Optional<BookWithCommentsDto> findWithCommentsById(long id) {
+        return bookRepository.findWithCommentsById(id).map(bookWithCommentsConverter::modelToDto);
     }
 
     @Override
