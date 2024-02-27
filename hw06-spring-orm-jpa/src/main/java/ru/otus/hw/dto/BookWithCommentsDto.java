@@ -1,8 +1,11 @@
 package ru.otus.hw.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -17,7 +20,7 @@ public class BookWithCommentsDto {
 
     private AuthorDto authorDto;
 
-    private List<GenreDto> genreDtoList = new ArrayList<>();
+    private List<GenreDto> genreDtoList;
 
-    private List<CommentDto> commentDtoList = new ArrayList<>();
+    private List<CommentDto> commentDtoList;
 }

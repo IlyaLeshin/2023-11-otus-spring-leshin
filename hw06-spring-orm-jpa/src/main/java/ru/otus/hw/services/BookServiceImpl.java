@@ -35,13 +35,14 @@ public class BookServiceImpl implements BookService {
 
     private final BookWithCommentsConverter bookWithCommentsConverter;
 
-
     @Override
+    @Transactional(readOnly = true)
     public Optional<BookDto> findById(long id) {
         return bookRepository.findById(id).map(bookConverter::modelToDto);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<BookWithCommentsDto> findWithCommentsById(long id) {
         return bookRepository.findWithCommentsById(id).map(bookWithCommentsConverter::modelToDto);
     }
