@@ -16,3 +16,8 @@ key (book_id, genre_id)
 values (1, 1),   (1, 2),
        (2, 3),   (2, 4),
        (3, 5),   (3, 6);
+
+merge into comments(text, book_id)
+key(text, book_id)
+values ('Comment_1', 1), ('Comment_2', 1), ('Comment_3', 1),
+       ('Comment_4', 2), ('Comment_5', 2), ('Comment_6', 2);

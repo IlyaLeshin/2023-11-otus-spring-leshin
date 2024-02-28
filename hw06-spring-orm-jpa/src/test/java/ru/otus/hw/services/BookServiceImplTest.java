@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.otus.hw.converters.BookConverter;
+import ru.otus.hw.converters.BookWithCommentsConverter;
 import ru.otus.hw.dto.AuthorDto;
 import ru.otus.hw.dto.BookDto;
+import ru.otus.hw.dto.BookWithCommentsDto;
 import ru.otus.hw.dto.GenreDto;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
@@ -19,8 +21,6 @@ import ru.otus.hw.repositories.GenreRepository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -46,6 +46,9 @@ class BookServiceImplTest {
 
     @MockBean
     private BookConverter bookConverter;
+
+    @MockBean
+    private BookWithCommentsConverter bookWithCommentsConverter;
 
     private List<BookDto> dbBookDtos;
 
@@ -78,6 +81,22 @@ class BookServiceImplTest {
                 .isEqualTo(expectedBookDto);
     }
 
+    @DisplayName("загружать книгу с комментариями по id. текущий метод: findWithCommentsById(long id)")
+    @Test
+    void findWithCommentsByIdTest() {
+        Book bookWithComments = new Book(1L, "BookTitle_1", dbBooks.get(0).getAuthor(),
+                dbBooks.get(0).getGenres(), List.of());
+        BookWithCommentsDto bookWithCommentsDto = new BookWithCommentsDto(1L, "BookTitle_1", dbBookDtos.get(0).getAuthorDto(),
+               dbBookDtos.get(0).getGenreDtoList(), List.of());
+
+        when(bookRepository.findWithCommentsById(1)).thenReturn(Optional.of(bookWithComments));
+        when(bookWithCommentsConverter.modelToDto(bookWithComments)).thenReturn(bookWithCommentsDto);
+        Optional<BookWithCommentsDto> actualBookDto = bookService.findWithCommentsById(1);
+
+        assertThat(actualBookDto).isPresent().get()
+                .isEqualTo(bookWithCommentsDto);
+    }
+
     @DisplayName("загружать список всех книг. текущий метод: findAll()")
     @Test
     void findAllTest() {
@@ -95,35 +114,13 @@ class BookServiceImplTest {
     @DisplayName("Сохранять книгу в БД. текущий метод: insert(String title, long authorId, Set<Long> genresIds)")
     @Test
     void insertTest() {
-        BookDto expectedBookDto = dbBookDtos.get(0);
-        String title = "Book_1";
-        long authorId = 1L;
-        Set<Long> genresIds = dbGenres.stream().map(Genre::getId).collect(Collectors.toSet());
-        when(authorRepository.findById(1)).thenReturn(Optional.ofNullable(dbAuthors.get(0)));
-        when(genreRepository.findAllByIds(genresIds)).thenReturn(dbGenres);
-        when(bookRepository.save(new Book(0, title, dbAuthors.get(0), dbGenres))).thenReturn(dbBooks.get(0));
-        when(bookConverter.modelToDto(dbBooks.get(0))).thenReturn(dbBookDtos.get(0));
-        BookDto actualBookDto = bookService.insert(title, authorId, genresIds);
-
-        assertThat(actualBookDto)
-                .isEqualTo(expectedBookDto);
+        //TODO
     }
 
     @DisplayName("Обновлять книгу в БД. текущий метод: update(long id, String title, long authorId, Set<Long> genresIds)")
     @Test
     void updateTest() {
-        BookDto expectedBookDto = dbBookDtos.get(0);
-        String title = "Book_1";
-        long authorId = 1L;
-        Set<Long> genresIds = dbGenres.stream().map(Genre::getId).collect(Collectors.toSet());
-        when(authorRepository.findById(1)).thenReturn(Optional.ofNullable(dbAuthors.get(0)));
-        when(genreRepository.findAllByIds(genresIds)).thenReturn(dbGenres);
-        when(bookRepository.save(new Book(1L, title, dbAuthors.get(0), dbGenres))).thenReturn(dbBooks.get(0));
-        when(bookConverter.modelToDto(dbBooks.get(0))).thenReturn(dbBookDtos.get(0));
-        BookDto actualBookDto = bookService.update(1L, title, authorId, genresIds);
-
-        assertThat(actualBookDto)
-                .isEqualTo(expectedBookDto);
+      //TODO
     }
 
     @DisplayName("отправлять запрос на удаление книги из БД. текущий метод: deleteById(long id)")

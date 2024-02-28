@@ -7,14 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.otus.hw.converters.BookConverter;
+import ru.otus.hw.converters.BookWithCommentsConverter;
 import ru.otus.hw.dto.AuthorDto;
 import ru.otus.hw.dto.BookDto;
+import ru.otus.hw.dto.BookWithCommentsDto;
 import ru.otus.hw.dto.GenreDto;
 import ru.otus.hw.services.AuthorService;
 import ru.otus.hw.services.BookService;
 import ru.otus.hw.services.GenreService;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -43,6 +44,9 @@ public class BookCommandsTest {
 
     @MockBean
     private BookConverter bookConverter;
+
+    @MockBean
+    private BookWithCommentsConverter bookWithCommentsConverter;
 
     private List<BookDto> dbBookDtos;
 
@@ -76,7 +80,18 @@ public class BookCommandsTest {
         String actualBook = bookCommands.findBookById(2L);
 
         assertThat(actualBook).isEqualTo(expectedBook);
+    }
 
+    @DisplayName("выводить в консоль найденную книгу по id. текущий метод findBookById(long id)")
+    @Test
+    void findBookWithCommentsByIdTest() {
+        var dbBookWithCommentsDtos = getDbBookWithCommentsDtos(getDbAuthorDtos(), getDbGenreDtos());
+        String expectedBook = "Id: 2, title: BookTitle_2";
+        when(bookService.findWithCommentsById(2L)).thenReturn(Optional.ofNullable(dbBookWithCommentsDtos.get(1)));
+        when(bookWithCommentsConverter.dtoToString(dbBookWithCommentsDtos.get(1))).thenReturn("Id: 2, title: BookTitle_2");
+        String actualBook = bookCommands.findBookWithCommentsById(2L);
+
+        assertThat(actualBook).isEqualTo(expectedBook);
     }
 
     @DisplayName("выводить в консоль сохраненную книгу. текущий метод insertBook(String title, long authorId, Set<Long> genresIds)")
@@ -98,7 +113,8 @@ public class BookCommandsTest {
     void updateBookTest() {
         String expectedBook = "Id: 3, title: BookTitle_3";
         Set<Long> genresIds = new HashSet<>();
-        BookDto bookDto = new BookDto(3L, "BookTitle_1", new AuthorDto(1, "Author_1"), new ArrayList<>());
+        BookDto bookDto = new BookDto(3L, "BookTitle_1", new AuthorDto(1, "Author_1"),
+                List.of());
         when(bookService.update(3L, "BookTitle_3", 3, genresIds)).thenReturn(bookDto);
         when(bookConverter.dtoToString(bookDto)).thenReturn("Id: 3, title: BookTitle_3");
         String actualBook = bookCommands.updateBook(3L, "BookTitle_3", 3, genresIds);
@@ -132,6 +148,16 @@ public class BookCommandsTest {
                         "BookTitle_" + id,
                         dbAuthorDtos.get(id - 1),
                         dbGenreDtos.subList((id - 1) * 2, (id - 1) * 2 + 2)
+                ))
+                .toList();
+    }
+
+    private static List<BookWithCommentsDto> getDbBookWithCommentsDtos(List<AuthorDto> dbAuthorDtos, List<GenreDto> dbGenreDtos) {
+        return IntStream.range(1, 4).boxed()
+                .map(id -> new BookWithCommentsDto((long) id,
+                        "BookTitle_" + id,
+                        dbAuthorDtos.get(id - 1),
+                        dbGenreDtos.subList((id - 1) * 2, (id - 1) * 2 + 2), List.of()
                 ))
                 .toList();
     }

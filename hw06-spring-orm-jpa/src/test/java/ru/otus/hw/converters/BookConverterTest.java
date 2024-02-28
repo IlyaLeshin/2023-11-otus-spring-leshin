@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.otus.hw.dto.AuthorDto;
 import ru.otus.hw.dto.BookDto;
 import ru.otus.hw.dto.GenreDto;
@@ -16,56 +17,64 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 @DisplayName("Конвертер для работы с книгами должен")
-@SpringBootTest(classes = {BookConverter.class, AuthorConverter.class, GenreConverter.class})
+@SpringBootTest(classes = {BookConverter.class})
 public class BookConverterTest {
     @Autowired
     private BookConverter bookConverter;
 
-    @Autowired
+    @MockBean
     private AuthorConverter authorConverter;
 
-    @Autowired
+    @MockBean
     private GenreConverter genreConverter;
+private  Author author;
 
+    private List<Genre> genres;
     private Book book;
+    private AuthorDto authorDto;
+
+    private List<GenreDto> genreDtos;
     private BookDto bookDto;
 
     @BeforeEach
     void setUp() {
-        Author author = getAuthor();
-        List<Genre> genres = getGenres();
+        author = getAuthor();
+        genres = getGenres();
         book = getBook(author, genres);
-        AuthorDto authorDto = getAuthorDto();
-        List<GenreDto> genreDtos = getGenreDtos();
+        authorDto = getAuthorDto();
+        genreDtos = getGenreDtos();
         bookDto = getBookDto(authorDto, genreDtos);
     }
 
-    @DisplayName("корректно преобразовывать DTO в строку. текущий метод bookToString(BookDto book)")
+    @DisplayName("корректно преобразовывать DTO в строку. текущий метод modelToString(BookDto book)")
     @Test
-    void bookToStringTest() {
-        String expectedBook="Id: 1, title: BookTitle_1," +
+    void modelToStringTest() {
+        String expectedBook = "Id: 1, title: BookTitle_1," +
                 " author: {Id: 1, FullName: Author_1}," +
                 " genres: [{Id: 1, Name: Genre_1}, {Id: 2, Name: Genre_2}]";
+        when(authorConverter.dtoToString(authorDto)).thenReturn("Id: 1, FullName: Author_1");
+        for (int i = 0; i < genreDtos.size(); i++) {
+            when(genreConverter.dtoToString(genreDtos.get(i)))
+                    .thenReturn("Id: %s, Name: Genre_%s".formatted(i + 1, i + 1));
+        }
+
         String actualBook = bookConverter.dtoToString(bookDto);
 
         assertThat(actualBook).isEqualTo(expectedBook);
     }
 
-    @DisplayName("корректно преобразовывать DTO в модель. текущий метод bookDtoToBook(BookDto bookDto)")
+    @DisplayName("корректно преобразовывать модель в DTO. текущий метод modelToDto(Book book)")
     @Test
-    void bookDtoToBook() {
-        Book expectedBook = book;
-        Book actualBook = bookConverter.dtoToModel(bookDto);
-
-        assertThat(actualBook).isEqualTo(expectedBook);
-    }
-
-    @DisplayName("корректно преобразовывать модель в DTO. текущий метод bookToBookDto(Book book)")
-    @Test
-    void bookToBookDtoTest() {
+    void modelToDtoTest() {
         BookDto expectedBookDto = bookDto;
+        when(authorConverter.modelToDto(author)).thenReturn(authorDto);
+        for (int i = 0; i < genres.size(); i++) {
+            when(genreConverter.modelToDto(genres.get(i)))
+                    .thenReturn(genreDtos.get(i));
+        }
         BookDto actualBookDto = bookConverter.modelToDto(book);
 
         assertThat(actualBookDto).isEqualTo(expectedBookDto);
