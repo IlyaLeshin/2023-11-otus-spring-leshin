@@ -97,7 +97,7 @@ class JpaBookRepositoryTest {
                 .isEqualTo(expectedBook);
 
         assertThat(actualBook)
-                .matches(book -> book.getId() == 4)
+                .matches(book -> book.getId() == newBook.getId())
                 .matches(book -> book.getTitle().equals("BookTitle_4"))
                 .matches(book -> !book.getGenres().isEmpty() && book.getGenres().get(0).getId() == FIRST_GENRE_ID)
                 .matches(book -> book.getAuthor() != null && book.getAuthor().getId() == FIRST_AUTHOR_ID);
