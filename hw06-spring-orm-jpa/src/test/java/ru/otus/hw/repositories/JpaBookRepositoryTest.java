@@ -37,6 +37,7 @@ class JpaBookRepositoryTest {
     void shouldReturnCorrectBookById() {
         var optionalActualBook = jpaBookRepository.findById(FIRST_BOOK_ID);
         var expectedBook = testEntityManager.find(Book.class, FIRST_BOOK_ID);
+
         assertThat(optionalActualBook).isPresent().get()
                 .isEqualTo(expectedBook);
     }
@@ -46,6 +47,7 @@ class JpaBookRepositoryTest {
     void shouldReturnCorrectBookWithCommentsById() {
         var optionalActualBook = jpaBookRepository.findWithCommentsById(FIRST_BOOK_ID);
         var expectedBook = testEntityManager.find(Book.class, FIRST_BOOK_ID);
+
         assertThat(optionalActualBook).isPresent().get()
                 .isEqualTo(expectedBook);
     }
@@ -68,6 +70,7 @@ class JpaBookRepositoryTest {
         var genre = testEntityManager.find(Genre.class, FIRST_GENRE_ID);
         var expectedBook = new Book(0, "saved_Book", author, List.of(genre));
         var returnedBook = jpaBookRepository.save(expectedBook);
+
         assertThat(returnedBook).isNotNull()
                 .matches(book -> book.getId() > 0);
 
@@ -87,6 +90,7 @@ class JpaBookRepositoryTest {
         newBook.setAuthor(testAuthor);
 
         var expectedBook = jpaBookRepository.save(newBook);
+
         assertThat(expectedBook).isNotNull();
         assertThat(expectedBook.getId()).isGreaterThan(0);
 
@@ -107,8 +111,11 @@ class JpaBookRepositoryTest {
     @Test
     void shouldDeleteBook() {
         var book = jpaBookRepository.findById(FIRST_BOOK_ID);
+
         assertThat(book).isPresent();
+
         jpaBookRepository.deleteById(book.get().getId());
+
         assertThat(jpaBookRepository.findById(FIRST_BOOK_ID)).isEmpty();
     }
 }

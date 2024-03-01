@@ -49,6 +49,4 @@ class JpaAuthorRepositoryTest {
                 .allMatch(author -> !author.getFullName().isEmpty())
                 .containsOnlyOnce(testEntityManager.find(Author.class, FIRST_AUTHOR_ID));
     }
-
-
 }

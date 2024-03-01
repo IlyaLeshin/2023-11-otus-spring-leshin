@@ -23,8 +23,6 @@ public class CommentConverterTest {
     @Autowired
     private CommentConverter commentConverter;
 
-    private Book book;
-
     private Comment comment;
 
     private CommentDto commentDto;
@@ -34,17 +32,17 @@ public class CommentConverterTest {
     void setUp() {
         Author author = getAuthor();
         List<Genre> genres = getGenres();
-        book = getBook(author, genres);
+        Book book = getBook(author, genres);
         comment = getComment(book);
 
         commentDto = getCommentDto();
-            }
+    }
 
     @DisplayName("корректно преобразовывать DTO в строку. текущий метод dtoToString(CommentDto commentDto)")
     @Test
     void dtoToStringTest() {
         String expectedComment = "Id: 1, Text: Comment_1";
-              String actualComment = commentConverter.dtoToString(commentDto);
+        String actualComment = commentConverter.dtoToString(commentDto);
 
         assertThat(actualComment).isEqualTo(expectedComment);
     }
@@ -76,6 +74,6 @@ public class CommentConverterTest {
     }
 
     private static CommentDto getCommentDto() {
-        return new CommentDto(1L, "Comment_1");
+        return new CommentDto(1L, "Comment_1", 1L);
     }
 }

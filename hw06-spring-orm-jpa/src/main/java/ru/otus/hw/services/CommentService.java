@@ -11,9 +11,9 @@ public interface CommentService {
 
     List<CommentDto> findAllByBookId(long bookId);
 
-    CommentDto create(String content, long bookId);
+    CommentDto create(String commentText, long bookId);
 
-    CommentDto update(long id, String content, long bookId);
+    CommentDto update(long id, String commentText, long bookId);
 
     void deleteById(long id);
 }

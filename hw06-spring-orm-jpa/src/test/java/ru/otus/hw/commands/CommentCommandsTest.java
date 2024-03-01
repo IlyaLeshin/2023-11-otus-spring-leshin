@@ -41,16 +41,8 @@ class CommentCommandsTest {
 
     @MockBean
     private CommentConverter commentConverter;
-    private List<BookDto> dbCommentDtos;
-
-    private Book book;
-
-    private Comment comment;
 
     List<Comment> comments;
-    private BookDto bookDto;
-
-    private CommentDto commentDto;
 
     List<CommentDto> commentDtos;
 
@@ -58,12 +50,9 @@ class CommentCommandsTest {
     void setUp() {
         Author author = getAuthor();
         List<Genre> genres = getGenres();
-        book = getBook(author, genres);
+        Book book = getBook(author, genres);
         comments = getComments(book);
 
-        AuthorDto authorDto = getAuthorDto();
-        List<GenreDto> genreDtos = getGenreDtos();
-        bookDto = getBookDto(authorDto, genreDtos);
         commentDtos = getCommentDtos();
     }
 
@@ -156,6 +145,6 @@ class CommentCommandsTest {
     }
 
     private static List<CommentDto> getCommentDtos() {
-        return IntStream.range(1, 3).boxed().map(id -> new CommentDto(id, "Comment_" + id)).toList();
+        return IntStream.range(1, 3).boxed().map(id -> new CommentDto(id, "Comment_" + id, FIRST_BOOK_ID)).toList();
     }
 }

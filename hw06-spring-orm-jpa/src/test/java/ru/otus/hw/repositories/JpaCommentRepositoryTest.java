@@ -21,8 +21,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 class JpaCommentRepositoryTest {
 
     private static final int EXPECTED_NUMBER_OF_COMMENTS = 3;
+
     private static final long FIRST_BOOK_ID = 1L;
+
     private static final long FIRST_AUTHOR_ID = 1L;
+
     private static final long FIRST_GENRE_ID = 1L;
 
     private static final long FIRST_COMMENT_ID = 1L;
@@ -41,6 +44,7 @@ class JpaCommentRepositoryTest {
     void shouldReturnCorrectCommentById() {
         var optionalActualComment = jpaCommentRepository.findById(FIRST_COMMENT_ID);
         var expectedComment = testEntityManager.find(Comment.class, FIRST_COMMENT_ID);
+
         assertThat(optionalActualComment).isPresent().get()
                 .isEqualTo(expectedComment);
     }
@@ -63,6 +67,7 @@ class JpaCommentRepositoryTest {
         var book = new Book(FIRST_BOOK_ID, "Book", author, List.of(genre));
         var expectedComment = new Comment(0, "saved_Comment", book);
         var returnedComment = jpaCommentRepository.save(expectedComment);
+
         assertThat(returnedComment).isNotNull()
                 .matches(comment -> comment.getId() > 0);
 
@@ -81,6 +86,7 @@ class JpaCommentRepositoryTest {
         var newComment = new Comment(FORTH_COMMENT_ID,"updated_Comment",book);
 
         var expectedComment = jpaCommentRepository.save(newComment);
+
         assertThat(expectedComment).isNotNull();
         assertThat(expectedComment.getId()).isGreaterThan(0);
 
@@ -100,8 +106,11 @@ class JpaCommentRepositoryTest {
     @Test
     void shouldDeleteBook() {
         var comment = jpaCommentRepository.findById(FIRST_COMMENT_ID);
+
         assertThat(comment).isPresent();
+
         jpaCommentRepository.deleteById(comment.get().getId());
+
         assertThat(jpaCommentRepository.findById(FIRST_COMMENT_ID)).isEmpty();
     }
 }

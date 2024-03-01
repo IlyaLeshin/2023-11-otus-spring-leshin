@@ -33,17 +33,9 @@ public class BookWithCommentsConverterTest {
     @MockBean
     private CommentConverter commentConverter;
 
-    private Book book;
-
-    private List<Comment> comments;
-
     private Book bookWithComments;
 
-    private AuthorDto authorDto;
-
     private List<GenreDto> genreDtos;
-
-    private BookDto bookDto;
 
     private List<CommentDto> commentDtos;
 
@@ -53,10 +45,10 @@ public class BookWithCommentsConverterTest {
     void setUp() {
         Author author = getAuthor();
         List<Genre> genres = getGenres();
-        book = getBook(author, genres);
-        comments = getComments(book);
+        Book book = getBook(author, genres);
+        List<Comment> comments = getComments(book);
         bookWithComments = getBookWithComments(author, genres, comments);
-        authorDto = getAuthorDto();
+        AuthorDto authorDto = getAuthorDto();
         genreDtos = getGenreDtos();
         commentDtos = getCommentDtos();
         bookWithCommentsDto = getBookWithCommentsDto(authorDto, genreDtos, commentDtos);
@@ -130,12 +122,8 @@ public class BookWithCommentsConverterTest {
         return IntStream.range(1, 3).boxed().map(id -> new GenreDto(id, "Genre_" + id)).toList();
     }
 
-    private static BookDto getBookDto(AuthorDto author, List<GenreDto> dbGenreDtos) {
-        return new BookDto(1L, "BookTitle_1", author, dbGenreDtos);
-    }
-
     private static List<CommentDto> getCommentDtos() {
-        return IntStream.range(1, 3).boxed().map(id -> new CommentDto(id, "Comment_" + id)).toList();
+        return IntStream.range(1, 3).boxed().map(id -> new CommentDto(id, "Comment_" + id, 1L)).toList();
     }
 
     private static BookWithCommentsDto getBookWithCommentsDto(AuthorDto author,
