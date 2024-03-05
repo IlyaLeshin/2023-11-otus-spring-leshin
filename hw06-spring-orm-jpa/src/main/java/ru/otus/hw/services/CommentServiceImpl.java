@@ -32,7 +32,9 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional(readOnly = true)
     public List<CommentDto> findAllByBookId(long bookId) {
-        return commentRepository.findAllByBookId(bookId).stream().map(commentConverter::modelToDto).toList();
+        var book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new BookNotFoundException("Book with id %d not found".formatted(bookId)));
+        return book.getComments().stream().map(commentConverter::modelToDto).toList();
     }
 
     @Override

@@ -6,12 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import ru.otus.hw.converters.BookWithCommentsConverter;
 import ru.otus.hw.converters.CommentConverter;
-import ru.otus.hw.dto.AuthorDto;
-import ru.otus.hw.dto.BookDto;
 import ru.otus.hw.dto.CommentDto;
-import ru.otus.hw.dto.GenreDto;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Comment;
@@ -48,9 +44,6 @@ class CommentServiceImplTest {
     @MockBean
     private CommentConverter commentConverter;
 
-    @MockBean
-    private BookWithCommentsConverter bookWithCommentsConverter;
-
     private Book book;
 
     List<Comment> comments;
@@ -82,7 +75,8 @@ class CommentServiceImplTest {
     @Test
     void findAllByBookIdTest() {
         List<CommentDto> expectedCommentList = commentDtos;
-        when(commentRepository.findAllByBookId(FIRST_BOOK_ID)).thenReturn(comments);
+        when(bookRepository.findById(FIRST_BOOK_ID)).thenReturn(Optional.ofNullable(book));
+        book.setComments(comments);
         for (int i = 0; i < comments.size(); i++) {
             when(commentConverter.modelToDto(comments.get(i)))
                     .thenReturn(commentDtos.get(i));
@@ -147,18 +141,6 @@ class CommentServiceImplTest {
 
     private static List<Comment> getComments(Book book) {
         return IntStream.range(1, 3).boxed().map(id -> new Comment(id, "Comment_" + id, book)).toList();
-    }
-
-    private static AuthorDto getAuthorDto() {
-        return new AuthorDto(1, "Author_1");
-    }
-
-    private static List<GenreDto> getGenreDtos() {
-        return IntStream.range(1, 3).boxed().map(id -> new GenreDto(id, "Genre_" + id)).toList();
-    }
-
-    private static BookDto getBookDto(AuthorDto author, List<GenreDto> dbGenreDtos) {
-        return new BookDto(FIRST_BOOK_ID, "BookTitle_1", author, dbGenreDtos);
     }
 
     private static List<CommentDto> getCommentDtos() {

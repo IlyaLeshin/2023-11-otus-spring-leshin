@@ -4,13 +4,13 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 import ru.otus.hw.models.Genre;
 
 import java.util.List;
 import java.util.Set;
 
-@Repository
+@Component
 @RequiredArgsConstructor
 public class JpaGenreRepository implements GenreRepository {
 

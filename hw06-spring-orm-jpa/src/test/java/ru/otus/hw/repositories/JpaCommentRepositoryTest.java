@@ -20,8 +20,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Import({JpaCommentRepository.class})
 class JpaCommentRepositoryTest {
 
-    private static final int EXPECTED_NUMBER_OF_COMMENTS = 3;
-
     private static final long FIRST_BOOK_ID = 1L;
 
     private static final long FIRST_AUTHOR_ID = 1L;
@@ -47,16 +45,6 @@ class JpaCommentRepositoryTest {
 
         assertThat(optionalActualComment).isPresent().get()
                 .isEqualTo(expectedComment);
-    }
-
-    @DisplayName("должен загружать список всех комментариев по id книги")
-    @Test
-    void shouldReturnCorrectCommentListByBookId() {
-        var actualBooks = jpaCommentRepository.findAllByBookId(FIRST_BOOK_ID);
-
-        assertThat(actualBooks).isNotNull().hasSize(EXPECTED_NUMBER_OF_COMMENTS)
-                .allMatch(comment -> !comment.getText().isEmpty())
-                .allMatch(comment -> comment.getBook().getId() == FIRST_BOOK_ID);
     }
 
     @DisplayName("должен сохранять новый комментарий")
