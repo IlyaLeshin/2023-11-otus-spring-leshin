@@ -20,6 +20,7 @@
         <module>hw02-spring-annotation-config</module>
         <module>hw03-spring-boot</module>
         <module>hw04-spring-shell</module>
+        <module>hw05-spring-jdbc</module>
         <module>hw06-spring-orm-jpa</module>
     </modules>
 
@@ -29,7 +30,9 @@
         <maven.compiler.source>17</maven.compiler.source>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.version>6.1.1</spring.version>
+        <h2.version>2.2.220</h2.version>
         <spring.shell.version>3.2.0</spring.shell.version>
+        <snakeyaml.version>2.0</snakeyaml.version>
         <opencsv.version>5.8</opencsv.version>
         <junit.version>5.10.1</junit.version>
         <mockito.version>5.8.0</mockito.version>
@@ -47,6 +50,12 @@
 
     <dependencyManagement>
         <dependencies>
+
+            <dependency>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <version>${h2.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.springframework.shell</groupId>
@@ -133,6 +142,11 @@
                             </configuration>
                         </execution>
                     </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
                 </plugin>
 
             </plugins>
