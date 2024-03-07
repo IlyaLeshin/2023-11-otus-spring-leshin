@@ -3,7 +3,7 @@ package ru.otus.hw.repositories;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 import ru.otus.hw.models.Author;
 
 import java.sql.ResultSet;
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@Repository
+@Component
 @RequiredArgsConstructor
 public class JdbcAuthorRepository implements AuthorRepository {
     private final NamedParameterJdbcOperations namedParameterJdbcOperations;

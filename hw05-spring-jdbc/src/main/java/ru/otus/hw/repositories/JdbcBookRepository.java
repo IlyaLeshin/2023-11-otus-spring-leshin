@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 import ru.otus.hw.exceptions.DuplicateBookIdException;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@Repository
+@Component
 @RequiredArgsConstructor
 public class JdbcBookRepository implements BookRepository {
 
