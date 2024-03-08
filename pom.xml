@@ -44,6 +44,8 @@
         <maven-enforcer-plugin.version>3.4.1</maven-enforcer-plugin.version>
         <checkstyle-plugin.version>3.2.2</checkstyle-plugin.version>
         <checkstyle.version>10.11.0</checkstyle.version>
+        <liquibase.version>4.26.0</liquibase.version>
+        <snakeyaml.version>2.2</snakeyaml.version>
         <checkstyle.config.url>
             https://raw.githubusercontent.com/OtusTeam/Spring/master/checkstyle.xml
         </checkstyle.config.url>
@@ -51,6 +53,17 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-core</artifactId>
+                <version>${liquibase.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.yaml</groupId>
+                <artifactId>snakeyaml</artifactId>
+                <version>${snakeyaml.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>com.h2database</groupId>
