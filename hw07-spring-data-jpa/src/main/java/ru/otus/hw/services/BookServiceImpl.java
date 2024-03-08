@@ -44,7 +44,7 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional(readOnly = true)
     public Optional<BookWithCommentsDto> findWithCommentsById(long id) {
-        return bookRepository.findWithCommentsById(id).map(bookWithCommentsConverter::modelToDto);
+        return bookRepository.findById(id).map(bookWithCommentsConverter::modelToDto);
     }
 
     @Override
@@ -81,7 +81,7 @@ public class BookServiceImpl implements BookService {
 
         var author = authorRepository.findById(authorId)
                 .orElseThrow(() -> new AuthorNotFoundException("Author with id %d not found".formatted(authorId)));
-        var genres = genreRepository.findAllByIds(genresIds);
+        var genres = genreRepository.findAllByIdIn(genresIds);
         if (isEmpty(genres) || genresIds.size() != genres.size()) {
             throw new GenreNotFoundException("One or all genres with ids %s not found".formatted(genresIds));
         }

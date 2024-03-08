@@ -93,7 +93,7 @@ class BookServiceImplTest {
         BookWithCommentsDto bookWithCommentsDto = new BookWithCommentsDto(FIRST_BOOK_ID, "BookTitle_1", dbBookDtos.get(0).getAuthorDto(),
                 dbBookDtos.get(0).getGenreDtoList(), List.of());
 
-        when(bookRepository.findWithCommentsById(FIRST_BOOK_ID)).thenReturn(Optional.of(bookWithComments));
+        when(bookRepository.findById(FIRST_BOOK_ID)).thenReturn(Optional.of(bookWithComments));
         when(bookWithCommentsConverter.modelToDto(bookWithComments)).thenReturn(bookWithCommentsDto);
         Optional<BookWithCommentsDto> actualBookDto = bookService.findWithCommentsById(FIRST_BOOK_ID);
 
@@ -125,7 +125,7 @@ class BookServiceImplTest {
 
         when(bookConverter.modelToDto(bookRepository.save(newBook))).thenReturn(expectedBookDto);
         when(authorRepository.findById(FIRST_AUTHOR_ID)).thenReturn(Optional.ofNullable(dbBooks.get(0).getAuthor()));
-        when(genreRepository.findAllByIds(Set.of(FIRST_GENRE_ID, SECOND_GENRE_ID))).thenReturn(dbBooks.get(0).getGenres());
+        when(genreRepository.findAllByIdIn(Set.of(FIRST_GENRE_ID, SECOND_GENRE_ID))).thenReturn(dbBooks.get(0).getGenres());
         var returnedBookDto = bookService.insert("saved_Book", FIRST_AUTHOR_ID, Set.of(FIRST_GENRE_ID, SECOND_GENRE_ID));
 
         verify(bookRepository).save(newBook);
@@ -145,7 +145,7 @@ class BookServiceImplTest {
         when(bookRepository.findById(FIRST_BOOK_ID)).thenReturn(Optional.ofNullable(bookBeforeUpdate));
         when(bookConverter.modelToDto(Optional.ofNullable(bookBeforeUpdate).get())).thenReturn(dbBookDtos.get(0));
         when(authorRepository.findById(FIRST_AUTHOR_ID)).thenReturn(Optional.ofNullable(dbBooks.get(0).getAuthor()));
-        when(genreRepository.findAllByIds(Set.of(FIRST_GENRE_ID, SECOND_GENRE_ID))).thenReturn(dbBooks.get(0).getGenres());
+        when(genreRepository.findAllByIdIn(Set.of(FIRST_GENRE_ID, SECOND_GENRE_ID))).thenReturn(dbBooks.get(0).getGenres());
         when(bookConverter.modelToDto(bookRepository.save(bookToUpdate))).thenReturn(expectedBookDto);
 
         var returnedBookDto = bookService.update(FIRST_BOOK_ID, "Updated_Book",
