@@ -48,7 +48,6 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<BookDto> findAll() {
         return bookRepository.findAll().stream().map(bookConverter::modelToDto).toList();
     }
@@ -69,7 +68,6 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    @Transactional
     public void deleteById(long id) {
         bookRepository.deleteById(id);
     }
