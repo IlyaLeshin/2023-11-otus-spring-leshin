@@ -11,10 +11,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collation = "authors")
+@Document
 public class Author {
     @Id
-    private long id;
+    private String id;
 
     private String fullName;
 }

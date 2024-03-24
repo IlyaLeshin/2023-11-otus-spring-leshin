@@ -12,10 +12,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = "comments")
+@Document
 public class Comment {
     @Id
-    private long id;
+    private String id;
 
     private String text;
 

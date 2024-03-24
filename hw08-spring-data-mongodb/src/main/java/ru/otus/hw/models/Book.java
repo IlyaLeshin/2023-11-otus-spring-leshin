@@ -14,26 +14,25 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = "books")
+@Document
 public class Book {
     @Id
-    private long id;
+    private String id;
 
     private String title;
 
-    @DBRef
     private Author author;
 
-    @DBRef
     private List<Genre> genres;
 
     @DBRef
     private List<Comment> comments;
 
-    public Book(long id, String title, Author author, List<Genre> genres) {
+    public Book(String id, String title, Author author, List<Genre> genres) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.genres = genres;
+        this.comments = List.of();
     }
 }

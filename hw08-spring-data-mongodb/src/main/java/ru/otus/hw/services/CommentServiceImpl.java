@@ -25,43 +25,46 @@ public class CommentServiceImpl implements CommentService {
     private final CommentConverter commentConverter;
 
     @Override
-    public Optional<CommentDto> findById(long id) {
+    public Optional<CommentDto> findById(String id) {
         return commentRepository.findById(id).map(commentConverter::modelToDto);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<CommentDto> findAllByBookId(long bookId) {
-        var book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new BookNotFoundException("Book with id %d not found".formatted(bookId)));
-        return book.getComments().stream().map(commentConverter::modelToDto).toList();
+    public List<CommentDto> findAllByBookId(String bookId) {
+        if (bookRepository.findById(bookId).isPresent()) {
+            return commentRepository.findAllByBookId(bookId).stream().map(commentConverter::modelToDto).toList();
+        }
+        throw new BookNotFoundException("Book with id %s not found".formatted(bookId));
     }
 
     @Override
     @Transactional
-    public CommentDto create(String text, long bookId) {
-        return save(0, text, bookId);
+    public CommentDto create(String text, String bookId) {
+        return save(null, text, bookId);
     }
 
     @Override
     @Transactional
-    public CommentDto update(long id, String text, long bookId) {
+    public CommentDto update(String id, String text, String bookId) {
         if (findById(id).isPresent()) {
             return save(id, text, bookId);
         }
-        throw new CommentNotFoundException("Comment with id %d to the book with id %d not found".formatted(id, bookId));
+        throw new CommentNotFoundException("Comment with id %s to the book with id %s not found".formatted(id, bookId));
     }
 
     @Override
     @Transactional
-    public void deleteById(long id) {
+    public void deleteById(String id) {
         commentRepository.deleteById(id);
     }
 
-    private CommentDto save(long id, String text, long bookId) {
+    private CommentDto save(String id, String text, String bookId) {
         var book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new BookNotFoundException("Book with id %d not found".formatted(bookId)));
+                .orElseThrow(() -> new BookNotFoundException("Book with id %s not found".formatted(bookId)));
         var comment = new Comment(id, text, book);
+        book.getComments().add(comment);
+        bookRepository.save(book);
         return commentConverter.modelToDto(commentRepository.save(comment));
     }
 }
