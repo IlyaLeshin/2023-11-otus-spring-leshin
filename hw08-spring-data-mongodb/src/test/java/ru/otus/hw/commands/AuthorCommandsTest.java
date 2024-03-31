@@ -19,6 +19,11 @@ import static org.mockito.Mockito.when;
 @DisplayName("Команды для работы с авторами должны")
 @SpringBootTest(classes = AuthorCommands.class)
 public class AuthorCommandsTest {
+    private static final String FIRST_AUTHOR_ID = "a1";
+
+    private static final String SECOND_AUTHOR_ID = "a2";
+
+    private static final String THIRD_AUTHOR_ID = "a3";
 
     @Autowired
     private AuthorCommands authorCommands;
@@ -40,13 +45,13 @@ public class AuthorCommandsTest {
     @Test
     void findAllAuthorsTest() {
         String separator = System.lineSeparator();
-        String expectedAuthors = "Id: 1, FullName: Author_1," + separator +
-                "Id: 2, FullName: Author_2," + separator +
-                "Id: 3, FullName: Author_3";
+        String expectedAuthors = "Id: %s, FullName: Author_1,".formatted(FIRST_AUTHOR_ID) + separator +
+                "Id: %s, FullName: Author_2,".formatted(SECOND_AUTHOR_ID) + separator +
+                "Id: %s, FullName: Author_3".formatted(THIRD_AUTHOR_ID);
         when(authorService.findAll()).thenReturn(dbAuthors);
         for (int i = 0; i < dbAuthors.size(); i++) {
             when(authorConverter.dtoToString(dbAuthors.get(i)))
-                    .thenReturn("Id: %s, FullName: Author_%s".formatted(i + 1, i + 1));
+                    .thenReturn("Id: a%s, FullName: Author_%s".formatted(i + 1, i + 1));
         }
         String actualAuthors = authorCommands.findAllAuthors();
 
@@ -56,7 +61,7 @@ public class AuthorCommandsTest {
 
     private static List<AuthorDto> getDbAuthors() {
         return IntStream.range(1, 4).boxed()
-                .map(id -> new AuthorDto(id, "Author_" + id))
+                .map(id -> new AuthorDto("a" + id, "Author_" + id))
                 .toList();
     }
 }

@@ -21,6 +21,18 @@ import static org.mockito.Mockito.when;
 @DisplayName("Конвертер для работы с книгами и списком комментариев должен")
 @SpringBootTest(classes = {BookWithCommentsConverter.class})
 public class BookWithCommentsConverterTest {
+    private static final String FIRST_AUTHOR_ID = "a1";
+
+    private static final String FIRST_GENRE_ID = "g1";
+
+    private static final String SECOND_GENRE_ID = "g2";
+
+    private static final String FIRST_BOOK_ID = "b1";
+
+    private static final String FIRST_COMMENT_ID = "c1";
+
+    private static final String SECOND_COMMENT_ID = "c2";
+
     @Autowired
     private BookWithCommentsConverter bookWithCommentsConverter;
 
@@ -57,18 +69,21 @@ public class BookWithCommentsConverterTest {
     @DisplayName("корректно преобразовывать DTO в строку. текущий метод dtoToString(BookWithCommentsDto book)")
     @Test
     void dtoToStringTest() {
-        String expectedBook = "Id: 1, title: BookTitle_1," +
-                " author: {Id: 1, FullName: Author_1}," +
-                " genres: [{Id: 1, Name: Genre_1}, {Id: 2, Name: Genre_2}]," +
-                " comments: [{Id: 1, Text: Comment_1}, {Id: 2, Text: Comment_2}]";
-        when(authorConverter.dtoToString(bookWithCommentsDto.getAuthorDto())).thenReturn("Id: 1, FullName: Author_1");
+        String expectedBook = "Id: %s, title: BookTitle_1,".formatted(FIRST_BOOK_ID) +
+                " author: {Id: %s, FullName: Author_1},".formatted(FIRST_AUTHOR_ID) +
+                " genres: [{Id: %s, Name: Genre_1}, {Id: %s, Name: Genre_2}],"
+                        .formatted(FIRST_GENRE_ID,SECOND_GENRE_ID) +
+                " comments: [{Id: %s, Text: Comment_1}, {Id: %s, Text: Comment_2}]"
+                        .formatted(FIRST_COMMENT_ID,SECOND_COMMENT_ID);
+        when(authorConverter.dtoToString(bookWithCommentsDto.getAuthorDto()))
+                .thenReturn("Id: %s, FullName: Author_1".formatted(FIRST_AUTHOR_ID));
         for (int i = 0; i < genreDtos.size(); i++) {
             when(genreConverter.dtoToString(bookWithCommentsDto.getGenreDtoList().get(i)))
-                    .thenReturn("Id: %s, Name: Genre_%s".formatted(i + 1, i + 1));
+                    .thenReturn("Id: g%s, Name: Genre_%s".formatted(i + 1, i + 1));
         }
         for (int i = 0; i < commentDtos.size(); i++) {
             when(commentConverter.dtoToString(bookWithCommentsDto.getCommentDtoList().get(i)))
-                    .thenReturn("Id: %s, Text: Comment_%s".formatted(i + 1, i + 1));
+                    .thenReturn("Id: c%s, Text: Comment_%s".formatted(i + 1, i + 1));
         }
 
         String actualBook = bookWithCommentsConverter.dtoToString(bookWithCommentsDto);
@@ -95,40 +110,41 @@ public class BookWithCommentsConverterTest {
     }
 
     private static Author getAuthor() {
-        return new Author(1, "Author_1");
+        return new Author(FIRST_AUTHOR_ID, "Author_1");
     }
 
     private static List<Genre> getGenres() {
-        return IntStream.range(1, 3).boxed().map(id -> new Genre(id, "Genre_" + id)).toList();
+        return IntStream.range(1, 3).boxed().map(id -> new Genre("g" + id, "Genre_" + id)).toList();
     }
 
     private static Book getBook(Author author, List<Genre> dbGenres) {
-        return new Book(1, "BookTitle_1", author, dbGenres);
+        return new Book(FIRST_BOOK_ID, "BookTitle_1", author, dbGenres);
     }
 
     private static List<Comment> getComments(Book book) {
-        return IntStream.range(1, 3).boxed().map(id -> new Comment(id, "Comment_" + id, book)).toList();
+        return IntStream.range(1, 3).boxed().map(id -> new Comment("c" + id, "Comment_" + id, book)).toList();
     }
 
     private static Book getBookWithComments(Author author, List<Genre> dbGenres, List<Comment> dbComments) {
-        return new Book(1, "BookTitle_1", author, dbGenres, dbComments);
+        return new Book(FIRST_BOOK_ID, "BookTitle_1", author, dbGenres, dbComments);
     }
 
     private static AuthorDto getAuthorDto() {
-        return new AuthorDto(1, "Author_1");
+        return new AuthorDto(FIRST_AUTHOR_ID, "Author_1");
     }
 
     private static List<GenreDto> getGenreDtos() {
-        return IntStream.range(1, 3).boxed().map(id -> new GenreDto(id, "Genre_" + id)).toList();
+        return IntStream.range(1, 3).boxed().map(id -> new GenreDto("g" + id, "Genre_" + id)).toList();
     }
 
     private static List<CommentDto> getCommentDtos() {
-        return IntStream.range(1, 3).boxed().map(id -> new CommentDto(id, "Comment_" + id, 1L)).toList();
+        return IntStream.range(1, 3).boxed().map(id -> new CommentDto("c" + id, "Comment_" + id,
+                FIRST_BOOK_ID)).toList();
     }
 
     private static BookWithCommentsDto getBookWithCommentsDto(AuthorDto author,
                                                               List<GenreDto> dbGenreDtos,
                                                               List<CommentDto> dbCommentsDtos) {
-        return new BookWithCommentsDto(1L, "BookTitle_1", author, dbGenreDtos, dbCommentsDtos);
+        return new BookWithCommentsDto(FIRST_BOOK_ID, "BookTitle_1", author, dbGenreDtos, dbCommentsDtos);
     }
 }

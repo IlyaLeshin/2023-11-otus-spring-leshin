@@ -13,6 +13,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayName("Конвертер для работы с авторами должен")
 @SpringBootTest(classes = AuthorConverter.class)
 public class AuthorConverterTest {
+
+    private static final String FIRST_AUTHOR_ID = "a1";
+
+    private static final String SECOND_AUTHOR_ID = "a2";
+
+    private static final String THIRD_AUTHOR_ID = "a3";
+
     @Autowired
     private AuthorConverter authorConverter;
 
@@ -22,14 +29,14 @@ public class AuthorConverterTest {
 
     @BeforeEach
     void setUp() {
-        author = new Author(1, "Author_1");
-        authorDto = new AuthorDto(1, "Author_1");
+        author = new Author(FIRST_AUTHOR_ID, "Author_1");
+        authorDto = new AuthorDto(FIRST_AUTHOR_ID, "Author_1");
     }
 
     @DisplayName("корректно преобразовывать DTO в строку. текущий метод dtoToString(AuthorDto author)")
     @Test
     void dtoToStringTest() {
-        String expectedAuthor = "Id: 1, FullName: Author_1";
+        String expectedAuthor = "Id: %s, FullName: Author_1".formatted(FIRST_AUTHOR_ID);
         String actualAuthor = authorConverter.dtoToString(authorDto);
 
         assertThat(actualAuthor).isEqualTo(expectedAuthor);

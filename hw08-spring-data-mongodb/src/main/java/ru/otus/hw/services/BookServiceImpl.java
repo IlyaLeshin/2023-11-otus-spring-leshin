@@ -10,11 +10,13 @@ import ru.otus.hw.exceptions.AuthorNotFoundException;
 import ru.otus.hw.exceptions.BookNotFoundException;
 import ru.otus.hw.exceptions.GenreNotFoundException;
 import ru.otus.hw.models.Book;
+import ru.otus.hw.models.Comment;
 import ru.otus.hw.repositories.AuthorRepository;
 import ru.otus.hw.repositories.BookRepository;
 import ru.otus.hw.repositories.CommentRepository;
 import ru.otus.hw.repositories.GenreRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -66,8 +68,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-     public void deleteById(String id) {
-        commentRepository.deleteAllByBookId(id);
+    public void deleteById(String id) {
         bookRepository.deleteById(id);
     }
 
@@ -83,6 +84,14 @@ public class BookServiceImpl implements BookService {
         }
 
         var book = new Book(id, title, author, genres);
+        if (id != null) {
+            updateCommentsReferenceInBook(book);
+        }
         return bookConverter.modelToDto(bookRepository.save(book));
+    }
+
+    private void updateCommentsReferenceInBook(Book book) {
+        var comments = commentRepository.findAllByBookId(book.getId());
+        book.setComments(comments);
     }
 }

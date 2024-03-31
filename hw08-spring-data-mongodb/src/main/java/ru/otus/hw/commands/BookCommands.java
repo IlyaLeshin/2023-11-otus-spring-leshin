@@ -29,7 +29,7 @@ public class BookCommands {
                 .collect(Collectors.joining("," + System.lineSeparator()));
     }
 
-    // bbid 1
+    // bbid b1
     @ShellMethod(value = "Find book by id", key = "bbid")
     public String findBookById(String id) {
         return bookService.findById(id)
@@ -37,7 +37,7 @@ public class BookCommands {
                 .orElse("Book with id %s not found".formatted(id));
     }
 
-    // bbcid 1
+    // bbcid b1
     @ShellMethod(value = "Find book with comments by id", key = "bbcid")
     public String findBookWithCommentsById(String id) {
         return bookService.findWithCommentsById(id)
@@ -45,21 +45,21 @@ public class BookCommands {
                 .orElse("Book with id %s not found".formatted(id));
     }
 
-    // bins newBook 1 1,6
+    // bins newBook a1 g1,g6
     @ShellMethod(value = "Insert book", key = "bins")
     public String insertBook(String title, String authorId, Set<String> genresIds) {
         var savedBook = bookService.insert(title, authorId, genresIds);
         return bookConverter.dtoToString(savedBook);
     }
 
-    // bupd 1 editedBook 65ff4ebad3bc0a781cdef982 65ff4ebad3bc0a781cdef98b,65ff4ebad3bc0a781cdef989
+    // bupd b1 editedBook a2 g5,g4
     @ShellMethod(value = "Update book", key = "bupd")
     public String updateBook(String id, String title, String authorId, Set<String> genresIds) {
         var savedBook = bookService.update(id, title, authorId, genresIds);
         return bookConverter.dtoToString(savedBook);
     }
 
-    // bdel 4
+    // bdel b3
     @ShellMethod(value = "Delete book by id", key = "bdel")
     public void deleteBook(String id) {
         bookService.deleteById(id);

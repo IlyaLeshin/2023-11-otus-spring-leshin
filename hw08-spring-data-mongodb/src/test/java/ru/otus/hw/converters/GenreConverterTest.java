@@ -13,6 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayName("Конвертер для работы с жанрами должен")
 @SpringBootTest(classes = {GenreConverter.class})
 public class GenreConverterTest {
+    private static final String FIRST_GENRE_ID = "g1";
 
     @Autowired
     private GenreConverter genreConverter;
@@ -30,7 +31,7 @@ public class GenreConverterTest {
     @DisplayName("корректно преобразовывать DTO в строку. текущий метод modelToString(GenreDto genre)")
     @Test
     void modelToStringTest() {
-        String expectedGenre = "Id: 1, Name: Genre_1";
+        String expectedGenre = "Id: %s, Name: Genre_1".formatted(FIRST_GENRE_ID);
         String actualGenre = genreConverter.dtoToString(genreDto);
 
         assertThat(actualGenre).isEqualTo(expectedGenre);
@@ -46,10 +47,10 @@ public class GenreConverterTest {
     }
 
     private static Genre getGenre() {
-        return new Genre(1, "Genre_1");
+        return new Genre(FIRST_GENRE_ID, "Genre_1");
     }
 
     private static GenreDto getGenreDto() {
-        return new GenreDto(1, "Genre_1");
+        return new GenreDto(FIRST_GENRE_ID, "Genre_1");
     }
 }

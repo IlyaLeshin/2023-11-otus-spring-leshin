@@ -2,15 +2,16 @@ package ru.otus.hw.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.converters.CommentConverter;
 import ru.otus.hw.dto.CommentDto;
 import ru.otus.hw.exceptions.BookNotFoundException;
 import ru.otus.hw.exceptions.CommentNotFoundException;
+import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Comment;
 import ru.otus.hw.repositories.BookRepository;
 import ru.otus.hw.repositories.CommentRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,7 +31,6 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<CommentDto> findAllByBookId(String bookId) {
         if (bookRepository.findById(bookId).isPresent()) {
             return commentRepository.findAllByBookId(bookId).stream().map(commentConverter::modelToDto).toList();
@@ -39,13 +39,11 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    @Transactional
     public CommentDto create(String text, String bookId) {
         return save(null, text, bookId);
     }
 
     @Override
-    @Transactional
     public CommentDto update(String id, String text, String bookId) {
         if (findById(id).isPresent()) {
             return save(id, text, bookId);
@@ -54,7 +52,6 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    @Transactional
     public void deleteById(String id) {
         commentRepository.deleteById(id);
     }
@@ -62,9 +59,14 @@ public class CommentServiceImpl implements CommentService {
     private CommentDto save(String id, String text, String bookId) {
         var book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new BookNotFoundException("Book with id %s not found".formatted(bookId)));
-        var comment = new Comment(id, text, book);
-        book.getComments().add(comment);
+        var comment = commentRepository.save(new Comment(id, text, book));
+        updateCommentsReferenceInBook(book);
+        return commentConverter.modelToDto(comment);
+    }
+
+    private void updateCommentsReferenceInBook(Book book) {
+        var comments = commentRepository.findAllByBookId(book.getId());
+        book.setComments(comments);
         bookRepository.save(book);
-        return commentConverter.modelToDto(commentRepository.save(comment));
     }
 }

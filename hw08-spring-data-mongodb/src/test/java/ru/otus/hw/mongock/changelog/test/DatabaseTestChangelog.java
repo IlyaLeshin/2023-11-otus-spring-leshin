@@ -1,4 +1,4 @@
-package ru.otus.hw.mongok.changelog.test;
+package ru.otus.hw.mongock.changelog.test;
 
 import com.github.cloudyrock.mongock.ChangeLog;
 import com.github.cloudyrock.mongock.ChangeSet;
@@ -17,13 +17,13 @@ import java.util.List;
 @ChangeLog
 public class DatabaseTestChangelog {
 
-    private List<Author> authorList;
+    private List<Author> authorList = List.of();
 
-    private List<Genre> genreList;
+    private List<Genre> genreList = List.of();
 
-    private List<Book> bookList;
+    private List<Book> bookList = List.of();
 
-    private List<Comment> commentList;
+    private List<Comment> commentList = List.of();
 
     @ChangeSet(order = "001", id = "dropDb", author = "ilyaLeshin", runAlways = true)
     public void dropDb(MongoDatabase db) {
@@ -32,16 +32,19 @@ public class DatabaseTestChangelog {
 
     @ChangeSet(order = "002", id = "insertAuthors", author = "ilyaLeshin")
     public void insertAuthors(AuthorRepository authorRepository) {
-        for (int i = 0; i < 3; i++) {
-            authorList.add(authorRepository.save(new Author("a" + i, "Author_" + i + 1)));
+        var authors = List.of(new Author("a1", "Author_1"),
+                new Author("a2", "Author_2"), new Author("a3", "Author_3"));
+
+        authorList = authorRepository.saveAll(authors);
         }
-    }
 
     @ChangeSet(order = "003", id = "insertGenres", author = "ilyaLeshin")
     public void insertGenres(GenreRepository genreRepository) {
-        for (int i = 0; i < 6; i++) {
-            genreList.add(genreRepository.save(new Genre("g" + i + 1, "Genre_" + i + 1)));
-        }
+        var genres = List.of(new Genre("g1", "Genre_1"), new Genre("g2", "Genre_2"),
+                new Genre("g3", "Genre_3"), new Genre("g4", "Genre_4"),
+                new Genre("g5", "Genre_5"), new Genre("g6", "Genre_6"));
+
+        genreList = genreRepository.saveAll(genres);
     }
 
     @ChangeSet(order = "004", id = "insertBooks", author = "ilyaLeshin")
@@ -75,15 +78,11 @@ public class DatabaseTestChangelog {
                 new Comment("c6", "Comment_6", bookTwo));
 
         commentList = commentRepository.saveAll(comments);
-    }
 
-    @ChangeSet(order = "006", id = "referenceBookComments", author = "ilyaLeshin", runAlways = true)
-    public void referenceBookComments(BookRepository repository) {
-
-        bookList.get(0).setComments(List.of(commentList.get(0), commentList.get(1)));
+        bookList.get(0).setComments(List.of(commentList.get(0), commentList.get(1), commentList.get(2)));
         bookList.get(1).setComments(List.of(commentList.get(3), commentList.get(4), commentList.get(5)));
-
-        repository.save(bookList.get(0));
-        repository.save(bookList.get(1));
+        bookRepository.save(bookList.get(0));
+        bookRepository.save(bookList.get(1));
     }
+
 }

@@ -19,6 +19,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayName("Конвертер для работы с комментариями должен")
 @SpringBootTest(classes = {CommentConverter.class})
 public class CommentConverterTest {
+    private static final String FIRST_AUTHOR_ID = "a1";
+
+    private static final String FIRST_BOOK_ID = "b1";
+
+    private static final String FIRST_COMMENT_ID = "c1";
 
     @Autowired
     private CommentConverter commentConverter;
@@ -41,7 +46,7 @@ public class CommentConverterTest {
     @DisplayName("корректно преобразовывать DTO в строку. текущий метод dtoToString(CommentDto commentDto)")
     @Test
     void dtoToStringTest() {
-        String expectedComment = "Id: 1, Text: Comment_1";
+        String expectedComment = "Id: %s, Text: Comment_1".formatted(FIRST_COMMENT_ID);
         String actualComment = commentConverter.dtoToString(commentDto);
 
         assertThat(actualComment).isEqualTo(expectedComment);
@@ -58,22 +63,22 @@ public class CommentConverterTest {
     }
 
     private static Author getAuthor() {
-        return new Author(1L, "Author_1");
+        return new Author(FIRST_AUTHOR_ID, "Author_1");
     }
 
     private static List<Genre> getGenres() {
-        return IntStream.range(1, 3).boxed().map(id -> new Genre(id, "Genre_" + id)).toList();
+        return IntStream.range(1, 3).boxed().map(id -> new Genre("g" + id, "Genre_" + id)).toList();
     }
 
     private static Book getBook(Author author, List<Genre> dbGenres) {
-        return new Book(1L, "BookTitle_1", author, dbGenres);
+        return new Book(FIRST_BOOK_ID, "BookTitle_1", author, dbGenres);
     }
 
     private static Comment getComment(Book book) {
-        return new Comment(1L, "Comment_1", book);
+        return new Comment(FIRST_COMMENT_ID, "Comment_1", book);
     }
 
     private static CommentDto getCommentDto() {
-        return new CommentDto(1L, "Comment_1", 1L);
+        return new CommentDto(FIRST_COMMENT_ID, "Comment_1", FIRST_BOOK_ID);
     }
 }

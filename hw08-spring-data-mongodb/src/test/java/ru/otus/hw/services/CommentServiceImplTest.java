@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.annotation.DirtiesContext;
 import ru.otus.hw.converters.CommentConverter;
 import ru.otus.hw.dto.CommentDto;
 import ru.otus.hw.models.Author;
@@ -15,6 +16,7 @@ import ru.otus.hw.models.Genre;
 import ru.otus.hw.repositories.BookRepository;
 import ru.otus.hw.repositories.CommentRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
@@ -26,10 +28,11 @@ import static org.mockito.Mockito.when;
 @DisplayName("Сервис для работы с комментариями должен")
 @SpringBootTest(classes = CommentServiceImpl.class)
 class CommentServiceImplTest {
+    private static final String FIRST_AUTHOR_ID = "a1";
 
-    private static final long FIRST_BOOK_ID = 1L;
+    private static final String FIRST_BOOK_ID = "b1";
 
-    private static final long FIRST_COMMENT_ID = 1L;
+    private static final String FIRST_COMMENT_ID = "c1";
 
 
     @Autowired
@@ -40,6 +43,9 @@ class CommentServiceImplTest {
 
     @MockBean
     private BookRepository bookRepository;
+
+    @MockBean
+    private BookService bookService;
 
     @MockBean
     private CommentConverter commentConverter;
@@ -57,6 +63,7 @@ class CommentServiceImplTest {
         book = getBook(author, genres);
         comments = getComments(book);
         commentDtos = getCommentDtos();
+        book.setComments(comments);
     }
 
     @DisplayName("загружать комментарий по id. текущий метод: findById(long id)")
@@ -76,7 +83,7 @@ class CommentServiceImplTest {
     void findAllByBookIdTest() {
         List<CommentDto> expectedCommentList = commentDtos;
         when(bookRepository.findById(FIRST_BOOK_ID)).thenReturn(Optional.ofNullable(book));
-        book.setComments(comments);
+        when(commentRepository.findAllByBookId(FIRST_BOOK_ID)).thenReturn(comments);
         for (int i = 0; i < comments.size(); i++) {
             when(commentConverter.modelToDto(comments.get(i)))
                     .thenReturn(commentDtos.get(i));
@@ -90,15 +97,15 @@ class CommentServiceImplTest {
     @DisplayName("создавать комментарий для книги. текущий метод: create(String text, long bookId)")
     @Test
     void create() {
-        var newComment = new Comment(0, "saved_Comment", book);
+        var newComment = new Comment(null, "saved_Comment", book);
         var expectedCommentDto = new CommentDto(FIRST_COMMENT_ID, "saved_Comment", newComment.getBook().getId());
-
         when(bookRepository.findById(FIRST_BOOK_ID)).thenReturn(Optional.ofNullable(book));
         when(commentConverter.modelToDto(commentRepository.save(newComment))).thenReturn(expectedCommentDto);
 
         CommentDto returnedCommentDto = commentService.create("saved_Comment", book.getId());
 
         verify(commentRepository).save(newComment);
+        verify(bookRepository).save(book);
         assertThat(returnedCommentDto).isEqualTo(expectedCommentDto);
     }
 
@@ -117,6 +124,7 @@ class CommentServiceImplTest {
         CommentDto actualComment = commentService.update(FIRST_COMMENT_ID, "updated_Comment", book.getId());
 
         verify(commentRepository).save(commentToUpdate);
+        verify(bookRepository).save(book);
         assertThat(actualComment).isEqualTo(expectedCommentDto);
     }
 
@@ -128,11 +136,11 @@ class CommentServiceImplTest {
     }
 
     private static Author getAuthor() {
-        return new Author(1, "Author_1");
+        return new Author(FIRST_AUTHOR_ID, "Author_1");
     }
 
     private static List<Genre> getGenres() {
-        return IntStream.range(1, 3).boxed().map(id -> new Genre(id, "Genre_" + id)).toList();
+        return IntStream.range(1, 3).boxed().map(id -> new Genre("g" + id, "Genre_" + id)).toList();
     }
 
     private static Book getBook(Author author, List<Genre> dbGenres) {
@@ -140,10 +148,10 @@ class CommentServiceImplTest {
     }
 
     private static List<Comment> getComments(Book book) {
-        return IntStream.range(1, 3).boxed().map(id -> new Comment(id, "Comment_" + id, book)).toList();
+        return IntStream.range(1, 3).boxed().map(id -> new Comment("c" + id, "Comment_" + id, book)).toList();
     }
 
     private static List<CommentDto> getCommentDtos() {
-        return IntStream.range(1, 3).boxed().map(id -> new CommentDto(id, "Comment_" + id, FIRST_BOOK_ID)).toList();
+        return IntStream.range(1, 3).boxed().map(id -> new CommentDto("c" + id, "Comment_" + id, FIRST_BOOK_ID)).toList();
     }
 }

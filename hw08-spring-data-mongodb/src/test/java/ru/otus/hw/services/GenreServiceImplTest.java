@@ -55,13 +55,13 @@ public class GenreServiceImplTest {
 
     private static List<GenreDto> getDbGenreDtos() {
         return IntStream.range(1, 4).boxed()
-                .map(id -> new GenreDto(id, "Genre_" + id))
+                .map(id -> new GenreDto("g" + id, "Genre_" + id))
                 .toList();
     }
 
     private static List<Genre> getDbGenres() {
         return IntStream.range(1, 4).boxed()
-                .map(id -> new Genre(id, "Genre_" + id))
+                .map(id -> new Genre("g" + id, "Genre_" + id))
                 .toList();
     }
 }

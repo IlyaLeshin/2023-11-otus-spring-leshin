@@ -57,13 +57,13 @@ public class AuthorServiceImplTest {
 
     private static List<AuthorDto> getAuthorDtos() {
         return IntStream.range(1, 4).boxed()
-                .map(id -> new AuthorDto(id, "Author_" + id))
+                .map(id -> new AuthorDto("a" + id, "Author_" + id))
                 .toList();
     }
 
     private static List<Author> getAuthors() {
         return IntStream.range(1, 4).boxed()
-                .map(id -> new Author(id, "Author_" + id))
+                .map(id -> new Author("a" + id, "Author_" + id))
                 .toList();
     }
 }
