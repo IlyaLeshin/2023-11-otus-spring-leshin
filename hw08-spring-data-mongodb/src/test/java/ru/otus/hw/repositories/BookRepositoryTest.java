@@ -3,12 +3,7 @@ package ru.otus.hw.repositories;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.test.annotation.DirtiesContext;
 import ru.otus.hw.models.Author;
@@ -25,9 +20,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 class BookRepositoryTest {
 
     private static final int EXPECTED_NUMBER_OF_BOOKS = 3;
+
     private static final String FIRST_BOOK_ID = "b1";
+
     private static final String SECOND_BOOK_ID = "b2";
+
     private static final String FIRST_AUTHOR_ID = "a1";
+
     private static final String FIRST_GENRE_ID = "g1";
 
     @Autowired

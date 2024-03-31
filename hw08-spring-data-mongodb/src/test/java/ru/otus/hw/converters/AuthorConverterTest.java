@@ -16,11 +16,7 @@ public class AuthorConverterTest {
 
     private static final String FIRST_AUTHOR_ID = "a1";
 
-    private static final String SECOND_AUTHOR_ID = "a2";
-
-    private static final String THIRD_AUTHOR_ID = "a3";
-
-    @Autowired
+      @Autowired
     private AuthorConverter authorConverter;
 
     private Author author;
