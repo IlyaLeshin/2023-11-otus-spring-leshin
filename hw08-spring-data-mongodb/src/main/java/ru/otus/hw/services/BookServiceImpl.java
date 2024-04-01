@@ -67,7 +67,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void deleteById(String id) {
-        bookRepository.deleteById(id);
+        deleteBookAndCascadeDeleteComments(id);
     }
 
     private BookDto save(String id, String title, String authorId, Set<String> genresIds) {
@@ -91,5 +91,11 @@ public class BookServiceImpl implements BookService {
     private void updateCommentsReferenceInBook(Book book) {
         var comments = commentRepository.findAllByBookId(book.getId());
         book.setComments(comments);
+    }
+
+    private void deleteBookAndCascadeDeleteComments(String bookId) {
+        bookRepository.deleteById(bookId);
+        commentRepository.deleteAllByBookId(bookId);
+
     }
 }

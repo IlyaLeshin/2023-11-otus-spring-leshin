@@ -166,6 +166,7 @@ class BookServiceImplTest {
         bookService.deleteById(FIRST_BOOK_ID);
 
         verify(bookRepository).deleteById(FIRST_BOOK_ID);
+        verify(commentRepository).deleteAllByBookId(FIRST_BOOK_ID);
     }
 
     private static List<AuthorDto> getDbAuthorDtos() {
