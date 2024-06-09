@@ -10,7 +10,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>ru.otus</groupId>
-    <artifactId>2023-11-otus-spring-leshin</artifactId>
+    <artifactId>2024-05-otus-spring-leshin</artifactId>
     <version>1.0</version>
 
     <packaging>pom</packaging>
