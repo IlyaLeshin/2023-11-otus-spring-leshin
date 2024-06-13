@@ -13,3 +13,4 @@
 - [x] hw06-spring-orm-jpa (ДЗ №6: Переписать приложение для хранения книг на ORM)
 - [x] hw07-spring-data-jpa (ДЗ №7: Переписать приложение для хранения книг на Spring Data JPA)
 - [x] hw08-spring-data-mongodb (ДЗ №8: Использовать MongoDB и spring-data для хранения информации о книгах)
+- [ ] hw09-spring-mvc (ДЗ №9: CRUD приложение с Web UI и хранением данных в БД)
