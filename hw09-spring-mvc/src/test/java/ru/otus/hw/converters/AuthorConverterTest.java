@@ -16,7 +16,7 @@ public class AuthorConverterTest {
 
     private static final String FIRST_AUTHOR_ID = "a1";
 
-      @Autowired
+    @Autowired
     private AuthorConverter authorConverter;
 
     private Author author;
@@ -27,15 +27,6 @@ public class AuthorConverterTest {
     void setUp() {
         author = new Author(FIRST_AUTHOR_ID, "Author_1");
         authorDto = new AuthorDto(FIRST_AUTHOR_ID, "Author_1");
-    }
-
-    @DisplayName("корректно преобразовывать DTO в строку. текущий метод dtoToString(AuthorDto author)")
-    @Test
-    void dtoToStringTest() {
-        String expectedAuthor = "Id: %s, FullName: Author_1".formatted(FIRST_AUTHOR_ID);
-        String actualAuthor = authorConverter.dtoToString(authorDto);
-
-        assertThat(actualAuthor).isEqualTo(expectedAuthor);
     }
 
     @DisplayName("корректно преобразовывать модель в DTO. текущий метод modelToDto(Author author)")

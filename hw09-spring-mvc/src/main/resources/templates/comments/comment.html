@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Library</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        .comment {
+            border: 1px solid steelblue;
+            width: 300px;
+            border-collapse: collapse;
+        }
+
+        .comment tr td, th {
+            padding: 5px;
+            border: 1px solid steelblue;
+        }
+
+        .comment td:last-child, td:first-child {
+            width: 50px;
+        }
+
+        h3 {
+            background-image: url("../static/listmark.png");
+            background-repeat: no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+
+    </style>
+    <style type="text/css" th:inline="text">
+        [[h3]] {
+            background-image: url([[@{/listmark.png}]]);
+            background-repeat: no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+    </style>
+</head>
+<body>
+<h3 th:text="#{comment-table-header}">Comment:</h3>
+
+<table class="comment">
+    <thead>
+    <tr>
+        <th th:text="#{comment-field-id}">ID</th>
+        <th th:text="#{comment-field-book-id}">Book Id</th>
+        <th th:text="#{comment-field-text}">Text</th>
+        <th th:text="#{comment-table-column-action}">Action</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:object="${comment}">
+        <td th:text="*{id}">0</td>
+        <td th:text="*{bookId}">0</td>
+        <td th:text="*{text}">Text</td>
+
+        <td>
+            <a href="edit.html" th:href="@{/books/__*{bookId}__/comments/__*{id}__/edit}" type="button">
+                <button th:text="#{edit-button-caption}">Edit</button>
+            </a>
+            <form action="#" th:action="@{/books/__*{bookId}__/comments/__*{id}__/delete}" th:method="post">
+                <button class="ordinary-btn" type="submit" th:text="#{delete-button-caption}">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<br/>
+<a href="book-with-comments.html" th:href="@{/books/__${comment.bookId}__}" type="button">
+    <button th:text="#{book-info-button-caption}">Book info</button>
+</a>
+<br/>
+<a href="main.html" th:href="@{/books}">
+    <button th:text="#{return-to-main-page-button-caption}" type="button">Return to books list page</button>
+</a>
+<br/>
+<a href="../index.html" th:href="@{/}" type="button">
+    <button th:text="#{return-to-index-page-button-caption}">Return to index page</button>
+</a>
+</body>
+</html>

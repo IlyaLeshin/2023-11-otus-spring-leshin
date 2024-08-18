@@ -66,31 +66,6 @@ public class BookWithCommentsConverterTest {
         bookWithCommentsDto = getBookWithCommentsDto(authorDto, genreDtos, commentDtos);
     }
 
-    @DisplayName("корректно преобразовывать DTO в строку. текущий метод dtoToString(BookWithCommentsDto book)")
-    @Test
-    void dtoToStringTest() {
-        String expectedBook = "Id: %s, title: BookTitle_1,".formatted(FIRST_BOOK_ID) +
-                " author: {Id: %s, FullName: Author_1},".formatted(FIRST_AUTHOR_ID) +
-                " genres: [{Id: %s, Name: Genre_1}, {Id: %s, Name: Genre_2}],"
-                        .formatted(FIRST_GENRE_ID,SECOND_GENRE_ID) +
-                " comments: [{Id: %s, Text: Comment_1}, {Id: %s, Text: Comment_2}]"
-                        .formatted(FIRST_COMMENT_ID,SECOND_COMMENT_ID);
-        when(authorConverter.dtoToString(bookWithCommentsDto.getAuthorDto()))
-                .thenReturn("Id: %s, FullName: Author_1".formatted(FIRST_AUTHOR_ID));
-        for (int i = 0; i < genreDtos.size(); i++) {
-            when(genreConverter.dtoToString(bookWithCommentsDto.getGenreDtoList().get(i)))
-                    .thenReturn("Id: g%s, Name: Genre_%s".formatted(i + 1, i + 1));
-        }
-        for (int i = 0; i < commentDtos.size(); i++) {
-            when(commentConverter.dtoToString(bookWithCommentsDto.getCommentDtoList().get(i)))
-                    .thenReturn("Id: c%s, Text: Comment_%s".formatted(i + 1, i + 1));
-        }
-
-        String actualBook = bookWithCommentsConverter.dtoToString(bookWithCommentsDto);
-
-        assertThat(actualBook).isEqualTo(expectedBook);
-    }
-
     @DisplayName("корректно преобразовывать модель в DTO. текущий метод modelToDtoTest(Book book)")
     @Test
     void modelToDtoTest() {

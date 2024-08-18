@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.otus.hw.converters.BookConverter;
 import ru.otus.hw.converters.BookWithCommentsConverter;
+import ru.otus.hw.dto.BookCreateDto;
 import ru.otus.hw.dto.BookDto;
+import ru.otus.hw.dto.BookUpdateDto;
 import ru.otus.hw.dto.BookWithCommentsDto;
 import ru.otus.hw.exceptions.AuthorNotFoundException;
 import ru.otus.hw.exceptions.BookNotFoundException;
@@ -16,7 +18,6 @@ import ru.otus.hw.repositories.CommentRepository;
 import ru.otus.hw.repositories.GenreRepository;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import static org.springframework.util.CollectionUtils.isEmpty;
@@ -38,13 +39,15 @@ public class BookServiceImpl implements BookService {
     private final BookWithCommentsConverter bookWithCommentsConverter;
 
     @Override
-    public Optional<BookDto> findById(String id) {
-        return bookRepository.findById(id).map(bookConverter::modelToDto);
+    public BookDto findById(String id) {
+        return bookRepository.findById(id).map(bookConverter::modelToDto).orElseThrow(() ->
+                new BookNotFoundException("Book with id %s not found".formatted(id)));
     }
 
     @Override
-    public Optional<BookWithCommentsDto> findWithCommentsById(String id) {
-        return bookRepository.findById(id).map(bookWithCommentsConverter::modelToDto);
+    public BookWithCommentsDto findWithCommentsById(String id) {
+        return bookRepository.findById(id).map(bookWithCommentsConverter::modelToDto).orElseThrow(() ->
+                new BookNotFoundException("Book with id %s not found".formatted(id)));
     }
 
     @Override
@@ -53,13 +56,22 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public BookDto insert(String title, String authorId, Set<String> genresIds) {
+    public BookDto insert(BookCreateDto bookCreateDto) {
+        String title = bookCreateDto.getTitle();
+        String authorId = bookCreateDto.getAuthorId();
+        Set<String> genresIds = bookCreateDto.getGenreIds();
         return save(null, title, authorId, genresIds);
+
     }
 
     @Override
-    public BookDto update(String id, String title, String authorId, Set<String> genresIds) {
-        if (findById(id).isPresent()) {
+    public BookDto update(BookUpdateDto bookUpdateDto) {
+        String id = bookUpdateDto.getId();
+        if (findById(id) != null) {
+            String title = bookUpdateDto.getTitle();
+            String authorId = bookUpdateDto.getAuthorId();
+            Set<String> genresIds = bookUpdateDto.getGenreIds();
+
             return save(id, title, authorId, genresIds);
         }
         throw new BookNotFoundException("Book with id %s not found".formatted(id));
@@ -96,6 +108,5 @@ public class BookServiceImpl implements BookService {
     private void deleteBookAndCascadeDeleteComments(String bookId) {
         bookRepository.deleteById(bookId);
         commentRepository.deleteAllByBookId(bookId);
-
     }
 }

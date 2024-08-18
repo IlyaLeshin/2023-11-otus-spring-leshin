@@ -9,10 +9,6 @@ import ru.otus.hw.models.Comment;
 @Component
 public class CommentConverter {
 
-    public String dtoToString(CommentDto commentDto) {
-        return "Id: %s, Text: %s".formatted(commentDto.getId(), commentDto.getText());
-    }
-
     public CommentDto modelToDto(Comment comment) {
         CommentDto commentDto = new CommentDto();
         commentDto.setId(comment.getId());

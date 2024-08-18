@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Create book</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+
+        h3 {
+            background-image: url("../static/listmark.png");
+            background-repeat: no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+
+        .errors {
+            color: red;
+        }
+    </style>
+    <style type="text/css" th:inline="text">
+        [[h3]] {
+            background-image: url([[@{/listmark.png}]]);
+            background-repeat: no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+    </style>
+</head>
+<body>
+
+<form id="create-form" action="create.html" th:method="post"
+      th:action="@{/books/{bookId}/comments/create(bookId=${comment.bookId})}"
+      th:object="${comment}">
+    <h3>Create new comment for book:</h3>
+
+    <div class="row">
+        <label for="book-id-input">Book ID:</label>
+        <input id="book-id-input" type="text" name="bookId" readonly="readonly" value="1" th:value="${comment.bookId}"/>
+    </div>
+
+    <div class="row">
+        <label for="comment-text-input">Text:</label>
+        <input required id="comment-text-input" name="text" type="text" value="Text" th:value="${comment.text}"/>
+        <div class="errors" th:if="${#fields.hasErrors('text')}" th:errors="*{text}">
+            Wrong Comment Text error
+        </div>
+    </div>
+
+    <div class="row">
+        <button th:text="#{save-button-caption}" type="submit">Save</button>
+        <a href="book-with-comments.html" th:href="@{/books/__${comment.bookId}__}">
+            <button th:text="#{cancel-button-caption}" type="button">Cancel</button>
+        </a>
+    </div>
+</form>
+
+</body>
+</html>

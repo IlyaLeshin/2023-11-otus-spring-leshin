@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Error page</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+    </style>
+</head>
+<body>
+
+<div th:insert="index"></div>
+<h2>Error:</h2>
+<p th:text="${exception}"></p>
+
+</body>
+</html>

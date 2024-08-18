@@ -4,15 +4,6 @@ spring:
       port: 0
       database: hw09mongoDBTest
 
-  shell:
-    interactive:
-      enabled: false
-    noninteractive:
-      enabled: false
-
-    command:
-      version:
-        enabled: false
 de:
   flapdoodle:
     mongodb:

@@ -57,24 +57,6 @@ public class BookConverterTest {
         bookDto = getBookDto(authorDto, genreDtos);
     }
 
-    @DisplayName("корректно преобразовывать DTO в строку. текущий метод modelToString(BookDto book)")
-    @Test
-    void modelToStringTest() {
-
-        String expectedBook = "Id: %s, title: BookTitle_1,".formatted(FIRST_BOOK_ID) +
-                " author: {Id: %s, FullName: Author_1},".formatted(FIRST_AUTHOR_ID) +
-                " genres: [{Id: %s, Name: Genre_1}, {Id: %s, Name: Genre_2}]".formatted(FIRST_GENRE_ID, SECOND_GENRE_ID);
-        when(authorConverter.dtoToString(authorDto)).thenReturn("Id: %s, FullName: Author_1".formatted(FIRST_AUTHOR_ID));
-        for (int i = 0; i < genreDtos.size(); i++) {
-            when(genreConverter.dtoToString(genreDtos.get(i)))
-                    .thenReturn("Id: g%s, Name: Genre_%s".formatted(i + 1, i + 1));
-        }
-
-        String actualBook = bookConverter.dtoToString(bookDto);
-
-        assertThat(actualBook).isEqualTo(expectedBook);
-    }
-
     @DisplayName("корректно преобразовывать модель в DTO. текущий метод modelToDto(Book book)")
     @Test
     void modelToDtoTest() {

@@ -28,15 +28,6 @@ public class GenreConverterTest {
         genreDto = getGenreDto();
     }
 
-    @DisplayName("корректно преобразовывать DTO в строку. текущий метод modelToString(GenreDto genre)")
-    @Test
-    void modelToStringTest() {
-        String expectedGenre = "Id: %s, Name: Genre_1".formatted(FIRST_GENRE_ID);
-        String actualGenre = genreConverter.dtoToString(genreDto);
-
-        assertThat(actualGenre).isEqualTo(expectedGenre);
-    }
-
     @DisplayName("корректно преобразовывать модель в DTO. текущий метод modelToDto(Genre genre)")
     @Test
     void modelToDtoTest() {

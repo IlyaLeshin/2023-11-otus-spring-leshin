@@ -68,9 +68,9 @@ class CommentServiceImplTest {
         when(commentRepository.findById(FIRST_COMMENT_ID)).thenReturn(Optional.ofNullable(comments.get(0)));
         when(commentConverter.modelToDto(comments.get(0))).thenReturn(commentDtos.get(0));
 
-        Optional<CommentDto> actualComment = commentService.findById(FIRST_COMMENT_ID);
+        CommentDto actualComment = commentService.findById(FIRST_COMMENT_ID);
 
-        assertThat(actualComment).isPresent().get().isEqualTo(expectedComment);
+        assertThat(actualComment).isEqualTo(expectedComment);
     }
 
     @DisplayName("загружать все комментарии по id книги. текущий метод: findAllByBookId(long id)")
@@ -93,11 +93,12 @@ class CommentServiceImplTest {
     @Test
     void create() {
         var newComment = new Comment(null, "saved_Comment", book);
+        var newCommentDto = new CommentDto(null, "saved_Comment", newComment.getBook().getId());
         var expectedCommentDto = new CommentDto(FIRST_COMMENT_ID, "saved_Comment", newComment.getBook().getId());
         when(bookRepository.findById(FIRST_BOOK_ID)).thenReturn(Optional.ofNullable(book));
         when(commentConverter.modelToDto(commentRepository.save(newComment))).thenReturn(expectedCommentDto);
 
-        CommentDto returnedCommentDto = commentService.create("saved_Comment", book.getId());
+        CommentDto returnedCommentDto = commentService.create(newCommentDto);
 
         verify(commentRepository).save(newComment);
         verify(bookRepository).save(book);
@@ -116,7 +117,7 @@ class CommentServiceImplTest {
                 .thenReturn(commentDtos.get(0));
         when(commentConverter.modelToDto(commentRepository.save(commentToUpdate))).thenReturn(expectedCommentDto);
 
-        CommentDto actualComment = commentService.update(FIRST_COMMENT_ID, "updated_Comment", book.getId());
+        CommentDto actualComment = commentService.update(expectedCommentDto);
 
         verify(commentRepository).save(commentToUpdate);
         verify(bookRepository).save(book);

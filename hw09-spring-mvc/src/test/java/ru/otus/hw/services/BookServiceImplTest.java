@@ -8,10 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.otus.hw.converters.BookConverter;
 import ru.otus.hw.converters.BookWithCommentsConverter;
-import ru.otus.hw.dto.AuthorDto;
-import ru.otus.hw.dto.BookDto;
-import ru.otus.hw.dto.BookWithCommentsDto;
-import ru.otus.hw.dto.GenreDto;
+import ru.otus.hw.dto.*;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Genre;
@@ -40,6 +37,28 @@ class BookServiceImplTest {
     private static final String FIRST_GENRE_ID = "g1";
 
     private static final String SECOND_GENRE_ID = "g2";
+
+    private static final Author EXPECTED_AUTHOR = new Author(FIRST_AUTHOR_ID, "AUTHOR_1");
+
+    private static final AuthorDto EXPECTED_AUTHOR_DTO = new AuthorDto(EXPECTED_AUTHOR.getId(),
+            EXPECTED_AUTHOR.getFullName());
+
+    private static final Genre EXPECTED_FIRST_GENRE = new Genre(FIRST_GENRE_ID, "GENRE_1");
+
+    private static final GenreDto EXPECTED_FIRST_GENRE_DTO = new GenreDto(EXPECTED_FIRST_GENRE.getId(),
+            EXPECTED_FIRST_GENRE.getName());
+
+    private static final Genre EXPECTED_SECOND_GENRE = new Genre(SECOND_GENRE_ID, "GENRE_2");
+
+    private static final GenreDto EXPECTED_SECOND_GENRE_DTO = new GenreDto(EXPECTED_SECOND_GENRE.getId(),
+            EXPECTED_SECOND_GENRE.getName());
+
+    private static final Book EXPECTED_BOOK = new Book(FIRST_BOOK_ID, "BOOK_1", EXPECTED_AUTHOR,
+            List.of(EXPECTED_FIRST_GENRE, EXPECTED_SECOND_GENRE), null);
+
+    private static final BookDto EXPECTED_BOOK_DTO = new BookDto(EXPECTED_BOOK.getId(), EXPECTED_BOOK.getTitle(),
+            EXPECTED_AUTHOR_DTO, List.of(EXPECTED_FIRST_GENRE_DTO, EXPECTED_SECOND_GENRE_DTO));
+
 
     @Autowired
     private BookService bookService;
@@ -80,10 +99,11 @@ class BookServiceImplTest {
     @DisplayName("загружать книгу по id. текущий метод: findById(long id)")
     @Test
     void findByIdTest() {
-        Optional<BookDto> expectedBookDto = Optional.ofNullable(dbBookDtos.get(0));
-        when(bookRepository.findById(FIRST_BOOK_ID)).thenReturn(Optional.of(dbBooks.get(0)));
-        when(bookConverter.modelToDto(dbBooks.get(0))).thenReturn(dbBookDtos.get(0));
-        Optional<BookDto> actualBookDto = bookService.findById(FIRST_BOOK_ID);
+        BookDto expectedBookDto = EXPECTED_BOOK_DTO;
+
+        when(bookRepository.findById(FIRST_BOOK_ID)).thenReturn(Optional.of(EXPECTED_BOOK));
+        when(bookConverter.modelToDto(EXPECTED_BOOK)).thenReturn(EXPECTED_BOOK_DTO);
+        BookDto actualBookDto = bookService.findById(FIRST_BOOK_ID);
 
         assertThat(actualBookDto)
                 .isEqualTo(expectedBookDto);
@@ -99,9 +119,9 @@ class BookServiceImplTest {
 
         when(bookRepository.findById(FIRST_BOOK_ID)).thenReturn(Optional.of(bookWithComments));
         when(bookWithCommentsConverter.modelToDto(bookWithComments)).thenReturn(bookWithCommentsDto);
-        Optional<BookWithCommentsDto> actualBookDto = bookService.findWithCommentsById(FIRST_BOOK_ID);
+        BookWithCommentsDto actualBookDto = bookService.findWithCommentsById(FIRST_BOOK_ID);
 
-        assertThat(actualBookDto).isPresent().get()
+        assertThat(actualBookDto)
                 .isEqualTo(bookWithCommentsDto);
     }
 
@@ -124,13 +144,14 @@ class BookServiceImplTest {
     void insertTest() {
         var newBook = new Book(null, "saved_Book", dbBooks.get(0).getAuthor(),
                 dbBooks.get(0).getGenres());
+        var newBookUpdateDto = new BookCreateDto("saved_Book", FIRST_AUTHOR_ID, Set.of(FIRST_GENRE_ID, SECOND_GENRE_ID));
         var expectedBookDto = new BookDto(FIRST_BOOK_ID, "saved_Book", dbBookDtos.get(0).getAuthorDto(),
                 dbBookDtos.get(0).getGenreDtoList());
 
         when(bookConverter.modelToDto(bookRepository.save(newBook))).thenReturn(expectedBookDto);
         when(authorRepository.findById(FIRST_AUTHOR_ID)).thenReturn(Optional.ofNullable(dbBooks.get(0).getAuthor()));
         when(genreRepository.findAllByIdIn(Set.of(FIRST_GENRE_ID, SECOND_GENRE_ID))).thenReturn(dbBooks.get(0).getGenres());
-        var returnedBookDto = bookService.insert("saved_Book", FIRST_AUTHOR_ID, Set.of(FIRST_GENRE_ID, SECOND_GENRE_ID));
+        var returnedBookDto = bookService.insert(newBookUpdateDto);
 
         verify(bookRepository).save(newBook);
         assertThat(returnedBookDto).isEqualTo(expectedBookDto);
@@ -142,6 +163,7 @@ class BookServiceImplTest {
         var bookBeforeUpdate = dbBooks.get(0);
         var bookToUpdate = new Book(FIRST_BOOK_ID, "updated_Book", dbBooks.get(0).getAuthor(),
                 dbBooks.get(0).getGenres());
+        var bookUpdateDto = new BookUpdateDto(FIRST_BOOK_ID, "updated_Book", FIRST_AUTHOR_ID, Set.of(FIRST_GENRE_ID, SECOND_GENRE_ID));
         var expectedBookDto = new BookDto(FIRST_BOOK_ID, "updated_Book", dbBookDtos.get(0).getAuthorDto(),
                 dbBookDtos.get(0).getGenreDtoList());
 
@@ -152,8 +174,7 @@ class BookServiceImplTest {
         when(genreRepository.findAllByIdIn(Set.of(FIRST_GENRE_ID, SECOND_GENRE_ID))).thenReturn(dbBooks.get(0).getGenres());
         when(bookConverter.modelToDto(bookRepository.save(bookToUpdate))).thenReturn(expectedBookDto);
 
-        var returnedBookDto = bookService.update(FIRST_BOOK_ID, "Updated_Book",
-                FIRST_AUTHOR_ID, Set.of(FIRST_GENRE_ID, SECOND_GENRE_ID));
+        var returnedBookDto = bookService.update(bookUpdateDto);
 
         verify(bookRepository).save(bookToUpdate);
         verify(commentRepository).findAllByBookId(FIRST_BOOK_ID);

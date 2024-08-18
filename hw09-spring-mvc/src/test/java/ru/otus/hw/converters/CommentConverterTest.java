@@ -43,15 +43,6 @@ public class CommentConverterTest {
         commentDto = getCommentDto();
     }
 
-    @DisplayName("корректно преобразовывать DTO в строку. текущий метод dtoToString(CommentDto commentDto)")
-    @Test
-    void dtoToStringTest() {
-        String expectedComment = "Id: %s, Text: Comment_1".formatted(FIRST_COMMENT_ID);
-        String actualComment = commentConverter.dtoToString(commentDto);
-
-        assertThat(actualComment).isEqualTo(expectedComment);
-    }
-
     @DisplayName("корректно преобразовывать модель в DTO. текущий метод modelToDto(Comment comment)")
     @Test
     void modelToDtoTest() {

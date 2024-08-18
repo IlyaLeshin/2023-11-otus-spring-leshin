@@ -4,15 +4,6 @@ spring:
       port: 0
       database: hw09mongoDB
 
-  shell:
-    interactive:
-      enabled: true
-    noninteractive:
-      enabled: false
-
-    command:
-      version:
-        enabled: false
 de:
   flapdoodle:
     mongodb:
@@ -27,3 +18,12 @@ mongock:
     write-concern:
       journal: false
     read-concern: local
+
+logging:
+  level:
+    org:
+      springframework:
+        data:
+          mongodb:
+            core:
+              MongoTemplate: DEBUG

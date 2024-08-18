@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Edit book</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        input:read-only {
+            background: lightgray;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+
+        h3 {
+            background-image: url("../static/listmark.png");
+            background-repeat: no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+
+        .errors {
+            color: red;
+        }
+    </style>
+    <style type="text/css" th:inline="text">
+        [[h3]] {
+            background-image: url([[@{/listmark.png}]]);
+            background-repeat: no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+    </style>
+</head>
+<body>
+<h3 th:text="Book">Book:</h3>
+
+<form id="edit-form" action="edit.html" th:method="post" th:action="@{/books/{id}/edit(id=${book.id})}"
+      th:object="${book}">
+    <h3>Edit book:</h3>
+
+    <div class="row">
+        <label for="book-id-input">ID:</label>
+        <input id="book-id-input" type="text" readonly="readonly" value="1" th:value="${book.id}"/>
+    </div>
+
+    <div class="row">
+        <label for="book-title-input">Title:</label>
+        <input required id="book-title-input" name="title" type="text" value="Book Title" th:value="${book.title}"/>
+        <div class="errors" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">
+            Wrong Book Title error
+        </div>
+    </div>
+
+    <div class="row">
+        <label for="book-author-select">Author:</label>
+        <select required id="book-author-select" name="author" th:field="*{authorId}">
+            <option value="" style="display:none">--Please select author--</option>
+            <option th:each="author : ${authors}" th:value="${author.id}" th:text="${author.fullName}">
+                List of authors
+            </option>
+        </select>
+        <div class="errors" th:if="${#fields.hasErrors('authorId')}" th:errors="*{authorId}">
+            Wrong Author error
+        </div>
+    </div>
+
+    <div class="row">
+        <label for="book-genre-dropdown">Genre:</label>
+        <select required multiple id="book-genre-dropdown" th:field="*{genreIds}">
+            <option value="" style="display:none">--Please select genres--</option>
+            <option th:each="genre : ${genres}" th:value="${genre.id}" th:text="${genre.name}">
+                List of genres
+            </option>
+        </select>
+        <div class="errors" th:if="${#fields.hasErrors('genreIds')}" th:errors="*{genreIds}">
+            Wrong Genre error
+        </div>
+    </div>
+
+    <div class="row">
+        <button th:text="#{save-button-caption}" type="submit">Save</button>
+        <a href="main.html" th:href="@{/books}">
+            <button th:text="#{cancel-button-caption}" type="button">Cancel</button>
+        </a>
+    </div>
+</form>
+
+</body>
+</html>

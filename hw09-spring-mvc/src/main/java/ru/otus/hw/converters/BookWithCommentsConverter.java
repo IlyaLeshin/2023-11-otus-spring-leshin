@@ -5,8 +5,6 @@ import org.springframework.stereotype.Component;
 import ru.otus.hw.dto.BookWithCommentsDto;
 import ru.otus.hw.models.Book;
 
-import java.util.stream.Collectors;
-
 @RequiredArgsConstructor
 @Component
 public class BookWithCommentsConverter {
@@ -15,26 +13,6 @@ public class BookWithCommentsConverter {
     private final GenreConverter genreConverter;
 
     private final CommentConverter commentConverter;
-
-    public String dtoToString(BookWithCommentsDto book) {
-        var genresString = book.getGenreDtoList().stream()
-                .map(genreConverter::dtoToString)
-                .map("{%s}"::formatted)
-                .collect(Collectors.joining(", "));
-
-        var commentsString = book.getCommentDtoList().stream()
-                .map(commentConverter::dtoToString)
-                .map("{%s}"::formatted)
-                .collect(Collectors.joining(", "));
-
-        return "Id: %s, title: %s, author: {%s}, genres: [%s], comments: [%s]".formatted(
-                book.getId(),
-                book.getTitle(),
-                authorConverter.dtoToString(book.getAuthorDto()),
-                genresString,
-                commentsString);
-    }
-
 
     public BookWithCommentsDto modelToDto(Book book) {
 

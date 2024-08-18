@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.otus.hw.converters.CommentConverter;
 import ru.otus.hw.dto.CommentDto;
 import ru.otus.hw.exceptions.BookNotFoundException;
+import ru.otus.hw.exceptions.CommentAlreadyExistsException;
 import ru.otus.hw.exceptions.CommentNotFoundException;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Comment;
@@ -12,7 +13,6 @@ import ru.otus.hw.repositories.BookRepository;
 import ru.otus.hw.repositories.CommentRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -25,8 +25,9 @@ public class CommentServiceImpl implements CommentService {
     private final CommentConverter commentConverter;
 
     @Override
-    public Optional<CommentDto> findById(String id) {
-        return commentRepository.findById(id).map(commentConverter::modelToDto);
+    public CommentDto findById(String id) {
+        return commentRepository.findById(id).map(commentConverter::modelToDto)
+                .orElseThrow(() -> new CommentNotFoundException("Comment with id %s not found".formatted(id)));
     }
 
     @Override
@@ -38,16 +39,26 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentDto create(String text, String bookId) {
-        return save(null, text, bookId);
+    public CommentDto create(CommentDto commentDto) {
+        String id = commentDto.getId();
+        if (id == null) {
+            String text = commentDto.getText();
+            String bookId = commentDto.getBookId();
+            return save(id, text, bookId);
+        }
+        throw new CommentAlreadyExistsException("Comment with id %s already exists".formatted(id));
     }
 
     @Override
-    public CommentDto update(String id, String text, String bookId) {
-        if (findById(id).isPresent()) {
+    public CommentDto update(CommentDto commentDto) {
+        String id = commentDto.getId();
+        if (findById(id) != null) {
+            String text = commentDto.getText();
+            String bookId = commentDto.getBookId();
             return save(id, text, bookId);
         }
-        throw new CommentNotFoundException("Comment with id %s to the book with id %s not found".formatted(id, bookId));
+        throw new CommentNotFoundException("Comment with id %s to the book with id %s not found"
+                .formatted(id, commentDto.getBookId()));
     }
 
     @Override
