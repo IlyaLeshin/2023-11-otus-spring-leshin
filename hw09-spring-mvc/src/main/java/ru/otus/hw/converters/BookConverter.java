@@ -30,33 +30,6 @@ public class BookConverter {
         );
     }
 
-    public BookCreateDto dtoToCreateDto(BookDto bookDto) {
-        return new BookCreateDto(
-                bookDto.getTitle(),
-                bookDto.getAuthorDto().getId(),
-                bookDto.getGenreDtoList().stream().map(GenreDto::getId).collect(Collectors.toSet())
-        );
-    }
-
-    public BookDto updateDtoToDto(BookUpdateDto bookUpdateDto, Author author, List<Genre> genreList) {
-        return new BookDto(
-                bookUpdateDto.getId(),
-                bookUpdateDto.getTitle(),
-                authorConverter.modelToDto(author),
-                genreList.stream().map(genreConverter::modelToDto).toList()
-        );
-    }
-
-    public BookDto createDtoToDto(BookCreateDto bookCreateDto, Author author, List<Genre> genreList) {
-        return new BookDto(
-                null,
-                bookCreateDto.getTitle(),
-                authorConverter.modelToDto(author),
-                genreList.stream().map(genreConverter::modelToDto).toList()
-        );
-    }
-
-
     public BookDto modelToDto(Book book) {
 
         BookDto bookDto = new BookDto();
@@ -66,12 +39,5 @@ public class BookConverter {
         bookDto.setGenreDtoList(book.getGenres().stream()
                 .map(genreConverter::modelToDto).toList());
         return bookDto;
-    }
-
-    public Book dtoToModel(BookDto bookDto) {
-        AuthorDto authorDto = bookDto.getAuthorDto();
-        List<GenreDto> genreDtos = bookDto.getGenreDtoList();
-        return new Book(bookDto.getId(), bookDto.getTitle(), authorConverter.dtoToModel(authorDto),
-                genreDtos.stream().map(genreConverter::dtoToModel).toList());
     }
 }

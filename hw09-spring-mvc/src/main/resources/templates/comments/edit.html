@@ -42,25 +42,30 @@
     </style>
 </head>
 <body>
-<h3 th:text="Comment">Comment:</h3>
+<h3 th:text="#{comment-form-header}">Comment:</h3>
 
-<form id="edit-form" action="edit.html" th:method="post"
-      th:action="@{/books/{bookId}/comments/{id}/edit(id=${comment.id},bookId=${comment.bookId})}"
+<form id="edit-form" action="edit.html"
+      th:method="post"
+      th:action="${marker} != 'create'
+      ? @{/books/{bookId}/comments/{id}/edit(id=${comment.id},bookId=${comment.bookId})}
+      : @{/books/{bookId}/comments/create(bookId=${comment.bookId})}"
       th:object="${comment}">
-    <h3>Edit comment:</h3>
+    <h3 th:text="${marker} != 'create'
+      ? #{comments-edit-form-header}
+      : #{comments-create-form-header}">Edit comment:</h3>
 
-    <div class="row">
-        <label for="comment-id-input">Comment ID:</label>
+    <div class="row" th:if="${marker} != 'create'">
+        <label for="comment-id-input" th:text="#{comment-field-id}">Comment ID:</label>
         <input id="comment-id-input" name="id" type="text" readonly="readonly" value="1" th:value="${comment.id}"/>
     </div>
 
     <div class="row">
-        <label for="book-id-input">Book ID:</label>
+        <label for="book-id-input" th:text="#{comment-field-book-id}">Book ID:</label>
         <input id="book-id-input" type="text" name="bookId" readonly="readonly" value="1" th:value="${comment.bookId}"/>
     </div>
 
     <div class="row">
-        <label for="comment-text-input">Text:</label>
+        <label for="comment-text-input" th:text="#{comment-field-text}">Text:</label>
         <input required id="comment-text-input" name="text" type="text" value="Text" th:value="${comment.text}"/>
         <div class="errors" th:if="${#fields.hasErrors('text')}" th:errors="*{text}">
             Wrong Comment Text error

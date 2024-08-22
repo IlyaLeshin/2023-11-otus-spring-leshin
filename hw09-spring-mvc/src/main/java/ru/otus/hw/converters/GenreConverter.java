@@ -13,8 +13,4 @@ public class GenreConverter {
         genreDto.setName(genre.getName());
         return genreDto;
     }
-
-    public Genre dtoToModel(GenreDto genreDto) {
-        return new Genre(genreDto.getId(), genreDto.getName());
-    }
 }

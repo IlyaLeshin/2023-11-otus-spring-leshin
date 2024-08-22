@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.otus.hw.converters.CommentConverter;
+import ru.otus.hw.dto.CommentCreateDto;
 import ru.otus.hw.dto.CommentDto;
+import ru.otus.hw.dto.CommentUpdateDto;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Comment;
@@ -93,7 +95,7 @@ class CommentServiceImplTest {
     @Test
     void create() {
         var newComment = new Comment(null, "saved_Comment", book);
-        var newCommentDto = new CommentDto(null, "saved_Comment", newComment.getBook().getId());
+        var newCommentDto = new CommentCreateDto("saved_Comment", newComment.getBook().getId());
         var expectedCommentDto = new CommentDto(FIRST_COMMENT_ID, "saved_Comment", newComment.getBook().getId());
         when(bookRepository.findById(FIRST_BOOK_ID)).thenReturn(Optional.ofNullable(book));
         when(commentConverter.modelToDto(commentRepository.save(newComment))).thenReturn(expectedCommentDto);
@@ -110,6 +112,7 @@ class CommentServiceImplTest {
     void updateTest() {
         var commentBeforeUpdate = comments.get(0);
         var commentToUpdate = new Comment(FIRST_COMMENT_ID, "updated_Comment", book);
+        var commentUpdateDto = new CommentUpdateDto(FIRST_COMMENT_ID, "updated_Comment", FIRST_BOOK_ID);
         var expectedCommentDto = new CommentDto(FIRST_COMMENT_ID, "updated_Comment", book.getId());
         when(bookRepository.findById(book.getId())).thenReturn(Optional.ofNullable(book));
         when(commentRepository.findById(FIRST_COMMENT_ID)).thenReturn(Optional.ofNullable(commentBeforeUpdate));
@@ -117,7 +120,7 @@ class CommentServiceImplTest {
                 .thenReturn(commentDtos.get(0));
         when(commentConverter.modelToDto(commentRepository.save(commentToUpdate))).thenReturn(expectedCommentDto);
 
-        CommentDto actualComment = commentService.update(expectedCommentDto);
+        CommentDto actualComment = commentService.update(commentUpdateDto);
 
         verify(commentRepository).save(commentToUpdate);
         verify(bookRepository).save(book);

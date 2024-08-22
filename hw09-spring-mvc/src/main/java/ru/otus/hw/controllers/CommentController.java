@@ -76,13 +76,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import ru.otus.hw.converters.CommentConverter;
+import ru.otus.hw.dto.CommentCreateDto;
 import ru.otus.hw.dto.CommentDto;
+import ru.otus.hw.dto.CommentUpdateDto;
 import ru.otus.hw.services.CommentService;
 
 @Controller
 @AllArgsConstructor
 public class CommentController {
     private final CommentService commentService;
+
+    private final CommentConverter commentConverter;
 
     @GetMapping("/books/{bookId}/comments/{commentId}")
     public String commentPage(@PathVariable("commentId") String commentId,
@@ -94,37 +99,38 @@ public class CommentController {
 
     @GetMapping("/books/{bookId}/comments/create")
     public String createPage(@PathVariable("bookId") String bookId, Model model) {
-        model.addAttribute("comment", new CommentDto(null,"",bookId));
-        return "comments/create";
+        model.addAttribute("comment", new CommentCreateDto("",bookId));
+        model.addAttribute("marker", "create");
+        return "comments/edit";
     }
 
     @PostMapping("/books/{bookId}/comments/create")
-    public String createComment(@Valid @ModelAttribute("comment") CommentDto commentDto,
+    public String createComment(@Valid @ModelAttribute("comment") CommentCreateDto commentCreateDto,
                                 BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("comment", new CommentDto());
-            return "comments/create";
+            model.addAttribute("comment", new CommentCreateDto());
+            return "comments/edit";
         }
-        commentService.create(commentDto);
+        commentService.create(commentCreateDto);
         return "redirect:/books/{bookId}";
     }
 
     @GetMapping("/books/{bookId}/comments/{commentId}/edit")
     public String editPage(@PathVariable("commentId") String commentId, Model model) {
         CommentDto commentDto = commentService.findById(commentId);
-        model.addAttribute("comment", commentDto);
+        model.addAttribute("comment", commentConverter.dtoToUpdateDto(commentDto));
         return "comments/edit";
     }
 
     @PostMapping("/books/{bookId}/comments/{commentId}/edit")
-    public String editBook(@Valid @ModelAttribute("book") CommentDto commentDto,
+    public String editBook(@Valid @ModelAttribute("book") CommentUpdateDto commentUpdateDto,
                            BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("comment", commentDto);
+            model.addAttribute("comment", commentUpdateDto);
             return "comments/edit";
         }
 
-        commentService.update(commentDto);
+        commentService.update(commentUpdateDto);
         return "redirect:/books/{bookId}";
     }
 

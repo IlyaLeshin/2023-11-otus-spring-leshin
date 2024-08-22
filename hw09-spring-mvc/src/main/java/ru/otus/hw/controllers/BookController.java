@@ -98,10 +98,10 @@ public class BookController {
     private final BookConverter bookConverter;
 
     @GetMapping("/books")
-    public String mainPage(Model model) {
+    public String booksPage(Model model) {
         List<BookDto> books = service.findAll();
         model.addAttribute("books", books);
-        return "books/main";
+        return "books/books";
     }
 
     @GetMapping("/books/{id}")
@@ -113,10 +113,11 @@ public class BookController {
 
     @GetMapping("/books/create")
     public String createPage(Model model) {
-        model.addAttribute("book", new BookUpdateDto());
+        model.addAttribute("book", new BookCreateDto());
         model.addAttribute("authors", authorService.findAll());
         model.addAttribute("genres", genreService.findAll());
-        return "books/create";
+        model.addAttribute("marker", "create");
+        return "books/edit";
     }
 
     @PostMapping("/books/create")
@@ -126,7 +127,7 @@ public class BookController {
             model.addAttribute("book", bookCreateDto);
             model.addAttribute("authors", authorService.findAll());
             model.addAttribute("genres", genreService.findAll());
-            return "books/create";
+            return "books/edit";
         }
         service.insert(bookCreateDto);
         return "redirect:/books";

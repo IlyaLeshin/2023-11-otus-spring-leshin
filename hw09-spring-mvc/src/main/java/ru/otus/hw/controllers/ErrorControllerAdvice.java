@@ -10,7 +10,7 @@ import ru.otus.hw.exceptions.LibraryException;
 public class ErrorControllerAdvice {
     @ExceptionHandler(LibraryException.class)
     public String errorPage(LibraryException ex, Model model) {
-        model.addAttribute("message", ex.getMessage());
+        model.addAttribute("exception", ex.getMessage());
         return "error";
     }
 }

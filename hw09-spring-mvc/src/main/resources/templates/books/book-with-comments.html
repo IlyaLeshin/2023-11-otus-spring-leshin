@@ -95,13 +95,13 @@
 </table>
 <br/>
 
-<h4 th:text="#{book-comments-table-header}">Comments:</h4>
+<h4 th:text="#{comment-table-header}">Comments:</h4>
 <table class="book-comments">
     <thead>
     <tr>
-        <th th:text="#{book-comment-field-id}">ID</th>
-        <th th:text="#{book-comment-text}">Comment</th>
-        <th th:text="#{books-comment-table-column-action}">Action</th>
+        <th th:text="#{comment-field-id}">ID</th>
+        <th th:text="#{comment-field-text}">Comment</th>
+        <th th:text="#{comment-table-column-action}">Action</th>
     </tr>
     </thead>
 
@@ -126,12 +126,12 @@
     </tbody>
 </table>
 <br/>
-<a href="create.html" th:href="@{/books/__${book.id}__/comments/create}" type="button">
+<a href="edit.html" th:href="@{/books/__${book.id}__/comments/create}" type="button">
     <button th:text="#{add-comment-button-caption}">Add book</button>
 </a>
 <br/>
-<a href="main.html" th:href="@{/books}">
-    <button th:text="#{return-to-main-page-button-caption}" type="button">Return to books list page</button>
+<a href="books.html" th:href="@{/books}">
+    <button th:text="#{return-to-books-page-button-caption}" type="button">Return to books list page</button>
 </a>
 <br/>
 <a href="../index.html" th:href="@{/}" type="button">

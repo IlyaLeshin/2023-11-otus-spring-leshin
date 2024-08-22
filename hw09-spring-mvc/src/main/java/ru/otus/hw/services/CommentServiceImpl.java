@@ -3,9 +3,10 @@ package ru.otus.hw.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.otus.hw.converters.CommentConverter;
+import ru.otus.hw.dto.CommentCreateDto;
 import ru.otus.hw.dto.CommentDto;
+import ru.otus.hw.dto.CommentUpdateDto;
 import ru.otus.hw.exceptions.BookNotFoundException;
-import ru.otus.hw.exceptions.CommentAlreadyExistsException;
 import ru.otus.hw.exceptions.CommentNotFoundException;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Comment;
@@ -39,26 +40,23 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentDto create(CommentDto commentDto) {
-        String id = commentDto.getId();
-        if (id == null) {
-            String text = commentDto.getText();
-            String bookId = commentDto.getBookId();
-            return save(id, text, bookId);
-        }
-        throw new CommentAlreadyExistsException("Comment with id %s already exists".formatted(id));
+    public CommentDto create(CommentCreateDto commentCreateDto) {
+            String text = commentCreateDto.getText();
+            String bookId = commentCreateDto.getBookId();
+            return save(null, text, bookId);
+
     }
 
     @Override
-    public CommentDto update(CommentDto commentDto) {
-        String id = commentDto.getId();
+    public CommentDto update(CommentUpdateDto commentUpdateDto) {
+        String id = commentUpdateDto.getId();
         if (findById(id) != null) {
-            String text = commentDto.getText();
-            String bookId = commentDto.getBookId();
+            String text = commentUpdateDto.getText();
+            String bookId = commentUpdateDto.getBookId();
             return save(id, text, bookId);
         }
         throw new CommentNotFoundException("Comment with id %s to the book with id %s not found"
-                .formatted(id, commentDto.getBookId()));
+                .formatted(id, commentUpdateDto.getBookId()));
     }
 
     @Override
