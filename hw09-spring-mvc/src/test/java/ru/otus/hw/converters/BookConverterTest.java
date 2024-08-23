@@ -8,12 +8,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.otus.hw.dto.AuthorDto;
 import ru.otus.hw.dto.BookDto;
+import ru.otus.hw.dto.BookUpdateDto;
 import ru.otus.hw.dto.GenreDto;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Genre;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,10 +26,6 @@ import static org.mockito.Mockito.when;
 @SpringBootTest(classes = {BookConverter.class})
 public class BookConverterTest {
     private static final String FIRST_AUTHOR_ID = "a1";
-
-    private static final String FIRST_GENRE_ID = "g1";
-
-    private static final String SECOND_GENRE_ID = "g2";
 
     private static final String FIRST_BOOK_ID = "b1";
 
@@ -55,6 +54,18 @@ public class BookConverterTest {
         authorDto = getAuthorDto();
         genreDtos = getGenreDtos();
         bookDto = getBookDto(authorDto, genreDtos);
+    }
+
+    @DisplayName("корректно преобразовывать DTO в UpdateDTO. текущий метод dtoToUpdateDto(BookDto bookDto)")
+    @Test
+    void dtoToUpdateDtoTest() {
+        BookUpdateDto expectedBookDto = new BookUpdateDto(bookDto.getId(), bookDto.getTitle(),
+                bookDto.getAuthorDto().getId(),
+                bookDto.getGenreDtoList().stream().map(GenreDto::getId).collect(Collectors.toSet()));
+
+        BookUpdateDto actualBookUpdateDto = bookConverter.dtoToUpdateDto(bookDto);
+
+        assertThat(actualBookUpdateDto).isEqualTo(expectedBookDto);
     }
 
     @DisplayName("корректно преобразовывать модель в DTO. текущий метод modelToDto(Book book)")
@@ -94,4 +105,5 @@ public class BookConverterTest {
     private static BookDto getBookDto(AuthorDto author, List<GenreDto> dbGenreDtos) {
         return new BookDto(FIRST_BOOK_ID, "BookTitle_1", author, dbGenreDtos);
     }
+
 }

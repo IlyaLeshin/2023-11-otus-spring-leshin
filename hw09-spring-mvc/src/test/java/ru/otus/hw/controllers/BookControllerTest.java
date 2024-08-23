@@ -105,6 +105,7 @@ class BookControllerTest {
     @MockBean
     private BookConverter bookConverter;
 
+    @DisplayName("создавать страницу со списком книг")
     @Test
     void booksPageTest() throws Exception {
         when(bookService.findAll()).thenReturn(List.of(FIRST_BOOK_DTO, SECOND_BOOK_DTO));
@@ -116,8 +117,9 @@ class BookControllerTest {
                 .andExpect(content().string(containsString(SECOND_BOOK_DTO.getTitle())));
     }
 
+    @DisplayName("создавать страницу с книгой с комментариями")
     @Test
-    void bookWithCommentsPage() throws Exception {
+    void bookWithCommentsPageTest() throws Exception {
         when(bookService.findWithCommentsById(FIRST_BOOK_ID)).thenReturn(FIRST_BOOK_WITH_COMMENTS_DTO);
 
         mvc.perform(get("/books/b1"))
@@ -126,8 +128,9 @@ class BookControllerTest {
                 .andExpect(content().string(containsString(FIRST_BOOK_WITH_COMMENTS_DTO.getTitle())));
     }
 
+    @DisplayName("создавать страницу добавления книги")
     @Test
-    void createPage() throws Exception {
+    void createPageTest() throws Exception {
         when(authorService.findAll()).thenReturn(List.of(FIRST_AUTHOR_DTO, SECOND_AUTHOR_DTO));
         when(genreService.findAll()).thenReturn(List.of(FIRST_GENRE_DTO, SECOND_GENRE_DTO));
 
@@ -142,17 +145,18 @@ class BookControllerTest {
                         List.of(FIRST_GENRE_DTO, SECOND_GENRE_DTO)));
     }
 
-
+    @DisplayName("отправлять запрос на добавление книги и возвращаться на страницу со списком книг")
     @Test
-    void createBook() throws Exception {
+    void createBookTest() throws Exception {
         mvc.perform(post("/books/create").flashAttr("book", BOOK_CREATE_DTO))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/books"));
         verify(bookService, times(1)).insert(BOOK_CREATE_DTO);
     }
 
+    @DisplayName("создавать страницу редактирования книги")
     @Test
-    void editPage() throws Exception {
+    void editPageTest() throws Exception {
         when(bookService.findById(FIRST_BOOK_ID)).thenReturn(FIRST_BOOK_DTO);
         when(bookConverter.dtoToUpdateDto(FIRST_BOOK_DTO)).thenReturn(FIRST_BOOK_UPDATE_DTO);
         when(authorService.findAll()).thenReturn(List.of(FIRST_AUTHOR_DTO, SECOND_AUTHOR_DTO));
@@ -167,15 +171,17 @@ class BookControllerTest {
                 .andExpect(content().string(containsString(SECOND_GENRE.getName())));
     }
 
+    @DisplayName("отправлять запрос на редактирование книги и возвращаться на страницу со списком книг")
     @Test
-    void editBook() throws Exception {
+    void editBookTest() throws Exception {
         mvc.perform(post("/books/{id}/edit", FIRST_BOOK_ID).flashAttr("book", FIRST_BOOK_UPDATE_DTO))
                 .andExpect(status().is3xxRedirection());
         verify(bookService, times(1)).update(FIRST_BOOK_UPDATE_DTO);
     }
 
+    @DisplayName("отправлять запрос на удаление книги и возвращаться на страницу со списком книг")
     @Test
-    void delete() throws Exception {
+    void deleteTest() throws Exception {
         mvc.perform(post("/books/{id}/delete", FIRST_BOOK_ID))
                 .andExpect(status().is3xxRedirection());
         verify(bookService, times(1)).deleteById(FIRST_BOOK_ID);

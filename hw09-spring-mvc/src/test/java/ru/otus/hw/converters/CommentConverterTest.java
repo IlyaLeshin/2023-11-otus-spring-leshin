@@ -5,13 +5,17 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import ru.otus.hw.dto.BookUpdateDto;
 import ru.otus.hw.dto.CommentDto;
+import ru.otus.hw.dto.CommentUpdateDto;
+import ru.otus.hw.dto.GenreDto;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Comment;
 import ru.otus.hw.models.Genre;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -41,6 +45,17 @@ public class CommentConverterTest {
         comment = getComment(book);
 
         commentDto = getCommentDto();
+    }
+
+    @DisplayName("корректно преобразовывать DTO в UpdateDTO. текущий метод dtoToUpdateDto(CommentDto commentDto)")
+    @Test
+    void dtoToUpdateDtoTest() {
+        CommentUpdateDto expectedCommentUpdateDto = new CommentUpdateDto(commentDto.getId(),
+                commentDto.getText(), commentDto.getBookId());
+
+        CommentUpdateDto actualCommentUpdateDto = commentConverter.dtoToUpdateDto(commentDto);
+
+        assertThat(actualCommentUpdateDto).isEqualTo(expectedCommentUpdateDto);
     }
 
     @DisplayName("корректно преобразовывать модель в DTO. текущий метод modelToDto(Comment comment)")

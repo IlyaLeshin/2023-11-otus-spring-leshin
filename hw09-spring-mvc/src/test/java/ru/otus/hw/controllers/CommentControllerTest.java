@@ -48,7 +48,7 @@ class CommentControllerTest {
 
     @DisplayName("создавать страницу с комментарием")
     @Test
-    void commentPage() throws Exception {
+    void commentPageTest() throws Exception {
         when(commentService.findById(FIRST_COMMENT_ID)).thenReturn(FIRST_COMMENT_DTO);
 
         mvc.perform(get("/books/{bookId}/comments/{commentId}", FIRST_BOOK_ID, FIRST_COMMENT_ID))
@@ -57,16 +57,18 @@ class CommentControllerTest {
                 .andExpect(content().string(containsString(FIRST_COMMENT_DTO.getText())));
     }
 
+    @DisplayName("создавать страницу добавления комментария")
     @Test
-    void createPage() throws Exception {
+    void createPageTest() throws Exception {
         mvc.perform(get("/books/{bookId}/comments/create", FIRST_BOOK_ID))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("comment"));
 
     }
 
+    @DisplayName("отправлять запрос на добавление комментария и возвращаться на страницу с книгой")
     @Test
-    void createComment() throws Exception {
+    void createCommentTest() throws Exception {
         mvc.perform(post("/books/{bookId}/comments/create", FIRST_BOOK_ID)
                         .flashAttr("comment", COMMENT_CREATE_DTO))
                 .andExpect(status().is3xxRedirection())
@@ -74,8 +76,9 @@ class CommentControllerTest {
         verify(commentService, times(1)).create(COMMENT_CREATE_DTO);
     }
 
+    @DisplayName("создавать страницу редактирования комментария")
     @Test
-    void editPage() throws Exception {
+    void editPageTest() throws Exception {
         when(commentService.findById(FIRST_COMMENT_ID)).thenReturn(FIRST_COMMENT_DTO);
         when(commentConverter.dtoToUpdateDto(FIRST_COMMENT_DTO)).thenReturn(COMMENT_UPDATE_DTO);
 
@@ -85,18 +88,22 @@ class CommentControllerTest {
                 .andExpect(content().string(containsString(COMMENT_UPDATE_DTO.getText())));
     }
 
+    @DisplayName("отправлять запрос на редактирование комментария и возвращаться на страницу с книгой")
     @Test
-    void editBook() throws Exception {
+    void editBookTest() throws Exception {
         mvc.perform(post("/books/{bookId}/comments/{commentId}/edit", FIRST_BOOK_ID, FIRST_COMMENT_ID)
                         .flashAttr("comment", COMMENT_UPDATE_DTO))
-                .andExpect(status().is3xxRedirection());
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlTemplate("/books/{bookId}", FIRST_BOOK_ID));
         verify(commentService, times(1)).update(COMMENT_UPDATE_DTO);
     }
 
+    @DisplayName("отправлять запрос на удаление комментария и возвращаться на страницу с книгой")
     @Test
-    void delete() throws Exception {
+    void deleteTest() throws Exception {
         mvc.perform(post("/books/{bookId}/comments/{commentID}/delete", FIRST_BOOK_ID, FIRST_COMMENT_ID))
-                .andExpect(status().is3xxRedirection());
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlTemplate("/books/{bookId}", FIRST_BOOK_ID));
         verify(commentService, times(1)).deleteById(FIRST_COMMENT_ID);
     }
 }

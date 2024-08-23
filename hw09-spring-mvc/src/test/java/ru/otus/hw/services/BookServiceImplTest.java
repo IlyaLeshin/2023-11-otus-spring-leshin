@@ -38,28 +38,6 @@ class BookServiceImplTest {
 
     private static final String SECOND_GENRE_ID = "g2";
 
-    private static final Author EXPECTED_AUTHOR = new Author(FIRST_AUTHOR_ID, "AUTHOR_1");
-
-    private static final AuthorDto EXPECTED_AUTHOR_DTO = new AuthorDto(EXPECTED_AUTHOR.getId(),
-            EXPECTED_AUTHOR.getFullName());
-
-    private static final Genre EXPECTED_FIRST_GENRE = new Genre(FIRST_GENRE_ID, "GENRE_1");
-
-    private static final GenreDto EXPECTED_FIRST_GENRE_DTO = new GenreDto(EXPECTED_FIRST_GENRE.getId(),
-            EXPECTED_FIRST_GENRE.getName());
-
-    private static final Genre EXPECTED_SECOND_GENRE = new Genre(SECOND_GENRE_ID, "GENRE_2");
-
-    private static final GenreDto EXPECTED_SECOND_GENRE_DTO = new GenreDto(EXPECTED_SECOND_GENRE.getId(),
-            EXPECTED_SECOND_GENRE.getName());
-
-    private static final Book EXPECTED_BOOK = new Book(FIRST_BOOK_ID, "BOOK_1", EXPECTED_AUTHOR,
-            List.of(EXPECTED_FIRST_GENRE, EXPECTED_SECOND_GENRE), null);
-
-    private static final BookDto EXPECTED_BOOK_DTO = new BookDto(EXPECTED_BOOK.getId(), EXPECTED_BOOK.getTitle(),
-            EXPECTED_AUTHOR_DTO, List.of(EXPECTED_FIRST_GENRE_DTO, EXPECTED_SECOND_GENRE_DTO));
-
-
     @Autowired
     private BookService bookService;
 
@@ -99,10 +77,9 @@ class BookServiceImplTest {
     @DisplayName("загружать книгу по id. текущий метод: findById(long id)")
     @Test
     void findByIdTest() {
-        BookDto expectedBookDto = EXPECTED_BOOK_DTO;
-
-        when(bookRepository.findById(FIRST_BOOK_ID)).thenReturn(Optional.of(EXPECTED_BOOK));
-        when(bookConverter.modelToDto(EXPECTED_BOOK)).thenReturn(EXPECTED_BOOK_DTO);
+        BookDto expectedBookDto = dbBookDtos.get(0);
+        when(bookRepository.findById(FIRST_BOOK_ID)).thenReturn(Optional.of(dbBooks.get(0)));
+        when(bookConverter.modelToDto(dbBooks.get(0))).thenReturn(dbBookDtos.get(0));
         BookDto actualBookDto = bookService.findById(FIRST_BOOK_ID);
 
         assertThat(actualBookDto)
