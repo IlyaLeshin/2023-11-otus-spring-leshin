@@ -99,7 +99,7 @@ public class CommentController {
 
     @GetMapping("/books/{bookId}/comments/create")
     public String createPage(@PathVariable("bookId") String bookId, Model model) {
-        model.addAttribute("comment", new CommentCreateDto("",bookId));
+        model.addAttribute("comment", new CommentCreateDto("", bookId));
         model.addAttribute("marker", "create");
         return "comments/edit";
     }
@@ -123,13 +123,12 @@ public class CommentController {
     }
 
     @PostMapping("/books/{bookId}/comments/{commentId}/edit")
-    public String editBook(@Valid @ModelAttribute("book") CommentUpdateDto commentUpdateDto,
+    public String editBook(@Valid @ModelAttribute("comment") CommentUpdateDto commentUpdateDto,
                            BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("comment", commentUpdateDto);
             return "comments/edit";
         }
-
         commentService.update(commentUpdateDto);
         return "redirect:/books/{bookId}";
     }

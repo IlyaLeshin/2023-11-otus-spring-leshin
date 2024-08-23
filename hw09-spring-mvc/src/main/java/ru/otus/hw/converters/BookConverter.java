@@ -2,16 +2,11 @@ package ru.otus.hw.converters;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.otus.hw.dto.AuthorDto;
-import ru.otus.hw.dto.BookCreateDto;
 import ru.otus.hw.dto.BookDto;
 import ru.otus.hw.dto.BookUpdateDto;
 import ru.otus.hw.dto.GenreDto;
-import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
-import ru.otus.hw.models.Genre;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
