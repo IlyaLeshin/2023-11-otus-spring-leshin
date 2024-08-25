@@ -91,9 +91,9 @@ import java.util.List;
 public class BookController {
     private final BookService service;
 
-    private final GenreService genreService;
-
     private final AuthorService authorService;
+
+    private final GenreService genreService;
 
     private final BookConverter bookConverter;
 

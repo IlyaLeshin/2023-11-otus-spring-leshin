@@ -3,9 +3,10 @@ package ru.otus.hw.controllers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.mongo.AutoConfigureDataMongo;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.hw.converters.CommentConverter;
 import ru.otus.hw.dto.CommentCreateDto;
@@ -22,8 +23,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @DisplayName("Контроллер комментариев должен")
 @WebMvcTest(CommentController.class)
-@AutoConfigureDataMongo
 class CommentControllerTest {
+
+    @Configuration
+    static class TestConfiguration {
+        @Bean
+        public CommentController commentController(CommentService commentService, CommentConverter commentConverter) {
+            return new CommentController(commentService, commentConverter);
+        }
+    }
+
     private static final String FIRST_COMMENT_ID = "c1";
 
     private static final String FIRST_BOOK_ID = "b1";
