@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Library</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        .books {
+            border: 1px solid steelblue;
+            width: 300px;
+            border-collapse: collapse;
+        }
+
+        .books tr td, th {
+            padding: 5px;
+            border: 1px solid steelblue;
+        }
+
+        .books td:last-child, td:first-child {
+            width: 50px;
+        }
+
+        h3 {
+            background-image: url("../static/listmark.png");
+            background-repeat: no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+
+        ul, li {
+          list-style: none;
+        }
+    </style>
+    <style type="text/css" th:inline="text">
+        [[h3]] {
+            background-image: url([[@{/listmark.png}]]);
+            background-repeat: no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+    </style>
+</head>
+<body>
+<h3 th:text="#{books-table-header}">Books:</h3>
+
+<table class="books">
+    <thead>
+    <tr>
+        <th th:text="#{book-field-id}">ID</th>
+        <th th:text="#{book-field-title}">Title</th>
+        <th th:text="#{book-field-author-full-name}">Author</th>
+        <th th:text="#{book-field-genres-name}">Genre</th>
+        <th th:text="#{books-table-column-action}">Action</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="book : ${books}" th:object="${book}">
+        <td th:text="*{id}">0</td>
+        <td th:text="*{title}">Title</td>
+        <td th:text="*{authorDto.fullName}">Author name</td>
+        <td>
+            <li th:each="genre : *{genreDtoList}" th:text="${genre.name}">Genre name</li>
+        </td>
+        <td>
+            <a href="book-with-comments.html" th:href="@{/books/__${book.id}__}" type="button">
+                <button th:text="#{book-info-button-caption}">Book info</button>
+            </a>
+            <a href="edit.html" th:href="@{/books/__${book.id}__/edit}" type="button">
+                <button th:text="#{edit-button-caption}">Edit</button>
+            </a>
+            <form action="#" th:action="@{/books/__${book.id}__/delete}" th:method="post">
+                <button class="ordinary-btn" type="submit" th:text="#{delete-button-caption}">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<br/>
+<a href="edit.html" th:href="@{books/create}" type="button">
+    <button th:text="#{add-book-button-caption}">Add book</button>
+</a>
+<br/>
+<a href="../index.html" th:href="@{/}" type="button">
+    <button th:text="#{return-to-index-page-button-caption}">Return to index page</button>
+</a>
+</body>
+</html>
