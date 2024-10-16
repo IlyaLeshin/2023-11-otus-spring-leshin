@@ -19,14 +19,14 @@ public class CommentPageController {
     }
 
     @GetMapping("/books/{bookId}/comments/creation-form")
-    public String createCommentPage(@PathVariable("bookId") long bookId, Model model) {
+    public String creationFormCommentPage(@PathVariable("bookId") long bookId, Model model) {
         model.addAttribute("bookId", bookId);
         model.addAttribute("marker", "creation");
         return "comments/editing-form";
     }
 
     @GetMapping("/books/{bookId}/comments/{commentId}/editing-form")
-    public String editCommentPage(@PathVariable("bookId") long bookId, @PathVariable("commentId") long commentId,
+    public String editingFormCommentPage(@PathVariable("bookId") long bookId, @PathVariable("commentId") long commentId,
                                   Model model) {
         model.addAttribute("bookId", bookId);
         model.addAttribute("commentId", commentId);

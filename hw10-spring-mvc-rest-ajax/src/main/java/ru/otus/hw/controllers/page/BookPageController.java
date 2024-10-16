@@ -22,13 +22,13 @@ public class BookPageController {
     }
 
     @GetMapping("/books/creation-form")
-    public String createBookPage(Model model) {
+    public String creationFormBookPage(Model model) {
         model.addAttribute("marker", "creation");
         return "books/editing-form";
     }
 
     @GetMapping("/books/{id}/editing-form")
-    public String editBookPage(@PathVariable long id, Model model) {
+    public String editingFormBookPage(@PathVariable long id, Model model) {
         model.addAttribute("bookId", id);
         return "books/editing-form";
     }
