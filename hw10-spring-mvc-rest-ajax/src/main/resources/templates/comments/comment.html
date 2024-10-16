@@ -53,25 +53,11 @@
     </tr>
     </thead>
 
-    <tbody>
-    <tr th:object="${comment}">
-        <td th:text="*{id}">0</td>
-        <td th:text="*{bookId}">0</td>
-        <td th:text="*{text}">Text</td>
-
-        <td>
-            <a href="edit.html" th:href="@{/books/__*{bookId}__/comments/__*{id}__/edit}" type="button">
-                <button th:text="#{edit-button-caption}">Edit</button>
-            </a>
-            <form action="#" th:action="@{/books/__*{bookId}__/comments/__*{id}__/delete}" th:method="post">
-                <button class="ordinary-btn" type="submit" th:text="#{delete-button-caption}">Delete</button>
-            </form>
-        </td>
-    </tr>
+    <tbody id="book-comment-body">
     </tbody>
 </table>
 <br/>
-<a href="book-with-comments.html" th:href="@{/books/__${comment.bookId}__}" type="button">
+<a href="book-with-comments.html" th:href="@{/books/__${bookId}__}" type="button">
     <button th:text="#{book-info-button-caption}">Book info</button>
 </a>
 <br/>
@@ -83,4 +69,47 @@
     <button th:text="#{return-to-index-page-button-caption}">Return to index page</button>
 </a>
 </body>
+<script  th:inline="javascript">
+    window.onload = () => {
+           getComment();
+       }
+
+    function getComment() {
+        const bookId=[[${bookId}]];
+        const commentId=[[${commentId}]];
+        fetch('/api/v1/books/' + bookId + '/comments/' + commentId, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        .then(response => response.json())
+        .then((comment) => {
+            let commentBody = "";
+
+            commentBody = `<tr>
+                     <td>${comment.id}</td>
+                     <td>${comment.bookId}</td>
+                     <td>${comment.text}</td>
+                     <td>
+                       <a href="/books/${comment.bookId}/comments/${comment.id}/editing-form">
+                           <button type="button">[[#{edit-button-caption}]]</button>
+                       </a>
+                       <button type="submit" onclick="deleteComment(${comment.bookId},${comment.id})"> [[#{delete-button-caption}]]</button>
+                     </td>
+                     </tr>`;
+           document.getElementById("book-comment-body").innerHTML = commentBody;
+        });
+    }
+
+	function deleteComment(bookId, commentId) {
+           fetch("/api/v1/books/" + bookId +"/comments/" + commentId, {
+               method: 'DELETE',
+               headers: {
+                   'Content-Type': 'application/json'
+               }
+           })
+           .then(location.href = "/books/${comment.bookId}");
+       }
+</script>>
 </html>

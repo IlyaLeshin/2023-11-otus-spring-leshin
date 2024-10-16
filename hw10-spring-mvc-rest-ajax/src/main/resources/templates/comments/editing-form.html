@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Edit book</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        input:read-only {
+            background: lightgray;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+
+        h3 {
+            background-image: url("../static/listmark.png");
+            background-repeat: no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+
+        .errors {
+            color: red;
+        }
+    </style>
+    <style type="text/css" th:inline="text">
+        [[h3]] {
+            background-image: url([[@{/listmark.png}]]);
+            background-repeat: no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+    </style>
+</head>
+<body>
+<h3 th:text="#{comment-form-header}">Comment:</h3>
+
+    <h3 th:text="${marker} != 'creation'
+      ? #{comments-edit-form-header}
+      : #{comments-create-form-header}">Edit comment:</h3>
+
+    <div class="row" th:if="${marker} != 'creation'">
+        <label for="comment-id-input" th:text="#{comment-field-id}">Comment ID:</label>
+        <input id="comment-id-input" name="id" type="text" readonly="readonly" value="1" th:value="${commentId}"/>
+    </div>
+
+    <div class="row">
+        <label for="book-id-input" th:text="#{comment-field-book-id}">Book ID:</label>
+        <input id="book-id-input" type="text" name="bookId" readonly="readonly" value="1" th:value="${bookId}"/>
+    </div>
+
+    <div class="row">
+        <label for="comment-text-input" th:text="#{comment-field-text}">Text:</label>
+        <input required id="comment-text-input" name="text" type="text"/>
+    </div>
+
+    <div class="row">
+        <button th:text="#{save-button-caption}" type="submit" onclick="saveComment()">Save</button>
+        <a href="book-with-comments.html" th:href="@{/books/__${bookId}__}">
+            <button th:text="#{cancel-button-caption}" type="button">Cancel</button>
+        </a>
+    </div>
+
+
+<script>
+
+   function saveComment() {
+            const commentId = document.getElementById("comment-id-input")
+            const commentText = document.getElementById("comment-text-input")
+            const bookId = document.getElementById("book-id-input")
+
+            let commentJson=""
+
+            if (commentId != null) {
+            commentJson = {id: commentId.value, text: commentText.value, bookId: bookId.value}
+            } else  {
+             commentJson = {text: commentText.value, bookId: bookId.value}
+             }
+
+
+            fetch(commentId != null ? ("/api/v1/books/" + bookId.value + "/comments/" + commentId.value)
+                             : ("/api/v1/books/" + bookId.value + "/comments"), {
+                method: commentId != null ? 'PUT' : 'POST',
+                headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(commentJson)
+            })
+            .then(rawResponse => rawResponse.json())
+            .then(response => commentId != null ? (location.href = "/books/" + bookId.value + "/comments/" + commentId.value)
+                                    : (location.href = "/books/" + bookId.value))
+            .catch(error => alert("Ошибка" + error))
+        }
+
+</script>
+</body>
+</html>
