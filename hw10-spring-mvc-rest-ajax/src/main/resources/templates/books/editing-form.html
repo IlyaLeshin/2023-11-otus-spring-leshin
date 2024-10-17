@@ -138,14 +138,9 @@
             let bookJson=""
 
             if (id != null) {
-            console.log("update")
             bookJson = {id: id.value, title: bookTitle.value, authorId: authorId.value, genreIds: genresIdsSelected}
-            console.log(JSON.stringify(bookJson))
             } else  {
-             console.log("create")
              bookJson = {title: bookTitle.value, authorId: authorId.value, genreIds: genresIdsSelected}
-             console.log(bookJson)
-             console.log(JSON.stringify(bookJson))
              }
 
             fetch(id != null ? ("/api/v1/books/" + id.value) : ("/api/v1/books"), {

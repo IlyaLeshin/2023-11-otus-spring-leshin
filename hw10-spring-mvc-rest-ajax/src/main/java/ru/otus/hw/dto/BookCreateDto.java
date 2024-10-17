@@ -24,6 +24,7 @@ public class BookCreateDto {
     @NotNull(message = "{authorId-field-should-not-be-blank}")
     private Long authorId;
 
+    @NotNull
     @Size(min = 1,message = "{genresIds-field-has-expected-size}")
     private Set<Long> genreIds;
 }
