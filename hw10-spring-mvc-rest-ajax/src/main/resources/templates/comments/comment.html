@@ -71,8 +71,8 @@
 </body>
 <script  th:inline="javascript">
     window.onload = () => {
-           getComment();
-       }
+        getComment();
+    }
 
     function getComment() {
         const bookId=[[${bookId}]];
@@ -88,28 +88,31 @@
             let commentBody = "";
 
             commentBody = `<tr>
-                     <td>${comment.id}</td>
-                     <td>${comment.bookId}</td>
-                     <td>${comment.text}</td>
-                     <td>
-                       <a href="/books/${comment.bookId}/comments/${comment.id}/editing-form">
-                           <button type="button">[[#{edit-button-caption}]]</button>
-                       </a>
-                       <button type="submit" onclick="deleteComment(${comment.bookId},${comment.id})"> [[#{delete-button-caption}]]</button>
-                     </td>
-                     </tr>`;
-           document.getElementById("book-comment-body").innerHTML = commentBody;
-        });
+                           <td>${comment.id}</td>
+                           <td>${comment.bookId}</td>
+                           <td>${comment.text}</td>
+                           <td>
+                              <a href="/books/${comment.bookId}/comments/${comment.id}/editing-form">
+                                  <button type="button">[[#{edit-button-caption}]]</button>
+                              </a>
+                              <button type="button" onclick="deleteComment(${comment.bookId},${comment.id})"> [[#{delete-button-caption}]]</button>
+                           </td>
+                           </tr>
+            `;
+            document.getElementById("book-comment-body").innerHTML = commentBody;
+        })
+        .catch(error => alert("Ошибка" + error));
     }
 
 	function deleteComment(bookId, commentId) {
-           fetch("/api/v1/books/" + bookId +"/comments/" + commentId, {
-               method: 'DELETE',
-               headers: {
-                   'Content-Type': 'application/json'
-               }
-           })
-           .then(location.href = "/books/${comment.bookId}");
-       }
-</script>>
+        fetch("/api/v1/books/" + bookId +"/comments/" + commentId, {
+             method: 'DELETE',
+             headers: {
+                'Content-Type': 'application/json'
+             }
+        })
+        .then(location.href = "/books/"+ bookId)
+        .catch(error => alert("Ошибка" + error));
+    }
+</script>
 </html>

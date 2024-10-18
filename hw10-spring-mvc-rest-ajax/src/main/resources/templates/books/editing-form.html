@@ -57,14 +57,12 @@
 <div class="row">
     <label for="book-title-input" th:text="#{book-field-title}">Title:</label>
     <input required id="book-title-input" name="title" type="text"/>
-
 </div>
 
 <div class="row">
     <label for="book-author-select" th:text="#{book-field-author-full-name}">Author:</label>
     <select required id="book-author-select" name="author">
         <option value="" style="display:none">--Please select author--</option>
-
     </select>
 
 </div>
@@ -74,7 +72,6 @@
     <select required multiple id="book-genre-dropdown">
         <option value="" style="display:none">--Please select genres--</option>
     </select>
-
 </div>
 
 <div class="row">
@@ -96,18 +93,19 @@
             headers: {
                 "Content-Type": "application/json"
             },
-        }).then(response => response.json())
-            .then((json) => {
+        })
+        .then(response => response.json())
+        .then((json) => {
 
-                let authorList = "";
+            let authorList = "";
 
-                json.forEach((author) => {
-
-                    authorList += `<option value="${author.id}">${author.fullName}</option>`;
-                });
-
-                document.getElementById("book-author-select").innerHTML = authorList;
+            json.forEach((author) => {
+                authorList += `<option value="${author.id}">${author.fullName}</option>`;
             });
+
+            document.getElementById("book-author-select").innerHTML = authorList;
+        })
+        .catch(error => alert("Ошибка" + error));
     }
 
     function getGenres() {
@@ -116,48 +114,47 @@
             headers: {
                 "Content-Type": "application/json"
             },
-        }).then(response => response.json())
-            .then((json) => {
+        })
+        .then(response => response.json())
+        .then((json) => {
 
-                let genreList = "";
+            let genreList = "";
 
-                json.forEach((genre) => {
-                    genreList += `<option value="${genre.id}">${genre.name}</option>`;
-                });
-                document.getElementById("book-genre-dropdown").innerHTML = genreList;
+            json.forEach((genre) => {
+                genreList += `<option value="${genre.id}">${genre.name}</option>`;
             });
+
+            document.getElementById("book-genre-dropdown").innerHTML = genreList;
+        })
+        .catch(error => alert("Ошибка" + error));
     }
 
-   function saveBook() {
+    function saveBook() {
+        const id = document.getElementById("book-id-input")
+        const bookTitle = document.getElementById("book-title-input")
+        const authorId = document.getElementById("book-author-select")
+        const genresIds = document.getElementById("book-genre-dropdown").options
+        const genresIdsSelected = Array.from(genresIds).filter(o => o.selected).map(o => o.value)
+        let bookJson=""
 
-            const id = document.getElementById("book-id-input")
-            const bookTitle = document.getElementById("book-title-input")
-            const authorId = document.getElementById("book-author-select")
-            const genresIds = document.getElementById("book-genre-dropdown").options
-            const genresIdsSelected = Array.from(genresIds).filter(o => o.selected).map(o => o.value)
-            let bookJson=""
-
-            if (id != null) {
-            bookJson = {id: id.value, title: bookTitle.value, authorId: authorId.value, genreIds: genresIdsSelected}
-            } else  {
-             bookJson = {title: bookTitle.value, authorId: authorId.value, genreIds: genresIdsSelected}
-             }
-
-            fetch(id != null ? ("/api/v1/books/" + id.value) : ("/api/v1/books"), {
-                method: id != null ? 'PUT' : 'POST',
-                headers: {
-                  'Accept': 'application/json',
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(bookJson)
-            })
-            .then(rawResponse => rawResponse.json())
-            .then(response => id != null ? (location.href = "/books/" + id.value) : (location.href = "/books"))
-            .catch(error => alert("Ошибка" + error))
+        if (id != null) {
+                bookJson = {id: id.value, title: bookTitle.value, authorId: authorId.value, genreIds: genresIdsSelected}
+        } else {
+            bookJson = {title: bookTitle.value, authorId: authorId.value, genreIds: genresIdsSelected}
         }
 
+        fetch(id != null ? ("/api/v1/books/" + id.value) : ("/api/v1/books"), {
+            method: id != null ? 'PUT' : 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(bookJson)
+        })
+        .then(rawResponse => rawResponse.json())
+        .then(response => id != null ? (location.href = "/books/" + id.value) : (location.href = "/books"))
+        .catch(error => alert("Ошибка" + error));
+    }
 </script>
-
-
 </body>
 </html>

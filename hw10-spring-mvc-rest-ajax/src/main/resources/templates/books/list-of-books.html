@@ -44,67 +44,61 @@
         }
     </style>
 
-    <script th:inline="javascript">
-        window.onload = () => {
-          getBookList();
-      }
-
-      function getBookList() {
-          fetch('/api/v1/books', {
-              method: "GET",
-              headers: {
-                  "Content-Type": "application/json"
-              }
-          })
-          .then(response => response.json())
-          .then((json) => {
-
-              let bookList = "";
-
-              json.forEach((book) => {
-
-                  let genreList = "";
-
-                  const genres = book.genreDtoList;
-
-                  genres.forEach((genre) => {
-                     genreList += `${genre.name} `
-                  });
-
-                  bookList += `<tr>
-                              <td>${book.id}</td>
-                              <td>${book.title} </td>
-                              <td>${book.authorDto.fullName}</td>
-                              <td>${genreList}</td>
-                              <td>
-                                  <form id="list-form">
-                                      <div class="row">
-                                          <a href="/books/${book.id}">
-                                              <button type="button">[[#{book-info-button-caption}]]</button>
-                                          </a>
-                                          <a href="/books/${book.id}/editing-form">
-                                              <button type="button">[[#{edit-button-caption}]]</button>
-                                          </a>
-                                          <button type="submit" onclick="deleteBook(${book.id})"> [[#{delete-button-caption}]]</button>
-                                      </div>
-                                  </form>
-                              </td>
-                             </tr>`;
-              });
-              document.getElementById("books-table-body").innerHTML = bookList;
-          });
-      }
-
-      function deleteBook(bookId) {
-          fetch("/api/v1/books/" + bookId, {
-              method: 'DELETE',
-              headers: {
-                  'Content-Type': 'application/json'
-              },
-          })
-          .then(response => window.location.href = "/")
-      }
-    </script>
+<script th:inline="javascript">
+    window.onload = () => {
+      getBookList();
+    }
+    function getBookList() {
+        fetch('/api/v1/books', {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        .then(response => response.json())
+        .then((json) => {
+            let bookList = "";
+            json.forEach((book) => {
+                let genreList = "";
+                const genres = book.genreDtoList;
+                genres.forEach((genre) => {
+                    genreList += `${genre.name} `
+                });
+                bookList += `<tr>
+                            <td>${book.id}</td>
+                            <td>${book.title} </td>
+                            <td>${book.authorDto.fullName}</td>
+                            <td>${genreList}</td>
+                            <td>
+                                <form id="list-form">
+                                    <div class="row">
+                                        <a href="/books/${book.id}">
+                                            <button type="button">[[#{book-info-button-caption}]]</button>
+                                        </a>
+                                        <a href="/books/${book.id}/editing-form">
+                                            <button type="button">[[#{edit-button-caption}]]</button>
+                                        </a>
+                                        <button type="button" onclick="deleteBook(${book.id})"> [[#{delete-button-caption}]]</button>
+                                    </div>
+                                </form>
+                            </td>
+                            </tr>
+                `;
+            });
+            document.getElementById("books-table-body").innerHTML = bookList;
+        });
+    }
+    function deleteBook(bookId) {
+        fetch("/api/v1/books/" + bookId, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+        .then(response => location.reload())
+        .catch(error => alert("Ошибка" + error));
+    }
+</script>
 
 </head>
 <body>

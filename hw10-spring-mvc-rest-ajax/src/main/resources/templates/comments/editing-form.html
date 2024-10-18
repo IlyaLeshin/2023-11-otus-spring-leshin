@@ -70,37 +70,35 @@
         </a>
     </div>
 
-
 <script>
 
-   function saveComment() {
-            const commentId = document.getElementById("comment-id-input")
-            const commentText = document.getElementById("comment-text-input")
-            const bookId = document.getElementById("book-id-input")
+    function saveComment() {
+        const commentId = document.getElementById("comment-id-input")
+        const commentText = document.getElementById("comment-text-input")
+        const bookId = document.getElementById("book-id-input")
 
-            let commentJson=""
+        let commentJson=""
 
-            if (commentId != null) {
+        if (commentId != null) {
             commentJson = {id: commentId.value, text: commentText.value, bookId: bookId.value}
-            } else  {
-             commentJson = {text: commentText.value, bookId: bookId.value}
-             }
-
-
-            fetch(commentId != null ? ("/api/v1/books/" + bookId.value + "/comments/" + commentId.value)
-                             : ("/api/v1/books/" + bookId.value + "/comments"), {
-                method: commentId != null ? 'PUT' : 'POST',
-                headers: {
-                  'Accept': 'application/json',
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(commentJson)
-            })
-            .then(rawResponse => rawResponse.json())
-            .then(response => commentId != null ? (location.href = "/books/" + bookId.value + "/comments/" + commentId.value)
-                                    : (location.href = "/books/" + bookId.value))
-            .catch(error => alert("Ошибка" + error))
+        } else {
+            commentJson = {text: commentText.value, bookId: bookId.value}
         }
+
+        fetch(commentId != null ? ("/api/v1/books/" + bookId.value + "/comments/" + commentId.value)
+                                : ("/api/v1/books/" + bookId.value + "/comments"), {
+            method: commentId != null ? 'PUT' : 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(commentJson)
+        })
+        .then(rawResponse => rawResponse.json())
+        .then(response => commentId != null ? (location.href = "/books/" + bookId.value + "/comments/" + commentId.value)
+                                    : (location.href = "/books/" + bookId.value))
+        .catch(error => alert("Ошибка" + error))
+    }
 
 </script>
 </body>
