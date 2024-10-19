@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.1</version>
+        <version>3.2.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>ru.otus</groupId>
@@ -24,6 +24,7 @@
         <module>hw06-spring-orm-jpa</module>
         <module>hw07-spring-data-jpa</module>
         <module>hw08-spring-data-mongodb</module>
+        <module>hw09-spring-mvc</module>
         <module>hw10-spring-mvc-rest-ajax</module>
     </modules>
 
