@@ -25,6 +25,7 @@
         <module>hw07-spring-data-jpa</module>
         <module>hw08-spring-data-mongodb</module>
         <module>hw09-spring-mvc</module>
+        <module>hw10-spring-mvc-rest-ajax</module>
     </modules>
 
     <properties>
