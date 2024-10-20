@@ -2,6 +2,7 @@ package ru.otus.hw.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,15 +18,6 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     private final UserConverter userConverter;
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserDto userDto = findByUsername(username);
-        return org.springframework.security.core.userdetails.User.builder()
-                .username(userDto.getUsername())
-                .password(userDto.getPassword())
-                .build();
-    }
 
     @Override
     @Transactional(readOnly = true)
