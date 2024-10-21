@@ -1,6 +1,6 @@
 --liquibase formatted sql
 
---changeset IlyaLeshin:2024-10-20-003-users
+--changeset IlyaLeshin:2024-10-20-002-users
 merge into users(username, password)
 key(username)
 values ('user1', '$2a$12$KQZtdFV4vtml5IKzvYpWreewsKvl6cWjVylmJ025Aqz/T8VS8UDSi'),
