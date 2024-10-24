@@ -14,7 +14,6 @@ import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Genre;
 import ru.otus.hw.repositories.AuthorRepository;
 import ru.otus.hw.repositories.BookRepository;
-import ru.otus.hw.repositories.CommentRepository;
 import ru.otus.hw.repositories.GenreRepository;
 
 import java.util.List;
@@ -49,9 +48,6 @@ class BookServiceImplTest {
 
     @MockBean
     private GenreRepository genreRepository;
-
-    @MockBean
-    private CommentRepository commentRepository;
 
     @MockBean
     private BookConverter bookConverter;
