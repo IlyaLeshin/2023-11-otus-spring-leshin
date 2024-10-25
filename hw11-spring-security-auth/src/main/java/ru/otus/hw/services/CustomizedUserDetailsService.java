@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.otus.hw.dto.UserDto;
+import ru.otus.hw.exceptions.UserNotFoundException;
 
 @RequiredArgsConstructor
 @Service
@@ -15,13 +16,14 @@ public class CustomizedUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserDto userDto = userService.findByUsername(username);
-        if (userDto != null) {
+        try {
+            UserDto userDto = userService.findByUsername(username);
             return org.springframework.security.core.userdetails.User.builder()
                     .username(userDto.getUsername())
                     .password(userDto.getPassword())
                     .build();
+        } catch (UserNotFoundException e) {
+            throw new UsernameNotFoundException("Username %s not found".formatted(username), e);
         }
-        throw new UsernameNotFoundException("Username %s not found".formatted(username));
     }
 }
