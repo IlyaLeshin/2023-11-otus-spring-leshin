@@ -26,6 +26,7 @@
         <module>hw08-spring-data-mongodb</module>
         <module>hw09-spring-mvc</module>
         <module>hw10-spring-mvc-rest-ajax</module>
+        <module>hw11-spring-security-auth</module>
     </modules>
 
     <properties>

@@ -15,3 +15,4 @@
 - [x] hw08-spring-data-mongodb (ДЗ №8: Использовать MongoDB и spring-data для хранения информации о книгах)
 - [x] hw09-spring-mvc (ДЗ №9: CRUD приложение с Web UI и хранением данных в БД)
 - [x] hw10-spring-mvc-rest-ajax (ДЗ №10: Переписать приложение с использованием AJAX и REST-контроллеров)
+- [x] hw11-spring-security-auth (ДЗ №11: В CRUD Web-приложение добавить механизм аутентификации)
