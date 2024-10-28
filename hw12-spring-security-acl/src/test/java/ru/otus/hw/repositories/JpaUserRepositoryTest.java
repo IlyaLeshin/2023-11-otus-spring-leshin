@@ -13,8 +13,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 class JpaUserRepositoryTest {
 
-    private static final long FIRST_USER_ID = 1L;
-    private static final String FIRST_USER_USERNAME = "testUser";
+    private static final long USER_ID = 1L;
+    private static final String USER_USERNAME = "testAdmin";
 
     @Autowired
     private UserRepository userRepository;
@@ -26,8 +26,8 @@ class JpaUserRepositoryTest {
     @DisplayName("должен пользователя по имени")
     @Test
     void shouldReturnCorrectUserByName() {
-        var optionalActualUser = userRepository.findByUsername(FIRST_USER_USERNAME);
-        var expectedBook = testEntityManager.find(User.class, FIRST_USER_ID);
+        var optionalActualUser = userRepository.findByUsername(USER_USERNAME);
+        var expectedBook = testEntityManager.find(User.class, USER_ID);
 
         assertThat(optionalActualUser).isPresent().get()
                 .isEqualTo(expectedBook);

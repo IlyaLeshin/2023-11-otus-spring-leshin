@@ -37,7 +37,8 @@ class ControllersSecurityTest {
     private static final long FIRST_COMMENT_ID = 1L;
 
     private static final String USERNAME = "testUser";
-    private static final String[] ROLES = {"USER"};
+    private static final String[] ROLES = {"ADMIN", "CAN_READ_AUTHORS","CAN_READ_GENRES",
+            "CAN_EDIT_BOOKS", "CAN_EDIT_COMMENTS"};
 
     @Autowired
     private MockMvc mvc;

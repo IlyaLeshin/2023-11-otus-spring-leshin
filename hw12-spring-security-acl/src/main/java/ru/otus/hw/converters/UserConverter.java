@@ -3,6 +3,7 @@ package ru.otus.hw.converters;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.otus.hw.dto.UserDto;
+import ru.otus.hw.models.Role;
 import ru.otus.hw.models.User;
 
 @RequiredArgsConstructor
@@ -14,6 +15,8 @@ public class UserConverter {
         userDto.setId(user.getId());
         userDto.setUsername(user.getUsername());
         userDto.setPassword(user.getPassword());
+        userDto.setRoles(user.getRoles().stream()
+                .map(Role::getName).toList());
         return userDto;
     }
 }

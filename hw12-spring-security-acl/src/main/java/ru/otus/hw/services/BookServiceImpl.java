@@ -1,6 +1,7 @@
 package ru.otus.hw.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.converters.BookConverter;
@@ -36,6 +37,7 @@ public class BookServiceImpl implements BookService {
 
     private final BookWithCommentsConverter bookWithCommentsConverter;
 
+    @Secured({"ROLE_ADMIN","ROLE_USER"})
     @Override
     @Transactional(readOnly = true)
     public BookDto findById(long id) {
@@ -43,6 +45,7 @@ public class BookServiceImpl implements BookService {
                 new BookNotFoundException("Book with id %s not found".formatted(id)));
     }
 
+    @Secured({"ROLE_ADMIN","ROLE_USER"})
     @Override
     @Transactional(readOnly = true)
     public BookWithCommentsDto findWithCommentsById(long id) {
@@ -50,11 +53,13 @@ public class BookServiceImpl implements BookService {
                 new BookNotFoundException("Book with id %s not found".formatted(id)));
     }
 
+    @Secured({"ROLE_ADMIN","ROLE_USER"})
     @Override
     public List<BookDto> findAll() {
         return bookRepository.findAll().stream().map(bookConverter::modelToDto).toList();
     }
 
+    @Secured("ROLE_ADMIN")
     @Override
     @Transactional
     public BookDto insert(BookCreateDto bookCreateDto) {
@@ -65,6 +70,7 @@ public class BookServiceImpl implements BookService {
 
     }
 
+    @Secured("ROLE_ADMIN")
     @Override
     @Transactional
     public BookDto update(BookUpdateDto bookUpdateDto) {
@@ -79,6 +85,7 @@ public class BookServiceImpl implements BookService {
         throw new BookNotFoundException("Book with id %s not found".formatted(id));
     }
 
+    @Secured("ROLE_ADMIN")
     @Override
     public void deleteById(long id) {
         bookRepository.deleteById(id);

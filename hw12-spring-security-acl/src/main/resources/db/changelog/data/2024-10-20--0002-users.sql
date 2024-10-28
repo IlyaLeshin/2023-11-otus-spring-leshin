@@ -3,5 +3,5 @@
 --changeset IlyaLeshin:2024-10-20-002-users
 merge into users(username, password)
 key(username)
-values ('user1', '$2a$12$KQZtdFV4vtml5IKzvYpWreewsKvl6cWjVylmJ025Aqz/T8VS8UDSi'),
-('user2', '$2a$12$2s3mj6h7PFcws1TydeJRDeapRMe/pgxAfqh0HIJ0c13gUCgK0PC2K');
+values ('admin', '$2a$12$aei29O3Qa2t.Sm1CBuC2oO.I5My2uvdVe7cUf3MYZJI2mY.W1x6D.'),
+('user', '$2a$12$W.Kr6TdM8kOWQuv5rmRRyu1LVrD9WZk0ZHF6TiFrdEQ9QWlbibFPa');

@@ -22,11 +22,20 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/login").permitAll()
-                        .requestMatchers("/**").authenticated()
-                        .anyRequest().authenticated()
+                        .requestMatchers("/login", "/").permitAll()
+                        .requestMatchers("/books/creation-form", "/books/*/editing-form").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/books/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
+                        .requestMatchers("/api/v1/authors").hasAuthority("ROLE_CAN_READ_AUTHORS")
+                        .requestMatchers("/api/v1/genres").hasAuthority("ROLE_CAN_READ_GENRES")
+                        .requestMatchers("/api/v1/books/*/comments/**").hasAuthority("ROLE_CAN_EDIT_COMMENTS")
+                        .requestMatchers("/api/v1/books/**").hasAuthority("ROLE_CAN_EDIT_BOOKS")
+                        .anyRequest().denyAll()
                 )
                 .formLogin(Customizer.withDefaults())
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login")
+                        .permitAll())
         ;
         return http.build();
     }
