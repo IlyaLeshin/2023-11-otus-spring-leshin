@@ -11,7 +11,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import ru.otus.hw.config.MethodSecurityConfig;
 import ru.otus.hw.config.SecurityConfig;
 
 import java.util.Map;
@@ -24,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @DisplayName("Контроллеры страниц должен")
 @WebMvcTest(controllers = {BookPageController.class, CommentPageController.class})
-@Import({SecurityConfig.class, MethodSecurityConfig.class})
+@Import({SecurityConfig.class})
 class PageControllersSecurityTest {
 
     private static final long FIRST_BOOK_ID = 1L;

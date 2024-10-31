@@ -27,7 +27,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@DisplayName("Контроллер должен")
+@DisplayName("Контроллер api должен")
 @WebMvcTest(controllers = {AuthorController.class, BookController.class,
         CommentController.class, GenreController.class})
 @Import(SecurityConfig.class)
@@ -37,7 +37,7 @@ class ControllersSecurityTest {
     private static final long FIRST_COMMENT_ID = 1L;
 
     private static final String USERNAME = "testUser";
-    private static final String[] ROLES = {"ADMIN", "CAN_READ_AUTHORS","CAN_READ_GENRES",
+    private static final String[] ROLES = {"ADMIN", "CAN_READ_AUTHORS","CAN_READ_GENRES", "CAN_READ_BOOKS",
             "CAN_EDIT_BOOKS", "CAN_EDIT_COMMENTS"};
 
     @Autowired

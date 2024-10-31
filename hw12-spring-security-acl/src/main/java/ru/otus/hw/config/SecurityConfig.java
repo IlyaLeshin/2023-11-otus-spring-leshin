@@ -3,6 +3,7 @@ package ru.otus.hw.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -25,9 +26,10 @@ public class SecurityConfig {
                         .requestMatchers("/login", "/").permitAll()
                         .requestMatchers("/books/creation-form", "/books/*/editing-form").hasAuthority("ROLE_ADMIN")
                         .requestMatchers("/books/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
-                        .requestMatchers("/api/v1/authors").hasAuthority("ROLE_CAN_READ_AUTHORS")
-                        .requestMatchers("/api/v1/genres").hasAuthority("ROLE_CAN_READ_GENRES")
+                        .requestMatchers(HttpMethod.GET,"/api/v1/authors").hasAuthority("ROLE_CAN_READ_AUTHORS")
+                        .requestMatchers(HttpMethod.GET,"/api/v1/genres").hasAuthority("ROLE_CAN_READ_GENRES")
                         .requestMatchers("/api/v1/books/*/comments/**").hasAuthority("ROLE_CAN_EDIT_COMMENTS")
+                        .requestMatchers(HttpMethod.GET,"/api/v1/books/**").hasAuthority("ROLE_CAN_READ_BOOKS")
                         .requestMatchers("/api/v1/books/**").hasAuthority("ROLE_CAN_EDIT_BOOKS")
                         .anyRequest().denyAll()
                 )

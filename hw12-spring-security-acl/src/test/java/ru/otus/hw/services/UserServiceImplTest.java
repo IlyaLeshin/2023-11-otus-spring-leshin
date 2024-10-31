@@ -18,7 +18,7 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.when;
 
-@DisplayName("Сервис для работы с книгами должен")
+@DisplayName("Сервис для работы с пользователями должен")
 @SpringBootTest(classes = UserServiceImpl.class)
 class UserServiceImplTest {
     private static final long FIRST_USER_ID = 1L;
