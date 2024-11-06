@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Edit book</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        input:read-only {
+            background: lightgray;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+
+        h3 {
+            background-image: url("../static/public/listmark.png");
+            background-repeat: no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+
+        .errors {
+            color: red;
+        }
+    </style>
+    <style type="text/css" th:inline="text">
+        [[h3]] {
+            background-image: url([[@{/public/listmark.png}]]);
+            background-repeat: no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+    </style>
+</head>
+
+<body>
+<h3 th:text="#{book-form-header}">Book:</h3>
+
+<h3 th:text="${marker} != 'creation'
+      ? #{books-edit-form-header}
+      : #{books-create-form-header}">Edit book:</h3>
+
+<div class="row" th:if="${marker} != 'creation'">
+    <label for="book-id-input" th:text="#{book-field-id}">ID:</label>
+    <input id="book-id-input" type="text" readonly="readonly"  value="1" th:value="${bookId}"/>
+</div>
+
+<div class="row">
+    <label for="book-title-input" th:text="#{book-field-title}">Title:</label>
+    <input required id="book-title-input" name="title" type="text"/>
+</div>
+
+<div class="row">
+    <label for="book-author-select" th:text="#{book-field-author-full-name}">Author:</label>
+    <select required id="book-author-select" name="author">
+        <option value="" style="display:none">--Please select author--</option>
+    </select>
+
+</div>
+
+<div class="row">
+    <label for="book-genre-dropdown" th:text="#{book-field-genres-name}">Genre:</label>
+    <select required multiple id="book-genre-dropdown">
+        <option value="" style="display:none">--Please select genres--</option>
+    </select>
+</div>
+
+<div class="row">
+    <button th:text="#{save-button-caption}" type="button" onclick="saveBook()">Save</button>
+    <a href="list-of-books.html" th:href="@{/books}">
+        <button th:text="#{cancel-button-caption}" type="button">Cancel</button>
+    </a>
+</div>
+
+<script>
+    window.onload = () => {
+        getAuthor();
+        getGenres();
+    };
+
+    function getAuthor() {
+        fetch('/api/v1/authors', {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            },
+        })
+        .then(response => response.json())
+        .then((json) => {
+
+            let authorList = "";
+
+            json.forEach((author) => {
+                authorList += `<option value="${author.id}">${author.fullName}</option>`;
+            });
+
+            document.getElementById("book-author-select").innerHTML = authorList;
+        })
+        .catch(error => alert("Ошибка" + error));
+    }
+
+    function getGenres() {
+        fetch('/api/v1/genres', {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            },
+        })
+        .then(response => response.json())
+        .then((json) => {
+
+            let genreList = "";
+
+            json.forEach((genre) => {
+                genreList += `<option value="${genre.id}">${genre.name}</option>`;
+            });
+
+            document.getElementById("book-genre-dropdown").innerHTML = genreList;
+        })
+        .catch(error => alert("Ошибка" + error));
+    }
+
+    function saveBook() {
+        const id = document.getElementById("book-id-input")
+        const bookTitle = document.getElementById("book-title-input")
+        const authorId = document.getElementById("book-author-select")
+        const genresIds = document.getElementById("book-genre-dropdown").options
+        const genresIdsSelected = Array.from(genresIds).filter(o => o.selected).map(o => o.value)
+        let bookJson=""
+
+        if (id != null) {
+                bookJson = {id: id.value, title: bookTitle.value, authorId: authorId.value, genreIds: genresIdsSelected}
+        } else {
+            bookJson = {title: bookTitle.value, authorId: authorId.value, genreIds: genresIdsSelected}
+        }
+
+        fetch(id != null ? ("/api/v1/books/" + id.value) : ("/api/v1/books"), {
+            method: id != null ? 'PUT' : 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(bookJson)
+        })
+        .then(rawResponse => rawResponse.json())
+        .then(response => id != null ? (location.href = "/books/" + id.value) : (location.href = "/books"))
+        .catch(error => alert("Ошибка" + error));
+    }
+</script>
+</body>
+</html>
