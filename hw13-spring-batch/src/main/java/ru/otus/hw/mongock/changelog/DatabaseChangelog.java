@@ -12,7 +12,10 @@ import ru.otus.hw.repositories.BookRepository;
 import ru.otus.hw.repositories.CommentRepository;
 import ru.otus.hw.repositories.GenreRepository;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @ChangeLog
 public class DatabaseChangelog {
@@ -32,57 +35,75 @@ public class DatabaseChangelog {
 
     @ChangeSet(order = "002", id = "insertAuthors", author = "ilyaLeshin")
     public void insertAuthors(AuthorRepository authorRepository) {
-        var authors = List.of(new Author("a1", "Author_1"),
-                new Author("a2", "Author_2"), new Author("a3", "Author_3"));
-
-        authorList = authorRepository.saveAll(authors);
+        authorList = authorRepository.saveAll(createAuthors());
     }
 
     @ChangeSet(order = "003", id = "insertGenres", author = "ilyaLeshin")
     public void insertGenres(GenreRepository genreRepository) {
-        var genres = List.of(new Genre("g1", "Genre_1"), new Genre("g2", "Genre_2"),
-                new Genre("g3", "Genre_3"), new Genre("g4", "Genre_4"),
-                new Genre("g5", "Genre_5"), new Genre("g6", "Genre_6"));
-
-        genreList = genreRepository.saveAll(genres);
+        genreList = genreRepository.saveAll(createGenres());
     }
 
     @ChangeSet(order = "004", id = "insertBooks", author = "ilyaLeshin")
     public void insertBooks(BookRepository bookRepository) {
-        var authorOne = authorList.get(0);
-        var authorTwo = authorList.get(1);
-        var authorThree = authorList.get(1);
-
-        var genreOne = genreList.get(0);
-        var genreTwo = genreList.get(1);
-        var genreFour = genreList.get(3);
-        var genreFive = genreList.get(4);
-
-        var books = List.of(new Book("b1", "BookTitle_1", authorOne, List.of(genreOne, genreTwo)),
-                new Book("b2", "BookTitle_2", authorTwo, List.of(genreTwo, genreFour)),
-                new Book("b3", "BookTitle_3", authorThree, List.of(genreTwo, genreFive)));
-
-        bookList = bookRepository.saveAll(books);
+        bookList = bookRepository.saveAll(createBooks(authorList, genreList));
     }
 
     @ChangeSet(order = "005", id = "insertCommentsForBooks", author = "ilyaLeshin")
     public void insertCommentsForBooks(BookRepository bookRepository, CommentRepository commentRepository) {
-        var bookOne = bookList.get(0);
-        var bookTwo = bookList.get(1);
+        for (Book book : bookList) {
+            List<Comment> comments = createCommentsForBook(book);
+            commentRepository.saveAll(comments);
+            book.setComments(comments);
+            bookRepository.save(book);
+        }
 
-        var comments = List.of(new Comment("c1", "Comment_1", bookOne),
-                new Comment("c2", "Comment_2", bookOne),
-                new Comment("c3", "Comment_3", bookOne),
-                new Comment("c4", "Comment_4", bookTwo),
-                new Comment("c5", "Comment_5", bookTwo),
-                new Comment("c6", "Comment_6", bookTwo));
+    }
 
-        commentList = commentRepository.saveAll(comments);
+    private List<Author> createAuthors() {
+        List<Author> authors = new ArrayList<>();
+        for (int i = 0; i < 50; i++) {
+            authors.add(new Author(null, "Author_" + i));
+        }
+        return authors;
+    }
 
-        bookList.get(0).setComments(List.of(commentList.get(0), commentList.get(1), commentList.get(2)));
-        bookList.get(1).setComments(List.of(commentList.get(3), commentList.get(4), commentList.get(5)));
-        bookRepository.save(bookList.get(0));
-        bookRepository.save(bookList.get(1));
+    private List<Genre> createGenres() {
+        List<Genre> genres = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            genres.add(new Genre(null, "Genre" + i));
+        }
+        return genres;
+    }
+
+    private List<Book> createBooks(List<Author> authorList, List<Genre> genreList) {
+        List<Book> books = new ArrayList<>();
+        for (int i = 0; i < 100; i++) {
+            Book book = new Book();
+            book.setTitle("Book_" + i);
+            int authorIdx = random(authorList.size());
+            book.setAuthor(authorList.get(authorIdx));
+            Set<Genre> genres = new HashSet<>();
+            for (int g = 0; g < random(5); g++) {
+                genres.add(genreList.get(random(genreList.size())));
+            }
+            book.setGenres(genres.stream().toList());
+            books.add(book);
+        }
+
+        return books;
+    }
+
+    private List<Comment> createCommentsForBook(Book book) {
+        List<Comment> comments = new ArrayList<>();
+        for (int c = 0; c < random(10); c++) {
+            Comment comment = new Comment(null, "Comment_" + c, book);
+            comments.add(comment);
+        }
+        return comments;
+    }
+
+    private int random(int max) {
+        return (int) (Math.random() * max);
     }
 
 }
