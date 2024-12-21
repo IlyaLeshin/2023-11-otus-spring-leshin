@@ -2,7 +2,13 @@ spring:
   data:
     mongodb:
       port: 0
-      database: hw08mongoDBTest
+      database: hw13mongoDBTest
+
+  batch:
+    job:
+      enabled: false
+    jdbc:
+      initialize-schema: always
 
   shell:
     interactive:
