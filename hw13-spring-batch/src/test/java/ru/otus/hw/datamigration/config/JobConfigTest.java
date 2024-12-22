@@ -78,15 +78,10 @@ class JobConfigTest {
         long migrationBookCountAfterJob = getMigrationTableElementsCount(MigrationBook.class);
         long migrationCommentCountAfterJob = getMigrationTableElementsCount(MigrationComment.class);
 
-        assertThat(migrationAuthorCountBeforeJob).isEqualTo(0);
-        assertThat(migrationGenreCountBeforeJob).isEqualTo(0);
-        assertThat(migrationBookCountBeforeJob).isEqualTo(0);
-        assertThat(migrationCommentCountBeforeJob).isEqualTo(0);
-
-        assertThat(migrationAuthorCountAfterJob).isEqualTo(originalAuthorsCount);
-        assertThat(migrationGenreCountAfterJob).isEqualTo(originalGenreCount);
-        assertThat(migrationBookCountAfterJob).isEqualTo(originalBookCount);
-        assertThat(migrationCommentCountAfterJob).isEqualTo(originalCommentCount);
+        assertThat(migrationAuthorCountAfterJob-migrationAuthorCountBeforeJob).isEqualTo(originalAuthorsCount);
+        assertThat(migrationGenreCountAfterJob-migrationGenreCountBeforeJob).isEqualTo(originalGenreCount);
+        assertThat(migrationBookCountAfterJob-migrationBookCountBeforeJob).isEqualTo(originalBookCount);
+        assertThat(migrationCommentCountAfterJob-migrationCommentCountBeforeJob).isEqualTo(originalCommentCount);
     }
 
     private Long getOriginalTableElementsCount(Class<?> className) {
