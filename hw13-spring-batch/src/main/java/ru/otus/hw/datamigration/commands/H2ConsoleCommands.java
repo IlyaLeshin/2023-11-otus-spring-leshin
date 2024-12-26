@@ -10,7 +10,7 @@ import java.sql.SQLException;
 
 @ShellComponent
 public class H2ConsoleCommands {
-    @ShellMethod(value = "Start H2 console", key = "h2")
+    @ShellMethod(value = "Start H2 console", key = {"h2", "console", "c", "db"})
     public void startConsole() throws SQLException {
         Logger logger = LoggerFactory.getLogger(H2ConsoleCommands.class);
         logger.info("""

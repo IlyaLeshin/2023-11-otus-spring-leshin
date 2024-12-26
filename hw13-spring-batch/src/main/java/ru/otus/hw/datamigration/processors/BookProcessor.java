@@ -10,11 +10,11 @@ import ru.otus.hw.datamigration.cache.MigrationBookCache;
 
 import ru.otus.hw.datamigration.cache.MigrationGenreCache;
 import ru.otus.hw.datamigration.models.MigrationBook;
+import ru.otus.hw.datamigration.repositories.MigrationBookRepository;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Genre;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Component
 @AllArgsConstructor
@@ -26,13 +26,13 @@ public class BookProcessor implements ItemProcessor<Book, MigrationBook> {
 
     private final MigrationBookCache migrationBookCache;
 
-    private final AtomicLong bookIdSequence = new AtomicLong();
+    private final MigrationBookRepository migrationBookRepository;
 
     @Override
     public MigrationBook process(@NonNull Book item) throws Exception {
         try {
             String bookMongoId = item.getId();
-            Long bookSqlId = getSqlId();
+            long bookSqlId = getSqlId();
             String authorMongoId = item.getAuthor().getId();
             List<String> genresMongoIds = item.getGenres().stream().map(Genre::getId).toList();
             migrationBookCache.put(bookMongoId, bookSqlId);
@@ -47,7 +47,6 @@ public class BookProcessor implements ItemProcessor<Book, MigrationBook> {
     }
 
     private Long getSqlId() {
-        return bookIdSequence.incrementAndGet();
+        return migrationBookRepository.getNextSequenceId();
     }
-
 }

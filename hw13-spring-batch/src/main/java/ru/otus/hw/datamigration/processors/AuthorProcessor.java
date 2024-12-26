@@ -6,16 +6,15 @@ import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;
 import ru.otus.hw.datamigration.cache.MigrationAuthorCache;
 import ru.otus.hw.datamigration.models.MigrationAuthor;
+import ru.otus.hw.datamigration.repositories.MigrationAuthorRepository;
 import ru.otus.hw.models.Author;
-
-import java.util.concurrent.atomic.AtomicLong;
 
 @Component
 @AllArgsConstructor
 public class AuthorProcessor implements ItemProcessor<Author, MigrationAuthor> {
     private final MigrationAuthorCache migrationAuthorCache;
 
-    private final AtomicLong authorIdSequence = new AtomicLong();
+    private final MigrationAuthorRepository migrationAuthorRepository;
 
     @Override
     public MigrationAuthor process(@NonNull Author item) throws Exception {
@@ -33,7 +32,7 @@ public class AuthorProcessor implements ItemProcessor<Author, MigrationAuthor> {
     }
 
     private Long getSqlId() {
-        return authorIdSequence.incrementAndGet();
+        return migrationAuthorRepository.getNextSequenceId();
     }
 
 }

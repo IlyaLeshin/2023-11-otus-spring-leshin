@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.otus.hw.datamigration.cache.MigrationBookCache;
 import ru.otus.hw.datamigration.dto.MigrationCommentDto;
+import ru.otus.hw.datamigration.repositories.MigrationCommentRepository;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Comment;
@@ -35,9 +36,11 @@ class CommentProcessorTest {
     @Autowired
     CommentProcessor commentProcessor;
 
-
     @MockBean
     MigrationBookCache migrationBookCache;
+
+    @MockBean
+    MigrationCommentRepository migrationCommentRepository;
 
     @DisplayName("преобразовывать Book в MigrationBook. текущий метод: process()")
     @Test
@@ -46,6 +49,7 @@ class CommentProcessorTest {
 
         when(migrationBookCache.get(BOOK_MONGO_ID)).thenReturn(BOOK_SQL_ID);
 
+        when(migrationCommentRepository.getNextSequenceId()).thenReturn(BOOK_SQL_ID);
         MigrationCommentDto migrationCommentDto = commentProcessor.process(mongoComment);
         assertThat(migrationCommentDto).isNotNull();
         assertThat(migrationCommentDto.getText()).isEqualTo(mongoComment.getText());

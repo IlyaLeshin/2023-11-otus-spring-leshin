@@ -20,6 +20,7 @@ import ru.otus.hw.datamigration.models.MigrationAuthor;
 import ru.otus.hw.datamigration.models.MigrationBook;
 import ru.otus.hw.datamigration.models.MigrationComment;
 import ru.otus.hw.datamigration.models.MigrationGenre;
+import ru.otus.hw.datamigration.repositories.MigrationGenreRepository;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Comment;
@@ -44,6 +45,9 @@ class JobConfigTest {
 
     @Autowired
     private MongoOperations mongoOperations;
+
+    @Autowired
+    MigrationGenreRepository migrationGenreRepository;
 
     @BeforeEach
     void clearMetaData() {

@@ -1,6 +1,11 @@
 --liquibase formatted sql
 
 --changeset IlyaLeshin:2024-03-08-001-authors-genres-books
+
+create sequence if not exists author_seq start with 1 increment by 1;
+create sequence if not exists genre_seq start with 1 increment by 1;
+create sequence if not exists book_seq start with 1 increment by 1;
+
 create table if not exists authors (
     id bigserial not null unique,
     full_name varchar(255) not null,

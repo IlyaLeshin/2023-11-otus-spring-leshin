@@ -6,16 +6,15 @@ import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;
 import ru.otus.hw.datamigration.cache.MigrationGenreCache;
 import ru.otus.hw.datamigration.models.MigrationGenre;
+import ru.otus.hw.datamigration.repositories.MigrationGenreRepository;
 import ru.otus.hw.models.Genre;
-
-import java.util.concurrent.atomic.AtomicLong;
 
 @Component
 @AllArgsConstructor
 public class GenreProcessor implements ItemProcessor<Genre, MigrationGenre> {
     private final MigrationGenreCache migrationGenreCache;
 
-    private final AtomicLong genreIdSequence = new AtomicLong();
+    private final MigrationGenreRepository migrationGenreRepository;
 
     @Override
     public MigrationGenre process(@NonNull Genre item) throws Exception {
@@ -26,12 +25,11 @@ public class GenreProcessor implements ItemProcessor<Genre, MigrationGenre> {
             migrationGenreCache.put(genreMongoId, migrationGenre);
             return migrationGenre;
         } catch (Exception e) {
-            throw new Exception("Exception in AuthorProcessor process()", e);
+            throw new Exception("Exception in GenreProcessor process()", e);
         }
     }
 
     private Long getSqlId() {
-        return genreIdSequence.incrementAndGet();
+        return migrationGenreRepository.getNextSequenceId();
     }
-
 }

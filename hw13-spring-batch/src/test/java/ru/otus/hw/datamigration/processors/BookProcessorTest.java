@@ -11,6 +11,7 @@ import ru.otus.hw.datamigration.cache.MigrationGenreCache;
 import ru.otus.hw.datamigration.models.MigrationAuthor;
 import ru.otus.hw.datamigration.models.MigrationBook;
 import ru.otus.hw.datamigration.models.MigrationGenre;
+import ru.otus.hw.datamigration.repositories.MigrationBookRepository;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Genre;
@@ -48,6 +49,9 @@ class BookProcessorTest {
     @MockBean
     MigrationBookCache migrationBookCache;
 
+    @MockBean
+    MigrationBookRepository migrationBookRepository;
+
     @DisplayName("преобразовывать Book в MigrationBook. текущий метод: process()")
     @Test
     void process() throws Exception {
@@ -60,6 +64,7 @@ class BookProcessorTest {
         when(migrationAuthorCache.get(AUTHOR_MONGO_ID)).thenReturn(migrationAuthor);
         when(migrationGenreCache.get(GENRE_MONGO_ID)).thenReturn(migrationGenre);
 
+        when(migrationBookRepository.getNextSequenceId()).thenReturn(1L);
         MigrationBook migrationBook = bookProcessor.process(mongoBook);
         assertThat(migrationBook).isNotNull();
         assertThat(migrationBook.getTitle()).isEqualTo(mongoBook.getTitle());
