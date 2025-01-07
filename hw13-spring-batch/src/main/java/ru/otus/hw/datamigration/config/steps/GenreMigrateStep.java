@@ -20,7 +20,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.lang.NonNull;
 import org.springframework.transaction.PlatformTransactionManager;
+import ru.otus.hw.datamigration.cache.MigrationGenreIdCache;
 import ru.otus.hw.datamigration.models.MigrationGenre;
+import ru.otus.hw.datamigration.repositories.MigrationGenreRepository;
 import ru.otus.hw.models.Genre;
 
 import java.util.HashMap;
@@ -35,6 +37,10 @@ public class GenreMigrateStep {
     private static final int CHUNK_SIZE = 5;
 
     private final Logger logger = LoggerFactory.getLogger("GenreMigrateStep");
+
+    private final MigrationGenreRepository migrationGenreRepository;
+
+    private final MigrationGenreIdCache migrationGenreIdCache;
 
     @Bean
     public MongoPagingItemReader<Genre> genreMongoReader(MongoTemplate mongoTemplate) {
@@ -71,6 +77,8 @@ public class GenreMigrateStep {
                 .listener(new ChunkListener() {
                     public void beforeChunk(@NonNull ChunkContext chunkContext) {
                         logger.info("Начало пачки");
+                        migrationGenreIdCache.putList(migrationGenreRepository.getNextSequenceRangeIds(CHUNK_SIZE));
+                        logger.info("получение диапазона id жанров из базы данных");
                     }
 
                     public void afterChunk(@NonNull ChunkContext chunkContext) {

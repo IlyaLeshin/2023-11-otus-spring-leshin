@@ -7,11 +7,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.otus.hw.datamigration.cache.MigrationAuthorCache;
 import ru.otus.hw.datamigration.cache.MigrationBookCache;
+import ru.otus.hw.datamigration.cache.MigrationBookIdCache;
 import ru.otus.hw.datamigration.cache.MigrationGenreCache;
 import ru.otus.hw.datamigration.models.MigrationAuthor;
 import ru.otus.hw.datamigration.models.MigrationBook;
 import ru.otus.hw.datamigration.models.MigrationGenre;
-import ru.otus.hw.datamigration.repositories.MigrationBookRepository;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Genre;
@@ -50,7 +50,7 @@ class BookProcessorTest {
     MigrationBookCache migrationBookCache;
 
     @MockBean
-    MigrationBookRepository migrationBookRepository;
+    MigrationBookIdCache migrationBookIdCache;
 
     @DisplayName("преобразовывать Book в MigrationBook. текущий метод: process()")
     @Test
@@ -64,7 +64,7 @@ class BookProcessorTest {
         when(migrationAuthorCache.get(AUTHOR_MONGO_ID)).thenReturn(migrationAuthor);
         when(migrationGenreCache.get(GENRE_MONGO_ID)).thenReturn(migrationGenre);
 
-        when(migrationBookRepository.getNextSequenceId()).thenReturn(1L);
+        when(migrationBookIdCache.getNext()).thenReturn(1L);
         MigrationBook migrationBook = bookProcessor.process(mongoBook);
         assertThat(migrationBook).isNotNull();
         assertThat(migrationBook.getTitle()).isEqualTo(mongoBook.getTitle());

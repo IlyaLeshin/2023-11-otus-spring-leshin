@@ -5,8 +5,8 @@ import lombok.NonNull;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;
 import ru.otus.hw.datamigration.cache.MigrationBookCache;
+import ru.otus.hw.datamigration.cache.MigrationCommentIdCache;
 import ru.otus.hw.datamigration.dto.MigrationCommentDto;
-import ru.otus.hw.datamigration.repositories.MigrationCommentRepository;
 import ru.otus.hw.models.Comment;
 
 @Component
@@ -14,7 +14,7 @@ import ru.otus.hw.models.Comment;
 public class CommentProcessor implements ItemProcessor<Comment, MigrationCommentDto> {
     private final MigrationBookCache migrationBookCache;
 
-    private final MigrationCommentRepository migrationCommentRepository;
+    private final MigrationCommentIdCache migrationCommentIdCache;
 
     @Override
     public MigrationCommentDto process(@NonNull Comment item) throws Exception {
@@ -29,6 +29,6 @@ public class CommentProcessor implements ItemProcessor<Comment, MigrationComment
     }
 
     private Long getSqlId() {
-        return migrationCommentRepository.getNextSequenceId();
+        return migrationCommentIdCache.getNext();
     }
 }

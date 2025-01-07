@@ -5,8 +5,8 @@ import lombok.NonNull;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;
 import ru.otus.hw.datamigration.cache.MigrationGenreCache;
+import ru.otus.hw.datamigration.cache.MigrationGenreIdCache;
 import ru.otus.hw.datamigration.models.MigrationGenre;
-import ru.otus.hw.datamigration.repositories.MigrationGenreRepository;
 import ru.otus.hw.models.Genre;
 
 @Component
@@ -14,7 +14,7 @@ import ru.otus.hw.models.Genre;
 public class GenreProcessor implements ItemProcessor<Genre, MigrationGenre> {
     private final MigrationGenreCache migrationGenreCache;
 
-    private final MigrationGenreRepository migrationGenreRepository;
+    private final MigrationGenreIdCache migrationGenreIdCache;
 
     @Override
     public MigrationGenre process(@NonNull Genre item) throws Exception {
@@ -30,6 +30,6 @@ public class GenreProcessor implements ItemProcessor<Genre, MigrationGenre> {
     }
 
     private Long getSqlId() {
-        return migrationGenreRepository.getNextSequenceId();
+        return migrationGenreIdCache.getNext();
     }
 }

@@ -20,7 +20,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.lang.NonNull;
 import org.springframework.transaction.PlatformTransactionManager;
+import ru.otus.hw.datamigration.cache.MigrationBookIdCache;
 import ru.otus.hw.datamigration.models.MigrationBook;
+import ru.otus.hw.datamigration.repositories.MigrationBookRepository;
 import ru.otus.hw.models.Book;
 
 import java.util.HashMap;
@@ -35,6 +37,10 @@ public class BookMigrateStep {
     private static final int CHUNK_SIZE = 15;
 
     private final Logger logger = LoggerFactory.getLogger("BookMigrateStep");
+
+    private final MigrationBookRepository migrationBookRepository;
+
+    private final MigrationBookIdCache migrationBookIdCache;
 
     @Bean
     public MongoPagingItemReader<Book> bookMongoReader(MongoTemplate mongoTemplate) {
@@ -70,6 +76,8 @@ public class BookMigrateStep {
                 .listener(new ChunkListener() {
                     public void beforeChunk(@NonNull ChunkContext chunkContext) {
                         logger.info("Начало пачки");
+                        migrationBookIdCache.putList(migrationBookRepository.getNextSequenceRangeIds(CHUNK_SIZE));
+                        logger.info("получение диапазона id книг из базы данных");
                     }
 
                     public void afterChunk(@NonNull ChunkContext chunkContext) {

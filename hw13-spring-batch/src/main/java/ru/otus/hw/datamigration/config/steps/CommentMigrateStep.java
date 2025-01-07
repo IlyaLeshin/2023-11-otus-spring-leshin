@@ -20,7 +20,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.lang.NonNull;
 import org.springframework.transaction.PlatformTransactionManager;
+import ru.otus.hw.datamigration.cache.MigrationCommentIdCache;
 import ru.otus.hw.datamigration.dto.MigrationCommentDto;
+import ru.otus.hw.datamigration.repositories.MigrationCommentRepository;
 import ru.otus.hw.models.Comment;
 
 import javax.sql.DataSource;
@@ -36,6 +38,10 @@ public class CommentMigrateStep {
     private static final int CHUNK_SIZE = 20;
 
     private final Logger logger = LoggerFactory.getLogger("CommentMigrateStep");
+
+    private final  MigrationCommentRepository migrationCommentRepository;
+
+    private final MigrationCommentIdCache migrationCommentIdCache;
 
     @Bean
     public MongoPagingItemReader<Comment> commentMongoReader(MongoTemplate mongoTemplate) {
@@ -74,6 +80,8 @@ public class CommentMigrateStep {
                 .listener(new ChunkListener() {
                     public void beforeChunk(@NonNull ChunkContext chunkContext) {
                         logger.info("Начало пачки");
+                        migrationCommentIdCache.putList(migrationCommentRepository.getNextSequenceRangeIds(CHUNK_SIZE));
+                        logger.info("получение диапазона id комментариев книг из базы данных");
                     }
 
                     public void afterChunk(@NonNull ChunkContext chunkContext) {

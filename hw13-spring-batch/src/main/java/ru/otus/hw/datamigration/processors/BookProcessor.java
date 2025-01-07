@@ -8,9 +8,9 @@ import ru.otus.hw.datamigration.cache.MigrationAuthorCache;
 import ru.otus.hw.datamigration.cache.MigrationBookCache;
 
 
+import ru.otus.hw.datamigration.cache.MigrationBookIdCache;
 import ru.otus.hw.datamigration.cache.MigrationGenreCache;
 import ru.otus.hw.datamigration.models.MigrationBook;
-import ru.otus.hw.datamigration.repositories.MigrationBookRepository;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Genre;
 
@@ -26,7 +26,7 @@ public class BookProcessor implements ItemProcessor<Book, MigrationBook> {
 
     private final MigrationBookCache migrationBookCache;
 
-    private final MigrationBookRepository migrationBookRepository;
+    private final MigrationBookIdCache migrationBookIdCache;
 
     @Override
     public MigrationBook process(@NonNull Book item) throws Exception {
@@ -47,6 +47,6 @@ public class BookProcessor implements ItemProcessor<Book, MigrationBook> {
     }
 
     private Long getSqlId() {
-        return migrationBookRepository.getNextSequenceId();
+        return migrationBookIdCache.getNext();
     }
 }

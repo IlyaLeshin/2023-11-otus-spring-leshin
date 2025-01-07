@@ -20,7 +20,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.lang.NonNull;
 import org.springframework.transaction.PlatformTransactionManager;
+import ru.otus.hw.datamigration.cache.MigrationAuthorIdCache;
 import ru.otus.hw.datamigration.models.MigrationAuthor;
+import ru.otus.hw.datamigration.repositories.MigrationAuthorRepository;
 import ru.otus.hw.models.Author;
 
 import java.util.HashMap;
@@ -35,6 +37,10 @@ public class AuthorMigrateStep {
     private static final int CHUNK_SIZE = 10;
 
     private final Logger logger = LoggerFactory.getLogger("AuthorMigrateStep");
+
+    private final MigrationAuthorRepository migrationAuthorRepository;
+
+    private final MigrationAuthorIdCache migrationAuthorIdCache;
 
     @Bean
     public MongoPagingItemReader<Author> authorMongoReader(MongoTemplate mongoTemplate) {
@@ -69,6 +75,8 @@ public class AuthorMigrateStep {
                 .listener(new ChunkListener() {
                     public void beforeChunk(@NonNull ChunkContext chunkContext) {
                         logger.info("Начало пачки");
+                        migrationAuthorIdCache.putList(migrationAuthorRepository.getNextSequenceRangeIds(CHUNK_SIZE));
+                        logger.info("получение диапазона id авторов из базы данных");
                     }
 
                     public void afterChunk(@NonNull ChunkContext chunkContext) {

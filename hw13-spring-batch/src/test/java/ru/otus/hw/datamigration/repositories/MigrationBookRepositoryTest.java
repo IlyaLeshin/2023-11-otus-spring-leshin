@@ -1,8 +1,7 @@
 package ru.otus.hw.datamigration.repositories;
 
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -18,17 +17,29 @@ class MigrationBookRepositoryTest {
     @Autowired
     private MigrationBookRepository migrationBookRepository;
 
-    @DisplayName("должен получать следующее значенние последовательности id книг из БД")
-    @ParameterizedTest
-    @MethodSource("getId")
-    void getNextSequenceIdTest(Long expectedId) {
-        var actualId = migrationBookRepository.getNextSequenceId();
+    @DisplayName("должен получатьдиапазон значенний последовательности id книг из БД")
+    @Test
+    void getNextSequenceRangeIdsTest() {
+        var expectedIdList = getFirstRangeIds();
+        var actualId = migrationBookRepository.getNextSequenceRangeIds(expectedIdList.size());
+
         assertThat(actualId)
-                .isEqualTo(expectedId);
+                .isEqualTo(expectedIdList);
+
+        var expectedSecondIdList = getSecondRangeIds();
+        var secondActualId = migrationBookRepository.getNextSequenceRangeIds(expectedIdList.size());
+        assertThat(secondActualId)
+                .isEqualTo(expectedSecondIdList);
     }
 
-    private static List<Long> getId() {
-        return LongStream.range(1L, 10L).boxed()
+
+    private static List<Long> getFirstRangeIds() {
+        return LongStream.range(1L, 11L).boxed()
+                .toList();
+    }
+
+    private static List<Long> getSecondRangeIds() {
+        return LongStream.range(11L, 21L).boxed()
                 .toList();
     }
 }

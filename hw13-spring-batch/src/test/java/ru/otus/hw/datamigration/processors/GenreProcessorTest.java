@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.otus.hw.datamigration.cache.MigrationGenreCache;
+import ru.otus.hw.datamigration.cache.MigrationGenreIdCache;
 import ru.otus.hw.datamigration.models.MigrationGenre;
-import ru.otus.hw.datamigration.repositories.MigrationGenreRepository;
 import ru.otus.hw.models.Genre;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,14 +24,14 @@ class GenreProcessorTest {
     MigrationGenreCache migrationGenreCache;
 
     @MockBean
-    MigrationGenreRepository migrationGenreRepository;
+    MigrationGenreIdCache migrationGenreIdCache;
 
-    @DisplayName("преобразовывать Author в MigrationAuthor. текущий метод: process()")
+    @DisplayName("преобразовывать Genre в MigrationGenre. текущий метод: process()")
     @Test
     void processTest() throws Exception {
         Genre genre = new Genre("ObjectId_1", "Genre_1");
 
-        when(migrationGenreRepository.getNextSequenceId()).thenReturn(1L);
+        when(migrationGenreIdCache.getNext()).thenReturn(1L);
         MigrationGenre migrationGenre = genreProcessor.process(genre);
 
         assertThat(migrationGenre).isNotNull();

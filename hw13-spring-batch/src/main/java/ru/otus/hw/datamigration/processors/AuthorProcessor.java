@@ -2,19 +2,21 @@ package ru.otus.hw.datamigration.processors;
 
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;
 import ru.otus.hw.datamigration.cache.MigrationAuthorCache;
+import ru.otus.hw.datamigration.cache.MigrationAuthorIdCache;
 import ru.otus.hw.datamigration.models.MigrationAuthor;
-import ru.otus.hw.datamigration.repositories.MigrationAuthorRepository;
 import ru.otus.hw.models.Author;
 
 @Component
 @AllArgsConstructor
-public class AuthorProcessor implements ItemProcessor<Author, MigrationAuthor> {
+public class AuthorProcessor implements ItemProcessor<Author, MigrationAuthor>, StepExecutionListener {
     private final MigrationAuthorCache migrationAuthorCache;
 
-    private final MigrationAuthorRepository migrationAuthorRepository;
+    private final MigrationAuthorIdCache migrationAuthorIdCache;
+
 
     @Override
     public MigrationAuthor process(@NonNull Author item) throws Exception {
@@ -32,7 +34,7 @@ public class AuthorProcessor implements ItemProcessor<Author, MigrationAuthor> {
     }
 
     private Long getSqlId() {
-        return migrationAuthorRepository.getNextSequenceId();
+        return migrationAuthorIdCache.getNext();
     }
 
 }

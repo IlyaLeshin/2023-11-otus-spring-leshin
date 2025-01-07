@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.otus.hw.datamigration.cache.MigrationAuthorCache;
+import ru.otus.hw.datamigration.cache.MigrationAuthorIdCache;
 import ru.otus.hw.datamigration.models.MigrationAuthor;
-import ru.otus.hw.datamigration.repositories.MigrationAuthorRepository;
 import ru.otus.hw.models.Author;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -21,10 +21,10 @@ class AuthorProcessorTest {
     AuthorProcessor authorProcessor;
 
     @MockBean
-    MigrationAuthorRepository migrationAuthorRepository;
+    MigrationAuthorCache migrationAuthorCache;
 
     @MockBean
-    MigrationAuthorCache migrationAuthorCache;
+    MigrationAuthorIdCache migrationAuthorIdCache;
 
     @DisplayName("преобразовывать Author в MigrationAuthor. текущий метод: process()")
     @Test
@@ -32,14 +32,14 @@ class AuthorProcessorTest {
         Author authorOne = new Author("ObjectId_1", "Author_1");
         Author authorTwo = new Author("ObjectId_2", "Author_2");
 
-        when(migrationAuthorRepository.getNextSequenceId()).thenReturn(1L);
+        when(migrationAuthorIdCache.getNext()).thenReturn(1L);
         MigrationAuthor migrationAuthorOne = authorProcessor.process(authorOne);
 
         assertThat(migrationAuthorOne).isNotNull();
         assertThat(migrationAuthorOne.getFullName()).isEqualTo(authorOne.getFullName());
         assertThat(migrationAuthorOne.getId()).isEqualTo(1L);
 
-        when(migrationAuthorRepository.getNextSequenceId()).thenReturn(2L);
+        when(migrationAuthorIdCache.getNext()).thenReturn(2L);
         MigrationAuthor migrationAuthorTwo = authorProcessor.process(authorTwo);
 
         assertThat(migrationAuthorTwo).isNotNull();
