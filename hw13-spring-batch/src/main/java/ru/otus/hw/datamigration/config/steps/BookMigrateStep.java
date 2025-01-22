@@ -116,21 +116,9 @@ public class BookMigrateStep {
     }
 
     @Bean
-    public ItemWriter<BookMigrationDto> booksGenresRelationWriter(DataSource dataSource, NamedParameterJdbcOperations namedParameterJdbcTemplate) {
-
-//        writer.setDataSource(dataSource);
-//        writer.setJdbcTemplate(namedParameterJdbcTemplate);
-//        writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>());
-//        writer.setSql("""
-//                insert into books_genres (book_id, genre_id)
-//                select b.id_migration, g.id_migration
-//                from temp_mapping_books_ids b
-//                join temp_mapping_genres_ids g
-//                where b.id_original = (?)
-//                and g.id_original in (?,?,?)
-//                """);
-
-
+    public ItemWriter<BookMigrationDto> booksGenresRelationWriter(
+            DataSource dataSource,
+            NamedParameterJdbcOperations namedParameterJdbcTemplate) {
         return new RelationBookGenreItemWriter(namedParameterJdbcTemplate);
     }
 

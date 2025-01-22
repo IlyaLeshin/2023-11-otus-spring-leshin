@@ -1,6 +1,5 @@
 package ru.otus.hw.datamigration.config;
 
-import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,15 +12,31 @@ import org.springframework.batch.test.context.SpringBatchTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.jdbc.core.JdbcOperations;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.jdbc.JdbcTestUtils;
+import ru.otus.hw.models.Author;
+import ru.otus.hw.models.Book;
+import ru.otus.hw.models.Comment;
+import ru.otus.hw.models.Genre;
+
+import javax.sql.DataSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.jdbc.JdbcTestUtils.countRowsInTable;
 
 @DisplayName("Конфигурация для миграции библиотеки должна")
 @SpringBootTest
 @SpringBatchTest
 class JobConfigTest {
+
     public static final String JOB_NAME = "migrateLibraryDbJob";
 
+    public static final String AUTHORS_TABLE_NAME = "authors";
+    public static final String GENRES_TABLE_NAME = "genres";
+    public static final String BOOKS_TABLE_NAME = "books";
+    public static final String COMMENTS_TABLE_NAME = "comments";
+    public static final String BOOKS_GENRES_RELATION_TABLE_NAME = "books_genres";
     @Autowired
     private JobLauncherTestUtils jobLauncherTestUtils;
 
@@ -29,7 +44,12 @@ class JobConfigTest {
     private JobRepositoryTestUtils jobRepositoryTestUtils;
 
     @Autowired
-    private EntityManager entityManager;
+    private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    void setDataSource(DataSource dataSource) {
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    }
 
     @Autowired
     private MongoOperations mongoOperations;
@@ -42,15 +62,16 @@ class JobConfigTest {
     @DisplayName("успешно выполнятся")
     @Test
     void testJob() throws Exception {
-//        long originalAuthorsCount = getOriginalTableElementsCount(Author.class);
-//        long originalGenreCount = getOriginalTableElementsCount(Genre.class);
-//        long originalBookCount = getOriginalTableElementsCount(Book.class);
-//        long originalCommentCount = getOriginalTableElementsCount(Comment.class);
-//
-//        long migrationAuthorCountBeforeJob = getMigrationTableElementsCount(AuthorMigrationDto.class);
-//        long migrationGenreCountBeforeJob = getMigrationTableElementsCount(GenreMigrationDto.class);
-//        long migrationBookCountBeforeJob = getMigrationTableElementsCount(BookMigrationDto.class);
-//        long migrationCommentCountBeforeJob = getMigrationTableElementsCount(CommentMigrationDto.class);
+        long originalAuthorsCount = getOriginalTableElementsCount(Author.class);
+        long originalGenreCount = getOriginalTableElementsCount(Genre.class);
+        long originalBookCount = getOriginalTableElementsCount(Book.class);
+        long originalCommentCount = getOriginalTableElementsCount(Comment.class);
+
+        long migrationAuthorCountBeforeJob = getMigrationTableElementsCount(AUTHORS_TABLE_NAME);
+        long migrationGenreCountBeforeJob = getMigrationTableElementsCount(GENRES_TABLE_NAME);
+        long migrationBookCountBeforeJob = getMigrationTableElementsCount(BOOKS_TABLE_NAME);
+        long migrationCommentCountBeforeJob = getMigrationTableElementsCount(COMMENTS_TABLE_NAME);
+        long migrationBooksGenresRelationCountBeforeJob = getMigrationTableElementsCount(BOOKS_GENRES_RELATION_TABLE_NAME);
 
         Job job = jobLauncherTestUtils.getJob();
         assertThat(job).isNotNull()
@@ -61,27 +82,27 @@ class JobConfigTest {
         JobExecution jobExecution = jobLauncherTestUtils.launchJob(parameters);
 
         assertThat(jobExecution.getExitStatus().getExitCode()).isEqualTo("COMPLETED");
-//
-//        long migrationAuthorCountAfterJob = getMigrationTableElementsCount(AuthorMigrationDto.class);
-//        long migrationGenreCountAfterJob = getMigrationTableElementsCount(GenreMigrationDto.class);
-//        long migrationBookCountAfterJob = getMigrationTableElementsCount(BookMigrationDto.class);
-//        long migrationCommentCountAfterJob = getMigrationTableElementsCount(CommentMigrationDto.class);
-//
-//        assertThat(migrationAuthorCountAfterJob-migrationAuthorCountBeforeJob).isEqualTo(originalAuthorsCount);
-//        assertThat(migrationGenreCountAfterJob-migrationGenreCountBeforeJob).isEqualTo(originalGenreCount);
-//        assertThat(migrationBookCountAfterJob-migrationBookCountBeforeJob).isEqualTo(originalBookCount);
-//        assertThat(migrationCommentCountAfterJob-migrationCommentCountBeforeJob).isEqualTo(originalCommentCount);
+
+        long migrationAuthorCountAfterJob = getMigrationTableElementsCount(AUTHORS_TABLE_NAME) - migrationAuthorCountBeforeJob;
+        long migrationGenreCountAfterJob = getMigrationTableElementsCount(GENRES_TABLE_NAME) - migrationGenreCountBeforeJob;
+        long migrationBookCountAfterJob = getMigrationTableElementsCount(BOOKS_TABLE_NAME) - migrationBookCountBeforeJob;
+        long migrationCommentCountAfterJob = getMigrationTableElementsCount(COMMENTS_TABLE_NAME) - migrationCommentCountBeforeJob;
+        long migrationBooksGenresRelationCountAfterJob = getMigrationTableElementsCount(BOOKS_GENRES_RELATION_TABLE_NAME) - migrationBooksGenresRelationCountBeforeJob;
+
+        assertThat(migrationAuthorCountAfterJob - migrationAuthorCountBeforeJob).isEqualTo(originalAuthorsCount);
+        assertThat(migrationGenreCountAfterJob - migrationGenreCountBeforeJob).isEqualTo(originalGenreCount);
+        assertThat(migrationBookCountAfterJob - migrationBookCountBeforeJob).isEqualTo(originalBookCount);
+        assertThat(migrationCommentCountAfterJob - migrationCommentCountBeforeJob).isEqualTo(originalCommentCount);
+
+        assertThat(migrationBooksGenresRelationCountAfterJob).isGreaterThan(0);
+
     }
 
-//    private Long getOriginalTableElementsCount(Class<?> className) {
-//        return mongoOperations.query(className).count();
-//    }
-//
-//    private Long getMigrationTableElementsCount(Class<?> className) {
-//        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-//        CriteriaQuery<Long> criteriaQuery = builder.createQuery(Long.class);
-//        Root<?> classRoot = criteriaQuery.from(className);
-//        criteriaQuery.select(builder.count(classRoot));
-//        return entityManager.createQuery(criteriaQuery).getSingleResult();
-//    }
+    private Long getOriginalTableElementsCount(Class<?> className) {
+        return mongoOperations.query(className).count();
+    }
+
+    private int getMigrationTableElementsCount(String tableName) {
+        return JdbcTestUtils.countRowsInTable(this.jdbcTemplate, tableName);
+    }
 }

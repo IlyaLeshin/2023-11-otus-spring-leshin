@@ -30,7 +30,6 @@ public class JobConfig {
 
     private final Logger logger = LoggerFactory.getLogger("Batch");
 
-
     @Autowired
     private JobRepository jobRepository;
 
@@ -40,18 +39,10 @@ public class JobConfig {
 
     @Bean
     public Job migrationLibraryDbJob(
-            Step createAuthorsTempTable,
-            Step migrateAuthorStep,
-            Step dropAuthorsTempTable,
-            Step createBooksTempTable,
-            Step migrateBookStep,
-            Step dropBooksTempTable,
-            Step createGenresTempTable,
-            Step migrateGenreStep,
-            Step dropGenresTempTable,
-            Step createCommentsTempTable,
-            Step migrateCommentStep,
-            Step dropCommentsTempTable,
+            Step createAuthorsTempTable, Step migrateAuthorStep, Step dropAuthorsTempTable,
+            Step createBooksTempTable, Step migrateBookStep, Step dropBooksTempTable,
+            Step createGenresTempTable, Step migrateGenreStep, Step dropGenresTempTable,
+            Step createCommentsTempTable, Step migrateCommentStep, Step dropCommentsTempTable,
             JobRepository jobRepository
     ) {
         return new JobBuilder(JOB_NAME, jobRepository)
@@ -81,7 +72,6 @@ public class JobConfig {
                 .build();
     }
 
-
     @Bean
     public Flow splitFlow(Step createAuthorsTempTable, Step migrateAuthorStep,
                           Step createGenresTempTable, Step migrateGenreStep) {
@@ -91,7 +81,6 @@ public class JobConfig {
                 .add(flow1(createAuthorsTempTable, migrateAuthorStep),
                         flow2(createGenresTempTable, migrateGenreStep))
                 .build();
-
     }
 
     @Bean
@@ -114,6 +103,4 @@ public class JobConfig {
     public TaskExecutor taskExecutor() {
         return new SimpleAsyncTaskExecutor("spring_batch");
     }
-
-
 }
