@@ -40,17 +40,32 @@ public class JobConfig {
 
     @Bean
     public Job migrationLibraryDbJob(
+            Step createAuthorsTempTable,
             Step migrateAuthorStep,
+            Step dropAuthorsTempTable,
+            Step createBooksTempTable,
             Step migrateBookStep,
+            Step dropBooksTempTable,
+            Step createGenresTempTable,
             Step migrateGenreStep,
+            Step dropGenresTempTable,
+            Step createCommentsTempTable,
             Step migrateCommentStep,
+            Step dropCommentsTempTable,
             JobRepository jobRepository
     ) {
         return new JobBuilder(JOB_NAME, jobRepository)
                 .incrementer(new RunIdIncrementer())
-                .start(splitFlow(migrateAuthorStep, migrateGenreStep))
+                .start(splitFlow(createAuthorsTempTable, migrateAuthorStep,
+                        createGenresTempTable, migrateGenreStep))
+                .next(createBooksTempTable)
                 .next(migrateBookStep)
+                .next(createCommentsTempTable)
                 .next(migrateCommentStep)
+                .next(dropAuthorsTempTable)
+                .next(dropGenresTempTable)
+                .next(dropBooksTempTable)
+                .next(dropCommentsTempTable)
                 .end()
                 .listener(new JobExecutionListener() {
                     @Override
@@ -68,25 +83,30 @@ public class JobConfig {
 
 
     @Bean
-    public Flow splitFlow(Step migrateAuthorStep, Step migrateGenreStep) {
+    public Flow splitFlow(Step createAuthorsTempTable, Step migrateAuthorStep,
+                          Step createGenresTempTable, Step migrateGenreStep) {
         return new FlowBuilder<SimpleFlow>("splitFlow")
+
                 .split(taskExecutor())
-                .add(flow1(migrateAuthorStep), flow2(migrateGenreStep))
+                .add(flow1(createAuthorsTempTable, migrateAuthorStep),
+                        flow2(createGenresTempTable, migrateGenreStep))
                 .build();
 
     }
 
     @Bean
-    public Flow flow1(Step migrateAuthorStep) {
+    public Flow flow1(Step createAuthorsTempTable, Step migrateAuthorStep) {
         return new FlowBuilder<SimpleFlow>("flow1")
-                .start(migrateAuthorStep)
+                .start(createAuthorsTempTable)
+                .next(migrateAuthorStep)
                 .build();
     }
 
     @Bean
-    public Flow flow2(Step migrateGenreStep) {
+    public Flow flow2(Step createGenresTempTable, Step migrateGenreStep) {
         return new FlowBuilder<SimpleFlow>("flow2")
-                .start(migrateGenreStep)
+                .start(createGenresTempTable)
+                .next(migrateGenreStep)
                 .build();
     }
 
@@ -94,4 +114,6 @@ public class JobConfig {
     public TaskExecutor taskExecutor() {
         return new SimpleAsyncTaskExecutor("spring_batch");
     }
+
+
 }

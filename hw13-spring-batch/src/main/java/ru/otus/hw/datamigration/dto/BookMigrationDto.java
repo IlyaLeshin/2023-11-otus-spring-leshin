@@ -6,15 +6,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-public class MigrationCommentDto {
-    private long id;
+public class BookMigrationDto {
+    private String id;
 
-    private String text;
+    private String title;
 
-    private long bookId;
+    private String authorId;
+
+    private List<String> genreIds;
 }

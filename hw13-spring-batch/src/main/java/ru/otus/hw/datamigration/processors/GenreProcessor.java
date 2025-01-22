@@ -4,32 +4,20 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;
-import ru.otus.hw.datamigration.cache.MigrationGenreCache;
-import ru.otus.hw.datamigration.cache.MigrationGenreIdCache;
-import ru.otus.hw.datamigration.models.MigrationGenre;
+import ru.otus.hw.datamigration.dto.GenreMigrationDto;
 import ru.otus.hw.models.Genre;
 
 @Component
 @AllArgsConstructor
-public class GenreProcessor implements ItemProcessor<Genre, MigrationGenre> {
-    private final MigrationGenreCache migrationGenreCache;
-
-    private final MigrationGenreIdCache migrationGenreIdCache;
+public class GenreProcessor implements ItemProcessor<Genre, GenreMigrationDto> {
 
     @Override
-    public MigrationGenre process(@NonNull Genre item) throws Exception {
+    public GenreMigrationDto process(@NonNull Genre item) throws Exception {
         try {
-            String genreMongoId = item.getId();
-            long genreSqlId = getSqlId();
-            MigrationGenre migrationGenre = new MigrationGenre(genreSqlId, item.getName());
-            migrationGenreCache.put(genreMongoId, migrationGenre);
-            return migrationGenre;
+            return new GenreMigrationDto(item.getId(), item.getName());
         } catch (Exception e) {
             throw new Exception("Exception in GenreProcessor process()", e);
         }
     }
 
-    private Long getSqlId() {
-        return migrationGenreIdCache.getNext();
-    }
 }
