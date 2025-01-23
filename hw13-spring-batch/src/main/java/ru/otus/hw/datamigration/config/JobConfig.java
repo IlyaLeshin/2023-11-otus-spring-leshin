@@ -1,5 +1,6 @@
 package ru.otus.hw.datamigration.config;
 
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
@@ -13,7 +14,6 @@ import org.springframework.batch.core.job.flow.support.SimpleFlow;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
@@ -24,27 +24,43 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 @SuppressWarnings("unused")
 @Configuration
+@AllArgsConstructor
 public class JobConfig {
 
     public static final String JOB_NAME = "migrateLibraryDbJob";
 
     private final Logger logger = LoggerFactory.getLogger("Batch");
 
-    @Autowired
-    private JobRepository jobRepository;
+    private final JobRepository jobRepository;
 
-    @Autowired
-    private PlatformTransactionManager platformTransactionManager;
+    private final PlatformTransactionManager platformTransactionManager;
 
+    private final Step createAuthorsTempTable;
+
+    private final Step migrateAuthorStep;
+
+    private final Step dropAuthorsTempTable;
+
+    private final Step createBooksTempTable;
+
+    private final Step migrateBookStep;
+
+    private final Step dropBooksTempTable;
+
+    private final Step createGenresTempTable;
+
+    private final Step migrateGenreStep;
+
+    private final Step dropGenresTempTable;
+
+    private final Step createCommentsTempTable;
+
+    private final Step migrateCommentStep;
+
+    private final Step dropCommentsTempTable;
 
     @Bean
-    public Job migrationLibraryDbJob(
-            Step createAuthorsTempTable, Step migrateAuthorStep, Step dropAuthorsTempTable,
-            Step createBooksTempTable, Step migrateBookStep, Step dropBooksTempTable,
-            Step createGenresTempTable, Step migrateGenreStep, Step dropGenresTempTable,
-            Step createCommentsTempTable, Step migrateCommentStep, Step dropCommentsTempTable,
-            JobRepository jobRepository
-    ) {
+    public Job migrationLibraryDbJob() {
         return new JobBuilder(JOB_NAME, jobRepository)
                 .incrementer(new RunIdIncrementer())
                 .start(splitFlow(createAuthorsTempTable, migrateAuthorStep,
