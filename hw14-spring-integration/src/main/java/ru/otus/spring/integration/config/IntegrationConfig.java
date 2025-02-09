@@ -12,6 +12,7 @@ import org.springframework.integration.scheduling.PollerMetadata;
 
 import ru.otus.spring.integration.domain.MetamorphosisType;
 import ru.otus.spring.integration.domain.stages.Egg;
+import ru.otus.spring.integration.services.AdultStageService;
 
 @Configuration
 public class IntegrationConfig {
@@ -20,6 +21,12 @@ public class IntegrationConfig {
     public MessageChannelSpec<?, ?> eggsChannel() {
         return MessageChannels.queue(10);
     }
+
+    @Bean
+    public MessageChannelSpec<?, ?> adultChannel() {
+        return MessageChannels.publishSubscribe();
+    }
+
 
     @Bean(name = PollerMetadata.DEFAULT_POLLER)
     public PollerSpec poller() {
@@ -34,8 +41,16 @@ public class IntegrationConfig {
 
     @Bean
     public IntegrationFlow eggsFlow() {
-        return IntegrationFlow.from("eggsChannel")
+        return IntegrationFlow.from(eggsChannel())
                 .route(this,"eggDirectionChanel")
+                .get();
+    }
+
+    @Bean
+    public IntegrationFlow adultFlow(AdultStageService adultStageService) {
+        return IntegrationFlow.from(adultChannel())
+                .split()
+                .handle(adultStageService, "releaseIntoWild")
                 .get();
     }
 

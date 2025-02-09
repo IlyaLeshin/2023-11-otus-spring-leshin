@@ -22,10 +22,9 @@ public class IncompleteMetamorphosisConfig {
         return MessageChannels.queue(10);
     }
 
-
     @Bean
     public IntegrationFlow incompleteMetamorphosisEggsFlow(IncompleteMetamorphosisService metamorphosisService) {
-        return IntegrationFlow.from("eggsWithIncompleteMetamorphismChannel")
+        return IntegrationFlow.from(eggsWithIncompleteMetamorphismChannel())
                 .split()
                 .handle(metamorphosisService, "transform")
                 .aggregate()
@@ -35,10 +34,11 @@ public class IncompleteMetamorphosisConfig {
 
     @Bean
     public IntegrationFlow nymphFlow(IncompleteMetamorphosisService incompleteMetamorphosisService) {
-        return IntegrationFlow.from("nymphChannel")
+        return IntegrationFlow.from(nymphChannel())
                 .split()
                 .handle(incompleteMetamorphosisService, "transform")
                 .aggregate()
+                .channel("adultChannel")
                 .get();
     }
 }

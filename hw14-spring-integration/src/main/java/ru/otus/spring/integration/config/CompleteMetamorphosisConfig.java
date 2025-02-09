@@ -27,7 +27,7 @@ public class CompleteMetamorphosisConfig {
 
     @Bean
     public IntegrationFlow completeMetamorphosisEggsFlow(CompleteMetamorphosisService metamorphosisService) {
-        return IntegrationFlow.from("eggsWithCompleteMetamorphismChannel")
+        return IntegrationFlow.from(eggsWithCompleteMetamorphismChannel())
                 .split()
                 .handle(metamorphosisService, "transform")
                 .aggregate()
@@ -37,7 +37,7 @@ public class CompleteMetamorphosisConfig {
 
     @Bean
     public IntegrationFlow larvaFlow(CompleteMetamorphosisService completeMetamorphosisService) {
-        return IntegrationFlow.from("larvaChannel")
+        return IntegrationFlow.from(larvaChannel())
                 .split()
                 .handle(completeMetamorphosisService, "transform")
                 .aggregate()
@@ -47,10 +47,11 @@ public class CompleteMetamorphosisConfig {
 
     @Bean
     public IntegrationFlow pupaFlow(CompleteMetamorphosisService completeMetamorphosisService) {
-        return IntegrationFlow.from("pupaChannel")
+        return IntegrationFlow.from(pupaChannel())
                 .split()
                 .handle(completeMetamorphosisService, "transform")
                 .aggregate()
+                .channel("adultChannel")
                 .get();
     }
 }
