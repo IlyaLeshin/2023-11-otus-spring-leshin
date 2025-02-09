@@ -9,6 +9,21 @@ spring:
     hibernate:
       ddl-auto: none
     show-sql: true
-  logging:
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: metrics, health, logfile
+  endpoint:
+    health:
+      show-details: always
+  health:
+    defaults:
+      enabled: true
+
+logging:
   level:
     sql: debug
+  file:
+    name: logfile/hw15log.txt
