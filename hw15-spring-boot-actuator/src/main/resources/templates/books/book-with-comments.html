@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Library</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        .book {
+            border: 1px solid steelblue;
+            width: 300px;
+            border-collapse: collapse;
+        }
+
+        .book tr td, th {
+            padding: 5px;
+            border: 1px solid steelblue;
+        }
+
+        .book td:last-child, td:first-child {
+            width: 50px;
+        }
+
+      .book-comments {
+            border: 1px solid steelblue;
+            width: 300px;
+            border-collapse: collapse;
+        }
+
+        .book-comments tr td, th {
+            padding: 5px;
+            border: 1px solid steelblue;
+        }
+
+        .book-comments td:last-child, td:first-child {
+            width: 50px;
+        }
+
+        h3 {
+            background-image: url("../static/public/listmark.png");
+            background-repeat: no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+
+        ul, li {
+          list-style: none;
+        }
+    </style>
+
+    <style type="text/css" th:inline="text">
+        [[h3]] {
+            background-image: url([[@{/public/listmark.png}]]);
+            background-repeat: no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+    </style>
+
+</head>
+<body>
+<h3 th:text="#{book-table-header}">Book:</h3>
+
+<table class="book">
+    <thead>
+    <tr>
+        <th th:text="#{book-field-id}">ID</th>
+        <th th:text="#{book-field-title}">Title</th>
+        <th th:text="#{book-field-author-full-name}">Author</th>
+        <th th:text="#{book-field-genres-name}">Genre</th>
+        <th th:text="#{books-table-column-action}">Action</th>
+    </tr>
+    </thead>
+    <tbody id="book-table-body">
+    </tbody>
+</table>
+<br/>
+
+<h4 th:text="#{comment-table-header}">Comments:</h4>
+<table class="book-comments">
+    <thead>
+    <tr>
+        <th th:text="#{comment-field-id}">ID</th>
+        <th th:text="#{comment-field-text}">Comment</th>
+        <th th:text="#{comment-table-column-action}">Action</th>
+    </tr>
+    </thead>
+
+    <tbody id="book-comments-table-body">
+    </tbody>
+</table>
+
+<br/>
+<a href="editing-form.html" th:href="@{/books/__${bookId}__/comments/creation-form}" type="button">
+    <button th:text="#{add-comment-button-caption}">Add book</button>
+</a>
+<br/>
+<a href="list-of-books.html" th:href="@{/books}">
+    <button th:text="#{return-to-books-page-button-caption}" type="button">Return to books list page</button>
+</a>
+<br/>
+<a href="../index.html" th:href="@{/}" type="button">
+    <button th:text="#{return-to-index-page-button-caption}">Return to index page</button>
+</a>
+</body>
+
+<script th:inline="javascript">
+    window.onload = () => {
+           getBookWithComments();
+       }
+
+    function getBookWithComments() {
+        const bookId=[[${bookId}]];
+        fetch('/api/v1/books/' + bookId, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        .then(response => response.json())
+        .then((book) => {
+            let bookBody = "";
+            let genreList = "";
+            let commentsList = "";
+            const genres = book.genreDtoList;
+            const comments = book.commentDtoList;
+            genres.forEach((genre) => {
+                genreList += `${genre.name} `
+            });
+            bookBody = `<tr>
+                            <td>${book.id}</td>
+                            <td>${book.title} </td>
+                            <td>${book.authorDto.fullName}</td>
+                            <td>${genreList}</td>
+                            <td>
+                                <a href="/books/${book.id}/editing-form">
+                                    <button type="button">[[#{edit-button-caption}]]</button>
+                                </a>
+                            <button type="button" onclick="deleteBook(${book.id})"> [[#{delete-button-caption}]]</button>
+                            </td>
+                        </tr>`;
+
+            comments.forEach((comment) => {
+
+                commentsList += `
+                     <tr>
+                         <td>${comment.id}</td>
+                         <td>${comment.text}</td>
+                         <td>
+                             <a href="/books/${comment.bookId}/comments/${comment.id}" type="button">
+                                 <button>[[#{comment-info-button-caption}]]</button>
+                             </a>
+                             <a href="/books/${comment.bookId}/comments/${comment.id}/editing-form" type="button">
+                                 <button>[[#{edit-button-caption}]]</button>
+                             </a>
+                             <button type="submit" onclick="deleteComment(${comment.bookId},${comment.id})">
+                                 [[#{delete-button-caption}]]
+                             </button>
+                         </td>
+                     </tr>
+                `;
+            });
+        document.getElementById("book-table-body").innerHTML = bookBody;
+        document.getElementById("book-comments-table-body").innerHTML = commentsList;
+        });
+    }
+
+    function deleteBook(bookId) {
+        fetch("/api/v1/books/" + bookId, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => location.href = "/books")
+        .catch(error => alert("Ошибка" + error));
+    }
+
+    function deleteComment(bookId, commentId) {
+        fetch("/api/v1/books/" + bookId +"/comments/" + commentId, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => location.reload())
+        .catch(error => alert("Ошибка" + error));
+    }
+</script>
+</html>
