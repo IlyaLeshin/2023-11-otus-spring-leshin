@@ -1,14 +1,22 @@
 spring:
+
   datasource:
-    url: jdbc:h2:mem:maindb
+    url: jdbc:postgresql://localhost:5433/hw16db
+    username: postgres
+    password: postgres
+
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
     enabled: true
+
   jpa:
     generate-ddl: false
     hibernate:
       ddl-auto: none
     show-sql: true
+
   logging:
-  level:
-    sql: debug
+    file:
+      name: ./logs/library-log.log
+    level:
+      sql: debug

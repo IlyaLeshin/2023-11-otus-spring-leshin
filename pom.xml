@@ -54,6 +54,8 @@
         <liquibase.version>4.26.0</liquibase.version>
         <mongock.version>4.3.8</mongock.version>
         <flapdoodle.version>4.7.0</flapdoodle.version>
+        <postgresql.version>42.7.5</postgresql.version>
+
         <checkstyle.config.url>
             https://raw.githubusercontent.com/OtusTeam/Spring/master/checkstyle.xml
         </checkstyle.config.url>
@@ -72,6 +74,12 @@
                 <groupId>de.flapdoodle.embed</groupId>
                 <artifactId>de.flapdoodle.embed.mongo.spring30x</artifactId>
                 <version>${flapdoodle.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>${postgresql.version}</version>
             </dependency>
 
             <dependency>
