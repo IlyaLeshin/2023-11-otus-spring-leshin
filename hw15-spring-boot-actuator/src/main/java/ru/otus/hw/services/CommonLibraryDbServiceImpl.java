@@ -12,7 +12,7 @@ public class CommonLibraryDbServiceImpl implements CommonLibraryDbService {
     private final CommonLibraryDbRepository commonLibraryDbRepository;
 
     @Override
-    public boolean checkingAccessToDb() {
+    public boolean checkAccessToDb() {
         try {
             commonLibraryDbRepository.executeTestQuery();
             return true;

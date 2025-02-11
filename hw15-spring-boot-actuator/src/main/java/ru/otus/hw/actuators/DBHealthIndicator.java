@@ -14,7 +14,7 @@ public class DBHealthIndicator implements HealthIndicator {
 
     @Override
     public Health health() {
-        if (commonLibraryDbService.checkingAccessToDb()) {
+        if (commonLibraryDbService.checkAccessToDb()) {
             return Health.up().withDetail("Message", "The database is available").build();
         }
         return Health.down().withDetail("Message", "The database is unavailable").build();
