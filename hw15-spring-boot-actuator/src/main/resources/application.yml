@@ -1,0 +1,29 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:maindb
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    enabled: true
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: metrics, health, logfile
+  endpoint:
+    health:
+      show-details: always
+  health:
+    defaults:
+      enabled: true
+
+logging:
+  level:
+    sql: debug
+  file:
+    name: logfile/log15hw.log

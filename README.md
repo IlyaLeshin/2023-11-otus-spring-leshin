@@ -17,3 +17,4 @@
 - [x] hw10-spring-mvc-rest-ajax (ДЗ №10: Переписать приложение с использованием AJAX и REST-контроллеров)
 - [x] hw11-spring-security-auth (ДЗ №11: В CRUD Web-приложение добавить механизм аутентификации)
 - [x] hw12-spring-security-acl (ДЗ №12: Ввести авторизацию на основе URL и/или доменных сущностей)
+- [x] hw15-spring-boot-actuator (ДЗ №15: Использовать метрики, healthchecks и logfile)
