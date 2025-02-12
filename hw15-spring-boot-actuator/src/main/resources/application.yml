@@ -26,4 +26,4 @@ logging:
   level:
     sql: debug
   file:
-    name: logfile/hw15log.txt
+    name: logfile/log15hw.log
