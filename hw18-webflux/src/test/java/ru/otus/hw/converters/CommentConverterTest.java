@@ -20,11 +20,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayName("Конвертер для работы с комментариями должен")
 @SpringBootTest(classes = {CommentConverter.class})
 public class CommentConverterTest {
-    private static final long FIRST_AUTHOR_ID = 1L;
+    private static final String FIRST_AUTHOR_ID = "a1";
 
-    private static final long FIRST_BOOK_ID = 1L;
+    private static final String FIRST_BOOK_ID = "b1";
 
-    private static final long FIRST_COMMENT_ID = 1L;
+    private static final String FIRST_COMMENT_ID = "c1";
 
     @Autowired
     private CommentConverter commentConverter;
@@ -70,7 +70,7 @@ public class CommentConverterTest {
     }
 
     private static List<Genre> getGenres() {
-        return IntStream.range(1, 3).boxed().map(id -> new Genre(id, "Genre_" + id)).toList();
+        return IntStream.range(1, 3).boxed().map(id -> new Genre("g" + id, "Genre_" + id)).toList();
     }
 
     private static Book getBook(Author author, List<Genre> dbGenres) {

@@ -8,7 +8,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.otus.hw.converters.BookConverter;
 import ru.otus.hw.converters.BookWithCommentsConverter;
-import ru.otus.hw.dto.*;
+import ru.otus.hw.dto.AuthorDto;
+import ru.otus.hw.dto.BookCreateDto;
+import ru.otus.hw.dto.BookDto;
+import ru.otus.hw.dto.BookUpdateDto;
+import ru.otus.hw.dto.BookWithCommentsDto;
+import ru.otus.hw.dto.GenreDto;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Genre;
@@ -30,13 +35,13 @@ import static org.mockito.BDDMockito.when;
 @DisplayName("Сервис для работы с книгами должен")
 @SpringBootTest(classes = BookServiceImpl.class)
 class BookServiceImplTest {
-    private static final long FIRST_BOOK_ID = 1L;
+    private static final String FIRST_BOOK_ID = "b1";
 
-    private static final long FIRST_AUTHOR_ID = 1L;
+    private static final String FIRST_AUTHOR_ID = "a1";
 
-    private static final long FIRST_GENRE_ID = 1L;
+    private static final String FIRST_GENRE_ID = "g1";
 
-    private static final long SECOND_GENRE_ID = 2L;
+    private static final String SECOND_GENRE_ID = "g2";
 
     @Autowired
     private BookService bookService;
@@ -119,7 +124,7 @@ class BookServiceImplTest {
     @DisplayName("Сохранять книгу в БД. текущий метод: insert(String title, long authorId, Set<Long> genresIds)")
     @Test
     void insertTest() {
-        var newBook = new Book(0L, "saved_Book", dbBooks.get(0).getAuthor(),
+        var newBook = new Book(null, "saved_Book", dbBooks.get(0).getAuthor(),
                 dbBooks.get(0).getGenres());
         var newBookUpdateDto = new BookCreateDto("saved_Book", FIRST_AUTHOR_ID, Set.of(FIRST_GENRE_ID, SECOND_GENRE_ID));
         var expectedBookDto = new BookDto(FIRST_BOOK_ID, "saved_Book", dbBookDtos.get(0).getAuthorDto(),
@@ -154,32 +159,34 @@ class BookServiceImplTest {
         var returnedBookDto = bookService.update(bookUpdateDto);
 
         verify(bookRepository).save(bookToUpdate);
+        verify(commentRepository).findAllByBookId(FIRST_BOOK_ID);
         assertThat(returnedBookDto).isEqualTo(expectedBookDto);
     }
 
     @DisplayName("отправлять запрос на удаление книги из БД. текущий метод: deleteById(long id)")
     @Test
-    public void deleteById() {
-        bookService.deleteById(1L);
+    public void deleteByIdTest() {
+        bookService.deleteById(FIRST_BOOK_ID);
 
-        verify(bookRepository).deleteById(1L);
+        verify(bookRepository).deleteById(FIRST_BOOK_ID);
+        verify(commentRepository).deleteAllByBookId(FIRST_BOOK_ID);
     }
 
     private static List<AuthorDto> getDbAuthorDtos() {
         return IntStream.range(1, 4).boxed()
-                .map(id -> new AuthorDto(id, "Author_" + id))
+                .map(id -> new AuthorDto("a" + id, "Author_" + id))
                 .toList();
     }
 
     private static List<GenreDto> getDbGenreDtos() {
         return IntStream.range(1, 7).boxed()
-                .map(id -> new GenreDto(id, "Genre_" + id))
+                .map(id -> new GenreDto("g" + id, "Genre_" + id))
                 .toList();
     }
 
     private static List<BookDto> getDbBookDtos(List<AuthorDto> dbAuthorDtos, List<GenreDto> dbGenreDtos) {
         return IntStream.range(1, 4).boxed()
-                .map(id -> new BookDto((long) id,
+                .map(id -> new BookDto("b" + id,
                         "BookTitle_" + id,
                         dbAuthorDtos.get(id - 1),
                         dbGenreDtos.subList((id - 1) * 2, (id - 1) * 2 + 2)
@@ -189,19 +196,19 @@ class BookServiceImplTest {
 
     private static List<Author> getDbAuthors() {
         return IntStream.range(1, 4).boxed()
-                .map(id -> new Author(id, "Author_" + id))
+                .map(id -> new Author("a" + id, "Author_" + id))
                 .toList();
     }
 
     private static List<Genre> getDbGenres() {
         return IntStream.range(1, 7).boxed()
-                .map(id -> new Genre(id, "Genre_" + id))
+                .map(id -> new Genre("g" + id, "Genre_" + id))
                 .toList();
     }
 
     private static List<Book> getDbBooks(List<Author> dbAuthors, List<Genre> dbGenres) {
         return IntStream.range(1, 4).boxed()
-                .map(id -> new Book(id,
+                .map(id -> new Book("b" + id,
                         "BookTitle_" + id,
                         dbAuthors.get(id - 1),
                         dbGenres.subList((id - 1) * 2, (id - 1) * 2 + 2)

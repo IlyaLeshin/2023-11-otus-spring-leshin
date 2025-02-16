@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.hw.dto.AuthorDto;
 import ru.otus.hw.services.AuthorService;
@@ -21,8 +23,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(AuthorController.class)
 class AuthorControllerTest {
 
-    private static final long FIRST_AUTHOR_ID = 1L;
-    private static final long SECOND_AUTHOR_ID = 2L;
+    @Configuration
+    static class TestConfiguration {
+        @Bean
+        public AuthorController AuthorController(AuthorService authorService) {
+            return new AuthorController(authorService);
+        }
+    }
+
+    private static final String FIRST_AUTHOR_ID = "a1";
+    private static final String SECOND_AUTHOR_ID = "a2";
 
     private static final AuthorDto FIRST_AUTHOR_DTO = new AuthorDto(FIRST_AUTHOR_ID, "AUTHOR_1");
 

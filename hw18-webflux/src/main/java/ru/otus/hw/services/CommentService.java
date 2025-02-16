@@ -8,13 +8,13 @@ import java.util.List;
 
 public interface CommentService {
 
-    CommentDto findById(long id);
+    CommentDto findById(String id);
 
-    List<CommentDto> findAllByBookId(long bookId);
+    List<CommentDto> findAllByBookId(String bookId);
 
     CommentDto create(CommentCreateDto commentCreateDto);
 
     CommentDto update(CommentUpdateDto commentUpdateDto);
 
-    void deleteById(long id);
+    void deleteById(String id);
 }

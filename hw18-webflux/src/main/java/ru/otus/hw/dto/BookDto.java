@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class BookDto {
-    private long id;
+    private String id;
 
     private String title;
 

@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayName("Конвертер для работы с жанрами должен")
 @SpringBootTest(classes = {GenreConverter.class})
 public class GenreConverterTest {
-    private static final long FIRST_GENRE_ID = 1L;
+    private static final String FIRST_GENRE_ID = "g1";
 
     @Autowired
     private GenreConverter genreConverter;

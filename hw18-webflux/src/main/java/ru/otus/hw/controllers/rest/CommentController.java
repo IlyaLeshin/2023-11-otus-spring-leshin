@@ -22,7 +22,7 @@ public class CommentController {
     private final CommentService commentService;
 
     @GetMapping("/api/v1/books/{bookId}/comments/{commentId}")
-    public CommentDto getComment(@PathVariable("commentId") long commentId) {
+    public CommentDto getComment(@PathVariable("commentId") String commentId) {
         return commentService.findById(commentId);
     }
 
@@ -39,7 +39,7 @@ public class CommentController {
 
     @DeleteMapping("/api/v1/books/{bookId}/comments/{commentId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteComment(@PathVariable("commentId") long commentId) {
+    public void deleteComment(@PathVariable("commentId") String commentId) {
         commentService.deleteById(commentId);
     }
 }

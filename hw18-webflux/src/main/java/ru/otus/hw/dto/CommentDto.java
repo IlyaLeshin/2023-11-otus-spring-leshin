@@ -12,9 +12,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class CommentDto {
-    private long id;
+    private String id;
 
     private String text;
 
-    private Long bookId;
+    private String bookId;
 }

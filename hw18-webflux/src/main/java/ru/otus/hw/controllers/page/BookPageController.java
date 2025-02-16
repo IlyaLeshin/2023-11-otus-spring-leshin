@@ -16,7 +16,7 @@ public class BookPageController {
     }
 
     @GetMapping("/books/{id}")
-    public String bookWithCommentsPage(@PathVariable long id, Model model) {
+    public String bookWithCommentsPage(@PathVariable String id, Model model) {
         model.addAttribute("bookId", id);
         return "books/book-with-comments";
     }
@@ -28,7 +28,7 @@ public class BookPageController {
     }
 
     @GetMapping("/books/{id}/editing-form")
-    public String editingFormBookPage(@PathVariable long id, Model model) {
+    public String editingFormBookPage(@PathVariable String id, Model model) {
         model.addAttribute("bookId", id);
         return "books/editing-form";
     }

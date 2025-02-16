@@ -24,9 +24,9 @@ import static org.mockito.Mockito.when;
 @DisplayName("Конвертер для работы с книгами должен")
 @SpringBootTest(classes = {BookConverter.class})
 public class BookConverterTest {
-    private static final long FIRST_AUTHOR_ID = 1L;
+    private static final String FIRST_AUTHOR_ID = "a1";
 
-    private static final long FIRST_BOOK_ID = 1L;
+    private static final String FIRST_BOOK_ID = "b1";
 
     @Autowired
     private BookConverter bookConverter;
@@ -86,7 +86,7 @@ public class BookConverterTest {
     }
 
     private static List<Genre> getGenres() {
-        return IntStream.range(1, 3).boxed().map(id -> new Genre(id, "Genre_" + id)).toList();
+        return IntStream.range(1, 3).boxed().map(id -> new Genre("g" + id, "Genre_" + id)).toList();
     }
 
     private static Book getBook(Author author, List<Genre> dbGenres) {
@@ -98,7 +98,7 @@ public class BookConverterTest {
     }
 
     private static List<GenreDto> getGenreDtos() {
-        return IntStream.range(1, 3).boxed().map(id -> new GenreDto(id, "Genre_" + id)).toList();
+        return IntStream.range(1, 3).boxed().map(id -> new GenreDto("g" + id, "Genre_" + id)).toList();
     }
 
     private static BookDto getBookDto(AuthorDto author, List<GenreDto> dbGenreDtos) {

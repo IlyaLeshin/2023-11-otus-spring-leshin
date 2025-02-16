@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 public class CommentPageController {
 
     @GetMapping("/books/{bookId}/comments/{commentId}")
-    public String commentPage(@PathVariable("bookId") long bookId, @PathVariable("commentId") long commentId,
+    public String commentPage(@PathVariable("bookId") String bookId, @PathVariable("commentId") long commentId,
                               Model model) {
         model.addAttribute("bookId", bookId);
         model.addAttribute("commentId", commentId);
@@ -19,15 +19,16 @@ public class CommentPageController {
     }
 
     @GetMapping("/books/{bookId}/comments/creation-form")
-    public String creationFormCommentPage(@PathVariable("bookId") long bookId, Model model) {
+    public String creationFormCommentPage(@PathVariable("bookId") String bookId, Model model) {
         model.addAttribute("bookId", bookId);
         model.addAttribute("marker", "creation");
         return "comments/editing-form";
     }
 
     @GetMapping("/books/{bookId}/comments/{commentId}/editing-form")
-    public String editingFormCommentPage(@PathVariable("bookId") long bookId, @PathVariable("commentId") long commentId,
-                                  Model model) {
+    public String editingFormCommentPage(@PathVariable("bookId") String bookId,
+                                         @PathVariable("commentId") String commentId,
+                                         Model model) {
         model.addAttribute("bookId", bookId);
         model.addAttribute("commentId", commentId);
         return "comments/editing-form";

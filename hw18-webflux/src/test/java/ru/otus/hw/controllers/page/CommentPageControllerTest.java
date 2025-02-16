@@ -4,6 +4,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -12,6 +14,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DisplayName("Контроллер страниц для комментариев должен")
 @WebMvcTest(CommentPageController.class)
 class CommentPageControllerTest {
+
+    @Configuration
+    static class TestConfiguration {
+        @Bean
+        public CommentPageController bookController() {
+            return new CommentPageController();
+        }
+    }
 
     private static final long FIRST_COMMENT_ID = 1L;
 

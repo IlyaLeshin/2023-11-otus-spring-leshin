@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(classes = AuthorConverter.class)
 public class AuthorConverterTest {
 
-    private static final long FIRST_AUTHOR_ID = 1L;
+    private static final String FIRST_AUTHOR_ID = "a1";
 
     @Autowired
     private AuthorConverter authorConverter;

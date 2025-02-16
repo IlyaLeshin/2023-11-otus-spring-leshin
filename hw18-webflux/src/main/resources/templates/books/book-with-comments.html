@@ -138,7 +138,7 @@
                                 <a href="/books/${book.id}/editing-form">
                                     <button type="button">[[#{edit-button-caption}]]</button>
                                 </a>
-                            <button type="button" onclick="deleteBook(${book.id})"> [[#{delete-button-caption}]]</button>
+                            <button type="button" onclick="deleteBook('${book.id}')"> [[#{delete-button-caption}]]</button>
                             </td>
                         </tr>`;
 
@@ -155,7 +155,7 @@
                              <a href="/books/${comment.bookId}/comments/${comment.id}/editing-form" type="button">
                                  <button>[[#{edit-button-caption}]]</button>
                              </a>
-                             <button type="submit" onclick="deleteComment(${comment.bookId},${comment.id})">
+                             <button type="submit" onclick="deleteComment('${comment.bookId}','${comment.id}')">
                                  [[#{delete-button-caption}]]
                              </button>
                          </td>

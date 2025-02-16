@@ -31,7 +31,7 @@ public class BookController {
     }
 
     @GetMapping("/api/v1/books/{id}")
-    public BookWithCommentsDto getBookWithComments(@PathVariable long id) {
+    public BookWithCommentsDto getBookWithComments(@PathVariable String id) {
         return service.findWithCommentsById(id);
     }
 
@@ -48,7 +48,7 @@ public class BookController {
 
     @DeleteMapping("/api/v1/books/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteBook(@PathVariable long id) {
+    public void deleteBook(@PathVariable String id) {
         service.deleteById(id);
     }
 }

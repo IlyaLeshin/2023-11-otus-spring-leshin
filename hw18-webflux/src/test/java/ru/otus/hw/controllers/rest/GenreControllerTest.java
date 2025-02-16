@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.hw.dto.GenreDto;
 import ru.otus.hw.services.GenreService;
@@ -21,8 +23,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(GenreController.class)
 class GenreControllerTest {
 
-    private static final long FIRST_GENRE_ID = 1L;
-    private static final long SECOND_GENRE_ID = 2L;
+    @Configuration
+    static class TestConfiguration {
+        @Bean
+        public GenreController bookController(GenreService genreService) {
+            return new GenreController(genreService);
+        }
+    }
+
+    private static final String FIRST_GENRE_ID = "g1";
+    private static final String SECOND_GENRE_ID = "g2";
 
     private static final GenreDto FIRST_GENRE_DTO = new GenreDto(FIRST_GENRE_ID, "GENRE_1");
 

@@ -17,16 +17,16 @@ import java.util.Set;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class BookUpdateDto {
-    private long id;
+    private String id;
 
     @NotBlank(message = "{name-field-should-not-be-blank}")
     @Size(min = 2, max = 20, message = "{name-field-should-has-expected-size}")
     private String title;
 
-    @NotNull(message = "{authorId-field-should-not-be-blank}")
-    private Long authorId;
+    @NotBlank(message = "{authorId-field-should-not-be-blank}")
+    private String authorId;
 
-    @NotNull
     @Size(min = 1,message = "{genresIds-field-has-expected-size}")
-    private Set<Long> genreIds;
+    @NotNull
+    private Set<String> genreIds;
 }

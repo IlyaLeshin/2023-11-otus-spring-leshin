@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.hw.dto.CommentCreateDto;
@@ -21,9 +23,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(CommentController.class)
 class CommentControllerTest {
 
-    private static final long FIRST_COMMENT_ID = 1L;
+    @Configuration
+    static class TestConfiguration {
+        @Bean
+        public CommentController bookController(CommentService commentService) {
+            return new CommentController(commentService);
+        }
+    }
 
-    private static final long FIRST_BOOK_ID = 1L;
+    private static final String FIRST_COMMENT_ID = "c1";
+
+    private static final String FIRST_BOOK_ID = "b1";
 
     private static final CommentDto FIRST_COMMENT_DTO = new CommentDto(FIRST_COMMENT_ID, "Comment_1",
             FIRST_BOOK_ID);

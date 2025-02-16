@@ -1,7 +1,6 @@
 package ru.otus.hw.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -19,6 +18,6 @@ public class CommentCreateDto {
     @Size(min = 1, max = 254, message = "{text-field-should-has-expected-size}")
     private String text;
 
-    @NotNull(message = "{bookId-field-should-not-be-blank}")
-    private Long bookId;
+    @NotBlank(message = "{bookId-field-should-not-be-blank}")
+    private String bookId;
 }

@@ -8,6 +8,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.hw.dto.AuthorDto;
@@ -33,12 +35,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DisplayName("Контроллер книг должен")
 @WebMvcTest(BookController.class)
 class BookControllerTest {
-    private static final long FIRST_BOOK_ID = 1L;
-    private static final long SECOND_BOOK_ID = 2L;
-    private static final long FIRST_AUTHOR_ID = 1L;
-    private static final long SECOND_AUTHOR_ID = 2L;
-    private static final long FIRST_GENRE_ID = 1L;
-    private static final long SECOND_GENRE_ID = 2L;
+
+    @Configuration
+    static class TestConfiguration {
+        @Bean
+        public BookController bookController(BookService bookService) {
+            return new BookController(bookService);
+        }
+    }
+
+    private static final String FIRST_BOOK_ID = "b1";
+    private static final String SECOND_BOOK_ID = "b2";
+    private static final String FIRST_AUTHOR_ID = "a1";
+    private static final String SECOND_AUTHOR_ID = "a1";
+    private static final String FIRST_GENRE_ID = "g1";
+    private static final String SECOND_GENRE_ID = "g2";
+
 
     private static final Author FIRST_AUTHOR = new Author(FIRST_AUTHOR_ID, "AUTHOR_1");
 
