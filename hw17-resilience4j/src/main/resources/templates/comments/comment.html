@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Library</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        .comment {
+            border: 1px solid steelblue;
+            width: 300px;
+            border-collapse: collapse;
+        }
+
+        .comment tr td, th {
+            padding: 5px;
+            border: 1px solid steelblue;
+        }
+
+        .comment td:last-child, td:first-child {
+            width: 50px;
+        }
+
+        h3 {
+            background-image: url("../static/listmark.png");
+            background-repeat: no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+
+    </style>
+    <style type="text/css" th:inline="text">
+        [[h3]] {
+            background-image: url([[@{/listmark.png}]]);
+            background-repeat: no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+    </style>
+</head>
+<body>
+<h3 th:text="#{comment-table-header}">Comment:</h3>
+
+<table class="comment">
+    <thead>
+    <tr>
+        <th th:text="#{comment-field-id}">ID</th>
+        <th th:text="#{comment-field-book-id}">Book Id</th>
+        <th th:text="#{comment-field-text}">Text</th>
+        <th th:text="#{comment-table-column-action}">Action</th>
+    </tr>
+    </thead>
+
+    <tbody id="book-comment-body">
+    </tbody>
+</table>
+<br/>
+<a href="book-with-comments.html" th:href="@{/books/__${bookId}__}" type="button">
+    <button th:text="#{book-info-button-caption}">Book info</button>
+</a>
+<br/>
+<a href="books.html" th:href="@{/books}">
+    <button th:text="#{return-to-books-page-button-caption}" type="button">Return to books list page</button>
+</a>
+<br/>
+<a href="../index.html" th:href="@{/}" type="button">
+    <button th:text="#{return-to-index-page-button-caption}">Return to index page</button>
+</a>
+</body>
+<script  th:inline="javascript">
+    window.onload = () => {
+        getComment();
+    }
+
+    function getComment() {
+        const bookId=[[${bookId}]];
+        const commentId=[[${commentId}]];
+        fetch('/api/v1/books/' + bookId + '/comments/' + commentId, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        .then(response => response.json())
+        .then((comment) => {
+            let commentBody = "";
+
+            commentBody = `<tr>
+                           <td>${comment.id}</td>
+                           <td>${comment.bookId}</td>
+                           <td>${comment.text}</td>
+                           <td>
+                              <a href="/books/${comment.bookId}/comments/${comment.id}/editing-form">
+                                  <button type="button">[[#{edit-button-caption}]]</button>
+                              </a>
+                              <button type="button" onclick="deleteComment(${comment.bookId},${comment.id})"> [[#{delete-button-caption}]]</button>
+                           </td>
+                           </tr>
+            `;
+            document.getElementById("book-comment-body").innerHTML = commentBody;
+        })
+        .catch(error => alert("Ошибка" + error));
+    }
+
+	function deleteComment(bookId, commentId) {
+        fetch("/api/v1/books/" + bookId +"/comments/" + commentId, {
+             method: 'DELETE',
+             headers: {
+                'Content-Type': 'application/json'
+             }
+        })
+        .then(location.href = "/books/"+ bookId)
+        .catch(error => alert("Ошибка" + error));
+    }
+</script>
+</html>

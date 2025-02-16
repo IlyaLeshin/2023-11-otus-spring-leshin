@@ -28,6 +28,7 @@
         <module>hw10-spring-mvc-rest-ajax</module>
         <module>hw11-spring-security-auth</module>
         <module>hw12-spring-security-acl</module>
+        <module>hw17-resilience4j</module>
     </modules>
 
     <properties>
@@ -57,10 +58,18 @@
             https://raw.githubusercontent.com/OtusTeam/Spring/master/checkstyle.xml
         </checkstyle.config.url>
         <ehcache.version>3.10.8</ehcache.version>
+        <resilience4j.version>3.1.4</resilience4j.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
+                <version>${resilience4j.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>de.flapdoodle.embed</groupId>
                 <artifactId>de.flapdoodle.embed.mongo</artifactId>

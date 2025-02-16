@@ -1,0 +1,69 @@
+spring:
+
+  datasource:
+    url: jdbc:h2:mem:maindb
+
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    enabled: true
+
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+
+  logging:
+    level:
+      sql: debug
+
+resilience4j:
+
+  retry:
+    configs:
+      default:
+        maxAttempts: 2
+        waitDuration: 1s
+
+    instances:
+      update-repeater:
+        baseConfig: default
+        ignoreExceptions:
+          - ru.otus.hw.exceptions.LibraryException
+
+  ratelimiter:
+    configs:
+      default:
+        timeoutDuration: 5s
+        limitForPeriod: 3
+        limitRefreshPeriod: 1s
+
+    instances:
+      read-ratelimiter:
+        baseConfig: default
+
+      mass-read-ratelimiter:
+        baseConfig: default
+
+  circuitbreaker:
+    configs:
+      default:
+        failureRateThreshold: 70
+        slowCallRateThreshold: 80
+        slowCallDurationThreshold: 3s
+        waitDurationInOpenState: 1s
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+
+    instances:
+
+      read-circuitbreaker:
+        baseConfig: default
+        ignoreExceptions:
+          - ru.otus.hw.exceptions.LibraryException
+
+      mass-read-circuitbreaker:
+        baseConfig: default
+        slowCallDurationThreshold: 10s
+        slowCallRateThreshold: 90
