@@ -1,5 +1,8 @@
 package ru.otus.hw.services;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +29,8 @@ public class CommentServiceImpl implements CommentService {
     private final CommentConverter commentConverter;
 
     @Override
+    @RateLimiter(name = "read-ratelimiter")
+    @CircuitBreaker(name = "read-circuitbreaker")
     public CommentDto findById(long id) {
         return commentRepository.findById(id).map(commentConverter::modelToDto)
                 .orElseThrow(() -> new CommentNotFoundException("Comment with id %s not found".formatted(id)));
@@ -33,6 +38,8 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional(readOnly = true)
+    @RateLimiter(name = "mass-read-ratelimiter")
+    @CircuitBreaker(name = "mass-read-circuitbreaker")
     public List<CommentDto> findAllByBookId(long bookId) {
         var book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new BookNotFoundException("Book with id %d not found".formatted(bookId)));
@@ -48,6 +55,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Retry(name = "update-repeater")
     public CommentDto update(CommentUpdateDto commentUpdateDto) {
         long id = commentUpdateDto.getId();
         if (findById(id) != null) {

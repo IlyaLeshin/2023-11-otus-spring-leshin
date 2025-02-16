@@ -1,5 +1,7 @@
 package ru.otus.hw.services;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.otus.hw.converters.GenreConverter;
@@ -16,6 +18,8 @@ public class GenreServiceImpl implements GenreService {
     private final GenreConverter genreConverter;
 
     @Override
+    @RateLimiter(name = "mass-read-ratelimiter")
+    @CircuitBreaker(name = "mass-read-circuitbreaker")
     public List<GenreDto> findAll() {
         return genreRepository.findAll().stream().map(genreConverter::modelToDto).toList();
     }

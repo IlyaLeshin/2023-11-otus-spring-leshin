@@ -1,5 +1,8 @@
 package ru.otus.hw.services;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +41,8 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
+    @RateLimiter(name = "read-ratelimiter")
+    @CircuitBreaker(name = "read-circuitbreaker")
     public BookDto findById(long id) {
         return bookRepository.findById(id).map(bookConverter::modelToDto).orElseThrow(() ->
                 new BookNotFoundException("Book with id %s not found".formatted(id)));
@@ -45,12 +50,16 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
+    @RateLimiter(name = "read-ratelimiter")
+    @CircuitBreaker(name = "read-circuitbreaker")
     public BookWithCommentsDto findWithCommentsById(long id) {
         return bookRepository.findById(id).map(bookWithCommentsConverter::modelToDto).orElseThrow(() ->
                 new BookNotFoundException("Book with id %s not found".formatted(id)));
     }
 
     @Override
+    @RateLimiter(name = "mass-read-ratelimiter")
+    @CircuitBreaker(name = "mass-read-circuitbreaker")
     public List<BookDto> findAll() {
         return bookRepository.findAll().stream().map(bookConverter::modelToDto).toList();
     }
@@ -62,11 +71,11 @@ public class BookServiceImpl implements BookService {
         long authorId = bookCreateDto.getAuthorId();
         Set<Long> genresIds = bookCreateDto.getGenreIds();
         return save(0L, title, authorId, genresIds);
-
     }
 
     @Override
     @Transactional
+    @Retry(name = "update-repeater")
     public BookDto update(BookUpdateDto bookUpdateDto) {
         long id = bookUpdateDto.getId();
         if (findById(id) != null) {

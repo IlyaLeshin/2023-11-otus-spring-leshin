@@ -1,5 +1,7 @@
 package ru.otus.hw.services;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.otus.hw.converters.AuthorConverter;
@@ -17,6 +19,8 @@ public class AuthorServiceImpl implements AuthorService {
     private final AuthorConverter authorConverter;
 
     @Override
+    @RateLimiter(name = "mass-read-ratelimiter")
+    @CircuitBreaker(name = "mass-read-circuitbreaker")
     public List<AuthorDto> findAll() {
         return authorRepository.findAll().stream().map(authorConverter::modelToDto).toList();
     }
