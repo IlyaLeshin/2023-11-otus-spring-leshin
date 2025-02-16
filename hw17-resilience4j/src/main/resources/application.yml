@@ -67,5 +67,3 @@ resilience4j:
         baseConfig: default
         slowCallDurationThreshold: 10s
         slowCallRateThreshold: 90
-        ignoreExceptions:
-          - ru.otus.hw.exceptions.LibraryException
