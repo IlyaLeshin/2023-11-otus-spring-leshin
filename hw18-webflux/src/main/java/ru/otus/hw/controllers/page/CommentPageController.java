@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 public class CommentPageController {
 
     @GetMapping("/books/{bookId}/comments/{commentId}")
-    public String commentPage(@PathVariable("bookId") String bookId, @PathVariable("commentId") long commentId,
+    public String commentPage(@PathVariable("bookId") String bookId, @PathVariable("commentId") String commentId,
                               Model model) {
         model.addAttribute("bookId", bookId);
         model.addAttribute("commentId", commentId);

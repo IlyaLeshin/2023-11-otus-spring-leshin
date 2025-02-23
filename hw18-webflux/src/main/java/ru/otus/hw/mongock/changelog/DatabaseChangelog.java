@@ -32,19 +32,19 @@ public class DatabaseChangelog {
 
     @ChangeSet(order = "002", id = "insertAuthors", author = "ilyaLeshin")
     public void insertAuthors(AuthorRepository authorRepository) {
-        var authors = List.of(new Author("a1", "Author_1"),
+        authorList = List.of(new Author("a1", "Author_1"),
                 new Author("a2", "Author_2"), new Author("a3", "Author_3"));
 
-        authorList = authorRepository.saveAll(authors);
+        authorRepository.saveAll(authorList).collectList().block();
     }
 
     @ChangeSet(order = "003", id = "insertGenres", author = "ilyaLeshin")
     public void insertGenres(GenreRepository genreRepository) {
-        var genres = List.of(new Genre("g1", "Genre_1"), new Genre("g2", "Genre_2"),
+        genreList = List.of(new Genre("g1", "Genre_1"), new Genre("g2", "Genre_2"),
                 new Genre("g3", "Genre_3"), new Genre("g4", "Genre_4"),
                 new Genre("g5", "Genre_5"), new Genre("g6", "Genre_6"));
 
-        genreList = genreRepository.saveAll(genres);
+        genreRepository.saveAll(genreList).collectList().block();
     }
 
     @ChangeSet(order = "004", id = "insertBooks", author = "ilyaLeshin")
@@ -58,11 +58,11 @@ public class DatabaseChangelog {
         var genreFour = genreList.get(3);
         var genreFive = genreList.get(4);
 
-        var books = List.of(new Book("b1", "BookTitle_1", authorOne, List.of(genreOne, genreTwo)),
+        bookList = List.of(new Book("b1", "BookTitle_1", authorOne, List.of(genreOne, genreTwo)),
                 new Book("b2", "BookTitle_2", authorTwo, List.of(genreTwo, genreFour)),
                 new Book("b3", "BookTitle_3", authorThree, List.of(genreTwo, genreFive)));
 
-        bookList = bookRepository.saveAll(books);
+        bookRepository.saveAll(bookList).collectList().block();
     }
 
     @ChangeSet(order = "005", id = "insertCommentsForBooks", author = "ilyaLeshin")
@@ -70,19 +70,19 @@ public class DatabaseChangelog {
         var bookOne = bookList.get(0);
         var bookTwo = bookList.get(1);
 
-        var comments = List.of(new Comment("c1", "Comment_1", bookOne),
+        commentList = List.of(new Comment("c1", "Comment_1", bookOne),
                 new Comment("c2", "Comment_2", bookOne),
                 new Comment("c3", "Comment_3", bookOne),
                 new Comment("c4", "Comment_4", bookTwo),
                 new Comment("c5", "Comment_5", bookTwo),
                 new Comment("c6", "Comment_6", bookTwo));
 
-        commentList = commentRepository.saveAll(comments);
+        commentRepository.saveAll(commentList).collectList().block();
 
         bookList.get(0).setComments(List.of(commentList.get(0), commentList.get(1), commentList.get(2)));
         bookList.get(1).setComments(List.of(commentList.get(3), commentList.get(4), commentList.get(5)));
-        bookRepository.save(bookList.get(0));
-        bookRepository.save(bookList.get(1));
+        bookRepository.save(bookList.get(0)).block();
+        bookRepository.save(bookList.get(1)).block();
     }
 
 }

@@ -2,7 +2,7 @@ spring:
   data:
     mongodb:
       port: 0
-      database: hw13mongoDBTest
+      database: hw18mongoDBTest
 
 de:
   flapdoodle:

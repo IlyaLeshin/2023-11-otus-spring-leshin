@@ -25,7 +25,7 @@ public class Book {
 
     private List<Genre> genres;
 
-    @DBRef
+    @DBRef (lazy = true)
     private List<Comment> comments;
 
     public Book(String id, String title, Author author, List<Genre> genres) {

@@ -95,7 +95,8 @@
                               <a href="/books/${comment.bookId}/comments/${comment.id}/editing-form">
                                   <button type="button">[[#{edit-button-caption}]]</button>
                               </a>
-                              <button type="button" onclick="deleteComment(${comment.bookId},${comment.id})"> [[#{delete-button-caption}]]</button>
+                              <button type="submit" onclick="deleteComment('${comment.bookId}','${comment.id}')">
+                                 [[#{delete-button-caption}]]
                            </td>
                            </tr>
             `;
@@ -104,12 +105,12 @@
         .catch(error => alert("Ошибка" + error));
     }
 
-	function deleteComment(bookId, commentId) {
+    function deleteComment(bookId, commentId) {
         fetch("/api/v1/books/" + bookId +"/comments/" + commentId, {
-             method: 'DELETE',
-             headers: {
+            method: 'DELETE',
+            headers: {
                 'Content-Type': 'application/json'
-             }
+            }
         })
         .then(location.href = "/books/"+ bookId)
         .catch(error => alert("Ошибка" + error));
